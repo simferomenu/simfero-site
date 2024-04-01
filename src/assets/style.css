@@ -1,0 +1,85 @@
+.menu-link {
+  @apply relative font-Sitka font-normal text-[#fff] text-[18px] leading-[162%] tracking-[0.15em] uppercase;
+}
+
+.menu-link::before {
+  content: '';
+  position: absolute;
+  height: 2px;
+  width: 67px;
+  max-width: 100%;
+  background-color: #d2af96;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.simple-text {
+  @apply font-Segoe font-[350] text-[18px] leading-[162%] tracking-[0.04em] text-[#fff];
+}
+
+.bold-text {
+  @apply font-Segoe font-black text-[21px] leading-[139%] tracking-[0.03em] text-[#fff];
+}
+
+.menu-link.active {
+  @apply text-gold;
+}
+
+.menu-link.active:before {
+  @apply opacity-100;
+}
+
+.default-transition {
+  @apply transition-all duration-300;
+}
+
+.inner-img {
+  @apply absolute w-full h-full object-cover;
+}
+
+.menu-card-bg {
+  backdrop-filter: blur(15.800000190734863px);
+  background: rgba(96, 96, 96, 0.25);
+}
+
+.main-bg {
+  background-image: url('/images/ImageMainBg.jpg');
+  background-position: center;
+  background-size: cover;
+}
+
+.dish-bg {
+  background-image: url('/images/ImageDishBg.jpg');
+  background-position: center;
+  background-size: cover;
+}
+
+.order-bg {
+  background-image: url('/images/ImageOrderBg.jpg');
+  background-position: center;
+  background-size: cover;
+}
+
+.small-card-bg1 {
+  backdrop-filter: blur(15.800000190734863px);
+  background: rgba(96, 96, 96, 0.73);
+}
+
+.small-card-bg2 {
+  backdrop-filter: blur(15.800000190734863px);
+  background: rgba(210, 175, 150, 0.31);
+}
+
+.dish-scrollbar {
+  @apply bg-gold w-[100px] h-[2px];
+}
+
+.dish-button-next,
+.dish-button-prev {
+  background: url('/icons/IconChevronLeft.svg') no-repeat;
+  width: 15px;
+  height: 22px;
+}

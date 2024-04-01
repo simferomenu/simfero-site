@@ -1,0 +1,55 @@
+<template>
+  <IconCross @click="toMain" />
+  <IconBack @click="toMain" />
+  <div
+    class="relative w-screen min-h-screen box-border bg-darkBlue order-bg flex flex-col pt-[35px]"
+  >
+    <div
+      class="font-Sitka w-full flex justify-center items-center text-[36px] font-base leading-[186%] tracking-[0.11em] uppercase text-[#fff] mb-[25px]"
+    >
+      Мой заказ
+    </div>
+    <div class="w-full flex flex-wrap box-border px-[80px] flex-1">
+      <OrderCard name="Обожженая говядина с соусом Якинику" :price="1200" />
+      <OrderCard name="Обожженая говядина с соусом Якинику" :price="1200" />
+      <OrderCard name="Обожженая говядина с соусом Якинику" :price="1200" />
+    </div>
+    <div
+      class="relative flex justify-between items-center border-solid border-t-[1px] border-t-[#fff] min-h-[60px] box-border mx-[80px] pt-[15px] mt-[15px] mb-[55px]"
+    >
+      <div class="flex items-center">
+        <span class="font-Segoe font-[350] text-[26px] tracking-[0.03em] text-[#fff]"
+          >Сумма заказа:</span
+        >
+        <span class="font-Segoe font-bold text-[26px] tracking-[0.03em] text-[#fff] ml-[30px]"
+          >{{ totalPrice }} Руб.</span
+        >
+      </div>
+      <div class="flex flex-col h-full">
+        <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
+          >Пригласить официанта</span
+        >
+        <div class="absolute bottom-[-10px] right-[-285px] w-[600px] flex shrink-1 items-center">
+          <img class="block h-[15px] w-auto" src="/icons/IconRhombusGold.svg" alt="" />
+          <div class="h-[1px] w-full bg-gold"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped></style>
+
+<script setup>
+import { useRoute, useRouter } from 'vue-router'
+import { IconCross, IconBack, OrderCard } from '@/components'
+import { ref } from 'vue'
+
+const totalPrice = ref(3200)
+
+const router = useRouter()
+
+const toMain = () => {
+  router.push('/')
+}
+</script>
