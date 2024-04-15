@@ -13,7 +13,7 @@
       <div class="relative box-border flex items-center"></div>
     </div>
     <div class="flex relative w-full h-[100%] mt-[40px] box-border pl-[40px] overflow-auto">
-      <div class="relative w-[60%] shrink-0 h-full flex flex-col mr-[20px]">
+      <div class="relative w-1/2 shrink-0 h-full flex flex-col mr-[20px]">
         <div class="relative flex w-full mb-[40px]">
           <span
             class="font-semibold text-[#fff] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit"
@@ -44,7 +44,7 @@
         </div>
       </div>
     </div>
-    <div class="w-full relative flex justify-between box-border px-[40px] mt-[20px] shrink-0 h-fit">
+    <div class="w-full relative flex justify-between box-border px-[40px] mt-[40px] shrink-0 h-fit">
       <div class="flex flex-col w-[320px]">
         <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
           >10 стол, основной зал</span

@@ -1,4 +1,4 @@
-@import url(https://db.onlinewebfonts.com/c/7a8bc7c29b5bcadb9510cca51210ac46?family=Sitka+Banner);
+/* @import url(https://db.onlinewebfonts.com/c/7a8bc7c29b5bcadb9510cca51210ac46?family=Sitka+Banner); */
 
 @font-face {
   font-family: 'Segoe UI';
@@ -76,4 +76,14 @@
     url('/fonts/SegoeUI-Italic.ttf') format('truetype');
   font-weight: normal;
   font-style: italic;
+}
+
+@font-face {
+  font-family: 'Sitka';
+  src: url('/fonts/Sitka Banner.eot');
+  src:
+    local('/fonts/Sitka Banner'),
+    url('/fonts/Sitka Banner.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/Sitka Banner.woff') format('woff'),
+    url('/fonts/Sitka Banner.ttf') format('truetype');
 }
