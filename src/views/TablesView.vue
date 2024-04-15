@@ -15,6 +15,7 @@
       <div
         class="relative w-1/2 shrink-0 h-full flex flex-col mr-[20px]"
         v-for='zone in zones'
+        :key='zone.name'
       >
         <div class="relative flex w-full mb-[40px]">
           <span class="font-semibold text-[#fff] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit">
@@ -30,6 +31,7 @@
             :key="item.id"
             :value="item.number"
             :id="item.id"
+            :is-selected='isSelected(item)'
             v-for="item in zone.tables"
             @selected='onCellSelected'
           />
@@ -76,24 +78,29 @@ const toWaiter = () => {
   router.push('/waiter')
 }
 
-let selectedTables = [];
+const selectedTables = ref([]);
 const zones = ref([]);
 
 const onCellSelected = ({ id }) => {
-  const isExist = selectedTables.find((item) => item === id);
+  const isExist = selectedTables.value.find((item) => item === id);
 
   if (!isExist) {
-    selectedTables.push(id);
+    selectedTables.value.push(id);
   } else {
-    selectedTables = selectedTables.filter((item) => item != id);
+    selectedTables.value = selectedTables.value.filter((item) => item != id);
   }
 
-  window.localStorage.setItem('selectedTables', JSON.stringify(selectedTables));
+  window.localStorage.setItem('selectedTables', JSON.stringify(selectedTables.value));
 };
+
+const isSelected = ({ id }) => {
+  return Boolean(selectedTables.value.find((item) => item === id));
+}
 
 onMounted(() => {
   axios.get('/tables').then((response) => {
     zones.value = response.data;
+    selectedTables.value = JSON.parse(window.localStorage.getItem('selectedTables'));
   });
 })
 </script>
