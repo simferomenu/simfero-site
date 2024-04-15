@@ -31,8 +31,7 @@ const props = defineProps({
     required: true
   },
   bgColor: {
-    type: String,
-    required: true
+    type: String
   }
 })
 </script>

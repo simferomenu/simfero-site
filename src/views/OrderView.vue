@@ -2,7 +2,7 @@
   <IconCross @click="toMain" />
   <IconBack @click="toMain" />
   <div
-    class="relative w-screen min-h-screen box-border bg-darkBlue order-bg flex flex-col pt-[35px]"
+    class="relative w-screen min-h-screen box-border bg-darkBlue order-bg flex flex-col pt-[35px] overflow-hidden"
   >
     <div
       class="font-Sitka w-full flex justify-center items-center text-[36px] font-base leading-[186%] tracking-[0.11em] uppercase text-[#fff] mb-[25px]"

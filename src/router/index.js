@@ -16,10 +16,19 @@ const router = createRouter({
       component: () => import('../views/DishView.vue')
     },
     {
-      // path: '/dish/:dishNickname',
       path: '/order',
       name: 'order',
       component: () => import('../views/OrderView.vue')
+    },
+    {
+      path: '/waiter',
+      name: 'waiter',
+      component: () => import('../views/WaiterView.vue')
+    },
+    {
+      path: '/tables',
+      name: 'tables',
+      component: () => import('../views/TablesView.vue')
     }
   ]
 })

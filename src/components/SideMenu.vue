@@ -7,6 +7,7 @@
       <div class="relative flex flex-col ml-[15px]">
         <h1
           class="font-Sitka font-normal text-[36px] leading-[96%] tracking-[0.09em] uppercase text-gold"
+          @click="toWaiterView"
         >
           SIMFERO
         </h1>
@@ -55,7 +56,11 @@
 <style scoped></style>
 
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+
+const isHolding = ref(false)
+
 const router = useRouter()
 
 const toMainView = () => {
@@ -64,4 +69,10 @@ const toMainView = () => {
 const toOrderView = () => {
   router.push('/order')
 }
+
+const toWaiterView = () => {
+  router.push('/waiter')
+}
+
+defineProps({})
 </script>

@@ -40,6 +40,10 @@
   @apply absolute w-full h-full object-cover;
 }
 
+.active-cell {
+  @apply w-[100px] h-[44px] flex justify-center items-center font-bold text-[16px] tracking-[0.17em] uppercase text-center !text-[#000] mr-[20px] mb-[30px] !bg-gold !border-none;
+}
+
 .menu-card-bg {
   backdrop-filter: blur(15.800000190734863px);
   background: rgba(96, 96, 96, 0.25);
@@ -63,6 +67,12 @@
   background-size: cover;
 }
 
+.waiter-bg {
+  background-image: url('/images/ImageWaiterBg.jpg');
+  background-position: center;
+  background-size: cover;
+}
+
 .small-card-bg1 {
   backdrop-filter: blur(15.800000190734863px);
   background: rgba(96, 96, 96, 0.73);
@@ -71,6 +81,11 @@
 .small-card-bg2 {
   backdrop-filter: blur(15.800000190734863px);
   background: rgba(210, 175, 150, 0.31);
+}
+
+.waiter-fade {
+  backdrop-filter: blur(37.599998474121094px);
+  background: linear-gradient(180deg, rgba(14, 19, 23, 0.78) 0%, rgba(14, 19, 23, 0.78) 95.4%);
 }
 
 .dish-scrollbar {

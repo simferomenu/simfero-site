@@ -3,7 +3,7 @@
     class="relative flex flex-col justify-between w-screen h-screen dish-bg box-border py-[40px] overflow-hidden"
   >
     <IconCross @click="toMain" />
-    <div class="relative flex items-center shrink w-full px-[20px] h-full">
+    <div class="relative flex items-center shrink w-full box-border px-[20px] h-full">
       <div class="relative max-h-full w-full shrink z-[2]">
         <img class="max-h-full max-w-full h-auto w-full" src="/images/ImageSalad.png" alt="" />
       </div>
@@ -80,7 +80,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import dishesList from '@/data/dishes.json'
 import { useRoute, useRouter } from 'vue-router'
 import { SideMenu, MenuSmallCard, AddButton, IconCross } from '@/components'
 

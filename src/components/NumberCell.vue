@@ -1,0 +1,34 @@
+<template>
+  <div
+    :class="
+      !disabled
+        ? 'w-[100px] h-[44px] flex justify-center items-center font-bold text-[16px] tracking-[0.17em] uppercase text-center text-[#fff] mr-[20px] mb-[30px] border-solid border-b-[1px] border-b-[#fff]'
+        : 'w-[100px] h-[44px] flex justify-center items-center font-bold text-[16px] tracking-[0.17em] uppercase text-center text-[#fff] opacity-50 mr-[20px] mb-[30px]'
+    "
+    @click="activateCell"
+  >
+    {{ value }}
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+defineProps({
+  active: {
+    type: Boolean
+  },
+  disabled: {
+    type: Boolean
+  },
+  value: {
+    type: Number
+  }
+})
+
+const activateCell = () => {
+  this.classList.toggle('active-cell')
+}
+</script>
+
+<style scoped></style>

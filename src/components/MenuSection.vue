@@ -12,48 +12,7 @@
       </div>
     </div>
     <div class="relative w-full flex flex-wrap">
-      <MenuCard
-        @click="toTuna"
-        name="Тунец Мацухиса"
-        :price="1200"
-        imgUrl="/images/ImageTuna.png"
-      />
-      <MenuCard
-        @click="toTuna"
-        name="Тунец Мацухиса"
-        :price="1200"
-        imgUrl="/images/ImageTuna.png"
-      />
-      <MenuCard
-        @click="toTuna"
-        name="Тунец Мацухиса"
-        :price="1200"
-        imgUrl="/images/ImageTuna.png"
-      />
-      <MenuCard
-        @click="toTuna"
-        name="Тунец Мацухиса"
-        :price="1200"
-        imgUrl="/images/ImageTuna.png"
-      />
-      <MenuCard
-        @click="toTuna"
-        name="Тунец Мацухиса"
-        :price="1200"
-        imgUrl="/images/ImageTuna.png"
-      />
-      <MenuCard
-        @click="toTuna"
-        name="Тунец Мацухиса"
-        :price="1200"
-        imgUrl="/images/ImageTuna.png"
-      />
-      <MenuCard
-        @click="toTuna"
-        name="Тунец Мацухиса"
-        :price="1200"
-        imgUrl="/images/ImageTuna.png"
-      />
+      <slot> </slot>
     </div>
   </div>
 </template>
@@ -61,9 +20,9 @@
 <style scoped></style>
 
 <script setup>
-import dishesList from '@/data/dishes.json'
 import { useRouter } from 'vue-router'
 import { MenuCard } from '@/components'
+import { useFetch } from '@vueuse/core'
 
 const router = useRouter()
 
