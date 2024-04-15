@@ -1,6 +1,6 @@
 <template>
   <div class="relative flex w-screen h-screen pointer-events-none">
-    <SideMenu />
+    <SideMenu :categories="categories" />
     <div
       class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
     >
@@ -27,9 +27,10 @@
 <script setup>
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
 import { SideMenu, MenuSection, WaiterMenu, MenuCard } from '@/components'
 import { useElementBounding } from '@vueuse/core'
-import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
@@ -40,44 +41,51 @@ const toTuna = () => {
 // const visibleEl = ref(null)
 // const { x, y, top, right, bottom, left, width, height } = useElementBounding(visibleEl)
 
+const menuData = ref(null)
 const menu = ref([])
 const categories = ref([])
 const products = ref([])
 
-onMounted(() => {
-  axios.get('https://api.simfero.cirus-it.com/menu').then((response) => {
-    const groups = response.data.groups
-    categories.value = groups
-    // console.log(groups)
-    const groupsIdArr = groups.map((obj) => obj.id)
-    const products = response.data.products
-    console.log(products)
-    const productsIdArr = products.map((obj) => obj.id)
+onMounted(async () => {
+  const storageMenu = window.localStorage.getItem('menu')
+  menuData.value = storageMenu ? JSON.parse(storageMenu) : null
 
-    products.forEach((product) => {
-      const groupId = product.parentGroup
-      // console.log(groupId)
-      const group = groups.find(({ id }) => {
-        // console.log(id, groupId, id === groupId)
-        return id === groupId
-      })
-      console.log(group)
-      const existingItem = menu.find(({ id }) => id === group.id)
+  if (!menuData.value) {
+    menuData.value = (await axios.get('/menu')).data
+  }
 
-      if (!existingItem) {
-        menu.push({
-          id: group.id,
-          name: group.name,
-          products: [product]
-        })
-      } else {
-        existingItem.products.push(product)
-      }
-    })
+  const groups = menuData.value.productCategories
+  categories.value = groups.filter(({ isDeleted }) => !isDeleted)
 
-    // const stringifiedMenu = JSON.stringify(menu)
+  // console.log(groups)
+  // const groupsIdArr = groups.map((obj) => obj.id)
+  // const products = menu.value.products
+  // console.log(products)
+  // const productsIdArr = products.map((obj) => obj.id)
+  //
+  // products.forEach((product) => {
+  //   const groupId = product.parentGroup
+  //   // console.log(groupId)
+  //   const group = groups.find(({ id }) => {
+  //     // console.log(id, groupId, id === groupId)
+  //     return id === groupId
+  //   })
+  //   console.log(group)
+  //   const existingItem = menu.find(({ id }) => id === group.id)
+  //
+  //   if (!existingItem) {
+  //     menu.push({
+  //       id: group.id,
+  //       name: group.name,
+  //       products: [product]
+  //     })
+  //   } else {
+  //     existingItem.products.push(product)
+  //   }
+  // })
 
-    // localStorage.setItem('menu', stringifiedMenu)
-  })
+  // const stringifiedMenu = JSON.stringify(menu)
+
+  // localStorage.setItem('menu', stringifiedMenu)
 })
 </script>

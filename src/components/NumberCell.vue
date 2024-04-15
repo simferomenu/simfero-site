@@ -1,11 +1,14 @@
 <template>
   <div
     ref="cell"
-    :class="
-      !disabled
-        ? 'w-[100px] h-[44px] flex justify-center items-center font-bold text-[16px] tracking-[0.17em] uppercase text-center text-[#fff] mr-[20px] mb-[30px] border-solid border-b-[1px] border-b-[#fff] cursor-pointer default-transition'
-        : 'w-[100px] h-[44px] flex justify-center items-center font-bold text-[16px] tracking-[0.17em] uppercase text-center text-[#fff] opacity-50 mr-[20px] mb-[30px] cursor-pointer default-transition'
-    "
+    :class="[
+      'w-[100px] h-[44px] flex justify-center items-center font-bold text-[16px] tracking-[0.17em] uppercase text-center text-[#fff] mr-[20px] mb-[30px]',
+      {
+        'opacity-50': disabled,
+        'border-solid border-b-[1px] border-b-[#fff]': !disabled,
+        'active-cell': isActive
+      }
+    ]"
     @click="activateCell"
   >
     {{ value }}
@@ -13,9 +16,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineEmits } from 'vue'
 
-defineProps({
+const props = defineProps({
   active: {
     type: Boolean
   },
@@ -24,13 +27,23 @@ defineProps({
   },
   value: {
     type: Number
+  },
+  id: {
+    type: String
+  },
+  isSelected: {
+    type: Boolean,
+    default: false
   }
 })
 
+const emit = defineEmits(['selected'])
 const cell = ref()
+const isActive = ref(props.isSelected)
 
 const activateCell = () => {
-  cell.value.classList.toggle('active-cell')
+  isActive.value = !isActive.value
+  emit('selected', { id: props.id })
 }
 </script>
 

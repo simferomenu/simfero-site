@@ -18,26 +18,8 @@
     </div>
     <div class="relative w-full flex flex-col mt-[90px]">
       <ul class="[&>*:not(:last-child)]:mb-[20px]">
-        <li>
-          <a @click="toMainView" class="menu-link active">Паста и ризотто</a>
-        </li>
-        <li>
-          <a class="menu-link">Холодные закуски</a>
-        </li>
-        <li>
-          <a class="menu-link">Рыба и морепродукты</a>
-        </li>
-        <li>
-          <a class="menu-link">Супы</a>
-        </li>
-        <li>
-          <a class="menu-link">Горячие закуски</a>
-        </li>
-        <li>
-          <a class="menu-link">Салаты</a>
-        </li>
-        <li>
-          <a class="menu-link">Холодные закуски</a>
+        <li v-for="item in categories">
+          <a @click="toMainView" class="menu-link active">{{ item.name }}</a>
         </li>
       </ul>
     </div>
@@ -76,5 +58,9 @@ const toWaiterView = () => {
   router.push('/waiter')
 }
 
-defineProps({})
+defineProps({
+  categories: {
+    type: Object,
+  }
+})
 </script>
