@@ -2,7 +2,7 @@ import axios from 'axios'
 
 onMounted(() => {
   axios
-    .get('https://api.simfero.cirus-it.com/menu')
+    .get('/menu')
     // .then((response) => console.log(response))
     .then((response) => {
       const menu = []

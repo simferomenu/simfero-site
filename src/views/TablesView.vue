@@ -4,14 +4,13 @@
   <div
     class="relative w-screen h-screen box-border waiter-bg flex flex-col py-[35px] overflow-hidden"
   >
-    <div
-      class="relative flex w-full h-fit box-border justify-center items-center mt-[70px] shrink-0"
-    >
+    <div class="relative flex w-full h-fit box-border justify-center items-center mt-[70px] shrink-0">
       <div class="font-Sitka text-[36px] tracking-[0.11em] uppercase font-[400] text-[#fff]">
         Выберите столик для гостей
       </div>
       <div class="relative box-border flex items-center"></div>
     </div>
+
     <div class="flex relative w-full h-[100%] mt-[40px] box-border pl-[40px] overflow-auto">
       <div class="relative w-[60%] shrink-0 h-full flex flex-col mr-[20px]">
         <div class="relative flex w-full mb-[40px]">
@@ -25,9 +24,16 @@
           </div>
         </div>
         <div class="w-full flex flex-wrap overflow-auto">
-          <NumberCell :value="item.number" v-for="item in zal" :key="item.id" />
+          <number-cell
+            :key="item.id"
+            :value="item.number"
+            :id='item.id'
+            v-for="item in terrace"
+            @selected='onCellSelected'
+          />
         </div>
       </div>
+
       <div class="relative w-full h-full shrink-1 overflow-auto">
         <div class="relative flex w-full mb-[40px]">
           <span
@@ -40,10 +46,18 @@
           </div>
         </div>
         <div class="w-full flex flex-wrap h-full overflow-auto">
-          <NumberCell :value="item.number" v-for="item in terrace" :key="item.id" />
+          <number-cell
+            :key="item.id"
+            :value="item.number"
+            :id='item.id'
+            v-for="item in terrace"
+            @selected='onCellSelected'
+          />
         </div>
       </div>
     </div>
+
+
     <div class="w-full relative flex justify-between box-border px-[40px] mt-[20px] shrink-0 h-fit">
       <div class="flex flex-col w-[320px]">
         <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
@@ -72,22 +86,29 @@
 </template>
 
 <script setup>
-import { IconCross, IconBack, NumberCell } from '@/components'
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
-import { useRoute, useRouter } from 'vue-router'
 
-const router = useRouter()
+import { IconCross, IconBack, NumberCell } from '@/components'
 
+const router = useRouter();
 const toWaiter = () => {
   router.push('/waiter')
 }
 
-const zal = ref([])
-const terrace = ref([])
+const zones = ref([]);
+const zal = ref([]);
+const terrace = ref([]);
+
+const onCellSelected = ({ id }) => {
+  console.log(data);
+}
 
 onMounted(() => {
-  axios.get('https://api.simfero.cirus-it.com/tables').then((response) => {
+  axios.get('/tables').then((response) => {
+    zones.value = response.data;
+
     terrace.value = response.data[0].tables
     zal.value = response.data[1].tables
   })

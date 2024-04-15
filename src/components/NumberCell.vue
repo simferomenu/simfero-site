@@ -13,9 +13,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineEmits } from 'vue';
 
-defineProps({
+const props = defineProps({
   active: {
     type: Boolean
   },
@@ -24,13 +24,18 @@ defineProps({
   },
   value: {
     type: Number
+  },
+  id: {
+    type: String
   }
-})
+});
 
+const emit = defineEmits(['selected'])
 const cell = ref();
 
 const activateCell = () => {
-  cell.value.classList.toggle('active-cell')
+  cell.value.classList.toggle('active-cell');
+  emit('selected', { id: props.id });
 }
 </script>
 
