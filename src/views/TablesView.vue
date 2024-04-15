@@ -97,6 +97,7 @@ const onCellSelected = ({ id }) => {
 };
 
 const isSelected = ({ id }) => {
+  if (!selectedTables.value) return false;
   return Boolean(selectedTables.value.find((item) => item === id));
 }
 
