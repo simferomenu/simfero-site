@@ -1,12 +1,12 @@
 <template>
   <div
-    class="relative w-[312px] h-screen bg-darkBlue flex flex-col box-border py-[30px] px-[28px] shrink-0 border-r-gold border-solid border-r-[2px] default-transition"
+    class="relative w-[312px] h-screen bg-darkBlue flex flex-col box-border py-[30px] px-[28px] shrink-0 border-r-gold border-solid border-r-[2px] default-transition pointer-events-none"
   >
     <div class="relative w-full flex items-center h-[71px]">
       <img class="h-full w-auto" src="/icons/IconLogo.png" alt="" />
       <div class="relative flex flex-col ml-[15px]">
         <h1
-          class="font-Sitka font-normal text-[36px] leading-[96%] tracking-[0.09em] uppercase text-gold"
+          class="font-Sitka font-normal text-[36px] leading-[96%] tracking-[0.09em] uppercase text-gold pointer-events-auto"
           @click="toWaiterView"
         >
           SIMFERO
@@ -42,12 +42,14 @@
       </ul>
     </div>
     <div class="relative w-full flex flex-col mt-[150px] [&>*:not(:last-child)]:mb-[20px]">
-      <div class="relative flex items-center">
+      <div class="relative flex items-center !pointer-events-auto">
         <img class="w-[32px] h-[32px]" src="/icons/IconExclamation.svg" alt="" />
         <span class="menu-link ml-[15px]">Интерактивы</span>
       </div>
       <div class="relative flex items-center">
-        <span @click="toOrderView" class="pl-[32px] menu-link ml-[15px]">Мой заказ</span>
+        <span @click="toOrderView" class="pl-[32px] menu-link ml-[15px] !pointer-events-auto"
+          >Мой заказ</span
+        >
       </div>
     </div>
   </div>

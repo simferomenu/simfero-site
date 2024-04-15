@@ -2,7 +2,7 @@
   <IconCross @click="toWaiter" />
   <IconBack @click="toWaiter" />
   <div
-    class="relative w-screen h-screen box-border waiter-bg flex flex-col py-[35px] overflow-hidden"
+    class="relative w-screen h-screen box-border waiter-bg flex flex-col py-[35px] !overflow-hidden pointer-events-none"
   >
     <div
       class="relative flex w-full h-fit box-border justify-center items-center mt-[70px] shrink-0"
@@ -12,9 +12,12 @@
       </div>
       <div class="relative box-border flex items-center"></div>
     </div>
-    <div class="flex relative w-full h-[100%] mt-[40px] box-border pl-[40px] overflow-auto">
+    <div class="flex relative w-full h-[100%] mt-[40px] box-border pl-[40px] overflow-hidden">
       <div class="relative w-1/2 shrink-0 h-full flex flex-col mr-[20px]">
         <div class="relative flex w-full mb-[40px]">
+          <div class="absolute top-[20vh] left-1/2 translate-x-[-70%] w-[150px] h-[150px]">
+            <img src="/icons/loading.gif" alt="" />
+          </div>
           <span
             class="font-semibold text-[#fff] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit"
             >Основной зал</span
@@ -24,12 +27,15 @@
             <div class="h-[1px] w-full bg-[#fff]"></div>
           </div>
         </div>
-        <div class="w-full flex flex-wrap overflow-auto">
+        <div class="relative w-full flex flex-wrap overflow-auto !pointer-events-auto">
           <NumberCell :value="item.number" v-for="item in zal" :key="item.id" />
         </div>
       </div>
-      <div class="relative w-full h-full shrink-1 overflow-auto">
+      <div class="relative w-full h-full shrink-1">
         <div class="relative flex w-full mb-[40px]">
+          <div class="absolute top-[20vh] left-1/2 translate-x-[-70%] w-[150px] h-[150px]">
+            <img src="/icons/loading.gif" alt="" />
+          </div>
           <span
             class="font-semibold text-[#fff] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit"
             >Веранда</span
@@ -39,13 +45,13 @@
             <div class="h-[1px] w-full bg-[#fff]"></div>
           </div>
         </div>
-        <div class="w-full flex flex-wrap h-full overflow-auto">
+        <div class="relative w-full flex flex-wrap h-full overflow-auto !pointer-events-auto">
           <NumberCell :value="item.number" v-for="item in terrace" :key="item.id" />
         </div>
       </div>
     </div>
-    <div class="w-full relative flex justify-between box-border px-[40px] mt-[40px] shrink-0 h-fit">
-      <div class="flex flex-col w-[320px]">
+    <div class="w-full relative flex justify-end box-border px-[40px] mt-[40px] shrink-0 h-fit">
+      <!-- <div class="flex flex-col w-[320px]">
         <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
           >10 стол, основной зал</span
         >
@@ -57,12 +63,13 @@
             >Бронь стола на 11:00</span
           >
         </div>
-      </div>
+      </div> -->
       <div class="relative flex flex-col h-full w-[310px]">
-        <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
+        <span
+          class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold cursor-pointer"
           >Выбрать</span
         >
-        <div class="absolute bottom-0 right-[-285px] w-[600px] flex shrink-1 items-center">
+        <div class="absolute bottom-[-20px] right-[-285px] w-[600px] flex shrink-1 items-center">
           <img class="block h-[15px] w-auto" src="/icons/IconRhombusGold.svg" alt="" />
           <div class="h-[1px] w-full bg-gold"></div>
         </div>

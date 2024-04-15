@@ -1,16 +1,22 @@
 <template>
-  <div class="relative flex w-screen h-screen">
+  <div class="relative flex w-screen h-screen pointer-events-none">
     <SideMenu />
     <div
-      class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px]"
+      class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
     >
+      <!-- Спиннер при загрузке категорий -->
+      <div class="fixed top-[35vh] right-[30vw] w-[200px] h-[200px] z-[3]">
+        <img src="/icons/loadingBlack.gif" alt="" />
+      </div>
       <MenuSection v-for="item in categories" :name="item.name" :key="item.id">
         <MenuCard
           @click="toTuna"
           name="Тунец Мацухиса"
           :price="1200"
-          imgUrl="/images/ImageTuna.png"
+          imgUrl="/images/ImageBasicDish.png"
         />
+        <!-- Заполняющий div, блокирующий тапы -->
+        <div class="flex-1 mr-auto !pointer-events-none"></div>
       </MenuSection>
     </div>
   </div>
