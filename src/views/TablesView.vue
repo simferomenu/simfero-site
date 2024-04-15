@@ -12,12 +12,14 @@
     </div>
 
     <div class="flex relative w-full h-[100%] mt-[40px] box-border pl-[40px] overflow-auto">
-      <div class="relative w-[60%] shrink-0 h-full flex flex-col mr-[20px]">
+      <div
+        class="relative w-1/2 shrink-0 h-full flex flex-col mr-[20px]"
+        v-for='zone in zones'
+      >
         <div class="relative flex w-full mb-[40px]">
-          <span
-            class="font-semibold text-[#fff] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit"
-            >Основной зал</span
-          >
+          <span class="font-semibold text-[#fff] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit">
+            {{ zone.name }}
+          </span>
           <div class="relative w-full flex shrink-1 items-center">
             <img class="block h-[15px] w-auto" src="/icons/IconRhombusWhite.svg" alt="" />
             <div class="h-[1px] w-full bg-[#fff]"></div>
@@ -28,29 +30,7 @@
             :key="item.id"
             :value="item.number"
             :id='item.id'
-            v-for="item in terrace"
-            @selected='onCellSelected'
-          />
-        </div>
-      </div>
-
-      <div class="relative w-full h-full shrink-1 overflow-auto">
-        <div class="relative flex w-full mb-[40px]">
-          <span
-            class="font-semibold text-[#fff] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit"
-            >Веранда</span
-          >
-          <div class="relative w-full flex shrink-1 items-center">
-            <img class="block h-[15px] w-auto" src="/icons/IconRhombusWhite.svg" alt="" />
-            <div class="h-[1px] w-full bg-[#fff]"></div>
-          </div>
-        </div>
-        <div class="w-full flex flex-wrap h-full overflow-auto">
-          <number-cell
-            :key="item.id"
-            :value="item.number"
-            :id='item.id'
-            v-for="item in terrace"
+            v-for="item in zone.tables"
             @selected='onCellSelected'
           />
         </div>
@@ -58,19 +38,19 @@
     </div>
 
 
-    <div class="w-full relative flex justify-between box-border px-[40px] mt-[20px] shrink-0 h-fit">
+    <div class="w-full relative flex justify-between box-border px-[40px] mt-[40px] shrink-0 h-fit">
       <div class="flex flex-col w-[320px]">
-        <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
-          >10 стол, основной зал</span
-        >
-        <div class="flex justify-between items-center mt-[12px]">
-          <span class="font-Segoe font-[350] text-[14px] tracking-[0.05em] text-[#fff]"
-            >3000 рублей депозит</span
-          >
-          <span class="font-Segoe font-[350] text-[14px] tracking-[0.05em] text-[#fff]"
-            >Бронь стола на 11:00</span
-          >
-        </div>
+<!--        <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"-->
+<!--          >10 стол, основной зал</span-->
+<!--        >-->
+<!--        <div class="flex justify-between items-center mt-[12px]">-->
+<!--          <span class="font-Segoe font-[350] text-[14px] tracking-[0.05em] text-[#fff]"-->
+<!--            >3000 рублей депозит</span-->
+<!--          >-->
+<!--          <span class="font-Segoe font-[350] text-[14px] tracking-[0.05em] text-[#fff]"-->
+<!--            >Бронь стола на 11:00</span-->
+<!--          >-->
+<!--        </div>-->
       </div>
       <div class="relative flex flex-col h-full w-[310px]">
         <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
@@ -102,7 +82,7 @@ const zal = ref([]);
 const terrace = ref([]);
 
 const onCellSelected = ({ id }) => {
-  console.log(data);
+  console.log(id);
 }
 
 onMounted(() => {
