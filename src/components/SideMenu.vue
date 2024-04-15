@@ -11,15 +11,26 @@
         >
           SIMFERO
         </h1>
-        <span class="font-Sitka font-normal text-[11px] text-gold tracking-[0.07em]"
-          >панорамный ресторан</span
-        >
+        <span class="font-Sitka font-normal text-[11px] text-gold tracking-[0.07em]">панорамный ресторан</span>
       </div>
     </div>
     <div class="relative w-full flex flex-col mt-[90px]">
       <ul class="[&>*:not(:last-child)]:mb-[20px]">
-        <li v-for="item in categories">
-          <a @click="toMainView" class="menu-link active">{{ item.name }}</a>
+        <li
+          v-for="item in categories"
+          :key='item.name'
+        >
+          <a
+            :class="[
+              'menu-link',
+              {
+                active: item.id === activeItem.id
+              }
+            ]"
+            @click="onCategorySelect(item)"
+          >
+            {{ item.name }}
+          </a>
         </li>
       </ul>
     </div>
@@ -38,15 +49,26 @@
 <style scoped></style>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, watch, defineEmits } from 'vue';
+import { useRouter } from 'vue-router';
 
-const isHolding = ref(false)
+const props = defineProps({
+  categories: {
+    type: Array,
+  }
+});
 
-const router = useRouter()
+const emit = defineEmits(['select']);
+const router = useRouter();
+const activeItem = ref([]);
 
-const toMainView = () => {
-  router.push('/')
+watch(props, (data) => {
+  activeItem.value = data.categories[0];
+});
+
+const onCategorySelect = (item) => {
+  activeItem.value = item;
+  emit('select', { item });
 }
 const toOrderView = () => {
   router.push('/order')
@@ -55,10 +77,4 @@ const toOrderView = () => {
 const toWaiterView = () => {
   router.push('/waiter')
 }
-
-defineProps({
-  categories: {
-    type: Object,
-  }
-})
 </script>
