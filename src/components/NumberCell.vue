@@ -27,7 +27,7 @@ const props = defineProps({
   },
   id: {
     type: String
-  }
+  },
 });
 
 const emit = defineEmits(['selected'])

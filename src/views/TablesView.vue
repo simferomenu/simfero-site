@@ -29,7 +29,7 @@
           <number-cell
             :key="item.id"
             :value="item.number"
-            :id='item.id'
+            :id="item.id"
             v-for="item in zone.tables"
             @selected='onCellSelected'
           />
@@ -69,7 +69,6 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-
 import { IconCross, IconBack, NumberCell } from '@/components'
 
 const router = useRouter();
@@ -77,21 +76,25 @@ const toWaiter = () => {
   router.push('/waiter')
 }
 
+let selectedTables = [];
 const zones = ref([]);
-const zal = ref([]);
-const terrace = ref([]);
 
 const onCellSelected = ({ id }) => {
-  console.log(id);
-}
+  const isExist = selectedTables.find((item) => item === id);
+
+  if (!isExist) {
+    selectedTables.push(id);
+  } else {
+    selectedTables = selectedTables.filter((item) => item != id);
+  }
+
+  window.localStorage.setItem('selectedTables', JSON.stringify(selectedTables));
+};
 
 onMounted(() => {
   axios.get('/tables').then((response) => {
     zones.value = response.data;
-
-    terrace.value = response.data[0].tables
-    zal.value = response.data[1].tables
-  })
+  });
 })
 </script>
 
