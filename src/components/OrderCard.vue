@@ -1,5 +1,7 @@
 <template>
-  <div class="relative flex flex-col items-center w-[216px] mr-[20px] mb-[20px]">
+  <div
+    class="relative flex flex-col items-center w-[216px] mr-[20px] mb-[20px] !pointer-events-auto"
+  >
     <div class="relative h-[177px] w-full mb-[27px]">
       <div class="absolute w-full h-full flex justify-center items-center">
         <img class="h-full w-auto" src="/images/ImageTuna.png" alt="" />

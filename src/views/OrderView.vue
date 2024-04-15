@@ -2,14 +2,14 @@
   <IconCross @click="toMain" />
   <IconBack @click="toMain" />
   <div
-    class="relative w-screen min-h-screen box-border bg-darkBlue order-bg flex flex-col pt-[35px] overflow-hidden"
+    class="relative w-screen min-h-screen box-border bg-darkBlue order-bg flex flex-col pt-[35px] overflow-hidden pointer-events-none"
   >
     <div
       class="font-Sitka w-full flex justify-center items-center text-[36px] font-base leading-[186%] tracking-[0.11em] uppercase text-[#fff] mb-[25px]"
     >
       Мой заказ
     </div>
-    <div class="w-full flex flex-wrap box-border px-[80px] flex-1">
+    <div class="w-full flex flex-wrap box-border px-[80px] flex-1 !pointer-events-auto">
       <OrderCard name="Обожженая говядина с соусом Якинику" :price="1200" />
       <OrderCard name="Обожженая говядина с соусом Якинику" :price="1200" />
       <OrderCard name="Обожженая говядина с соусом Якинику" :price="1200" />
@@ -25,7 +25,7 @@
           >{{ totalPrice }} Руб.</span
         >
       </div>
-      <div class="flex flex-col h-full">
+      <div class="flex flex-col h-full !pointer-events-auto">
         <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
           >Пригласить официанта</span
         >

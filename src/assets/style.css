@@ -1,5 +1,9 @@
+body {
+  touch-action: manipulation;
+}
+
 .menu-link {
-  @apply relative font-Sitka font-normal text-[#fff] text-[18px] leading-[162%] tracking-[0.15em] uppercase;
+  @apply relative font-Sitka font-normal text-[#fff] text-[18px] leading-[162%] tracking-[0.15em] uppercase default-transition !pointer-events-auto;
 }
 
 .menu-link::before {
@@ -14,6 +18,12 @@
   transform: translateX(-50%);
   opacity: 0;
   transition: all 0.3s ease;
+}
+
+.filling-div {
+  flex-grow: 1;
+  margin-right: auto;
+  pointer-events: none !important;
 }
 
 .simple-text {

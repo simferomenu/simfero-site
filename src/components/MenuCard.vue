@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative flex flex-col h-[340px] w-[214px] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px]"
+    class="relative flex flex-col h-[340px] w-[214px] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto"
   >
     <div class="relative h-1/2 w-full shrink-0">
       <div class="absolute w-full h-auto top-[-15%] left-[-15%]">
