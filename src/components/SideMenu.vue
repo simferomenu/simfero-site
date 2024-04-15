@@ -24,10 +24,10 @@
       </ul>
     </div>
     <div class="relative w-full flex flex-col mt-[150px] [&>*:not(:last-child)]:mb-[20px]">
-      <div class="relative flex items-center !pointer-events-auto">
+      <!-- <div class="relative flex items-center !pointer-events-auto">
         <img class="w-[32px] h-[32px]" src="/icons/IconExclamation.svg" alt="" />
         <span class="menu-link ml-[15px]">Интерактивы</span>
-      </div>
+      </div> -->
       <div class="relative flex items-center">
         <span @click="toOrderView" class="pl-[32px] menu-link ml-[15px] !pointer-events-auto"
           >Мой заказ</span
@@ -60,7 +60,7 @@ const toWaiterView = () => {
 
 defineProps({
   categories: {
-    type: Object,
+    type: Object
   }
 })
 </script>
