@@ -55,9 +55,12 @@
 <!--        </div>-->
       </div>
       <div class="relative flex flex-col h-full w-[310px]">
-        <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
-          >Выбрать</span
+        <span
+          class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
+          @click="onTablesSelected"
         >
+          Выбрать
+        </span>
         <div class="absolute bottom-0 right-[-285px] w-[600px] flex shrink-1 items-center">
           <img class="block h-[15px] w-auto" src="/icons/IconRhombusGold.svg" alt="" />
           <div class="h-[1px] w-full bg-gold"></div>
@@ -95,6 +98,10 @@ const onCellSelected = ({ id }) => {
 
 const isSelected = ({ id }) => {
   return Boolean(selectedTables.value.find((item) => item === id));
+}
+
+const onTablesSelected = () => {
+  router.push('/');
 }
 
 onMounted(() => {
