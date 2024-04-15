@@ -77,6 +77,7 @@ const toOrderView = () => {
 }
 
 const toWaiterView = () => {
+  window.localStorage.removeItem('selectedTables');
   router.push('/waiter')
 }
 </script>
