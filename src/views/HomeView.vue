@@ -4,6 +4,10 @@
     <div
       class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
     >
+      <div v-if="isLoading" class="fixed top-[35vh] w-[200px] h-[200px] z-[3] pointer-events-none loader">
+        <img src="/icons/loadingBlack.gif" alt="" />
+      </div>
+
       <div v-if="selectedCategory">
         <MenuSection
           v-for="item in productsList"
@@ -21,16 +25,16 @@
           <!-- Заполняющий div, блокирующий тапы -->
           <div class="flex-1 mr-auto !pointer-events-none"></div>
         </MenuSection>
-
-<!--        <div class="fixed top-[35vh] right-[30vw] w-[200px] h-[200px] z-[3] pointer-events-none">-->
-<!--          <img src="/icons/loadingBlack.gif" alt="" />-->
-<!--        </div>-->
       </div>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+  .loader {
+    right: calc(50vw - 200px);
+  }
+</style>
 
 <script setup>
 import axios from 'axios'
@@ -45,6 +49,7 @@ const menu = ref([]);
 const categories = ref([]);
 const selectedCategory = ref(null);
 const productsList = ref([]);
+const isLoading = ref(false);
 
 const onCategorySelect = ({ item }) => {
   selectedCategory.value = item
@@ -73,11 +78,13 @@ const toTuna = () => {
 }
 
 onMounted(async () => {
-  const storageMenu = window.localStorage.getItem('menu')
-  menuData.value = storageMenu ? JSON.parse(storageMenu) : null
+  const storageMenu = window.localStorage.getItem('menu');
+  menuData.value = storageMenu ? JSON.parse(storageMenu) : null;
 
   if (!menuData.value) {
-    menuData.value = (await axios.get('/menu')).data
+    isLoading.value = true;
+    menuData.value = (await axios.get('/menu')).data;
+    isLoading.value = false;
   }
 
   const productCategories = menuData.value.productCategories
