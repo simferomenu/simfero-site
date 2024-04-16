@@ -1,0 +1,42 @@
+.animated-up {
+  animation: fadeAnimationUp 1s ease forwards;
+}
+
+.animated-down {
+  animation: fadeAnimationDown 1s ease forwards;
+}
+
+.animated {
+  animation: fadeAnimation 1s ease forwards;
+}
+
+@keyframes fadeAnimationUp {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeAnimationDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

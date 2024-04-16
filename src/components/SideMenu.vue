@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative w-[312px] h-screen bg-darkBlue flex flex-col box-border py-[30px] px-[28px] shrink-0 border-r-gold border-solid border-r-[2px] default-transition pointer-events-none"
+    class="relative w-[312px] !h-screen bg-darkBlue flex flex-col box-border py-[30px] px-[28px] shrink-0 border-r-gold border-solid border-r-[2px] default-transition pointer-events-none overflow-hidden"
   >
     <div class="relative w-full flex items-center h-[71px]">
       <img class="h-full w-auto" src="/icons/IconLogo.png" alt="" />
@@ -16,7 +16,9 @@
         >
       </div>
     </div>
-    <div class="relative w-full flex flex-col mt-[90px]">
+    <div
+      class="relative w-full flex-1 h-full flex flex-col mt-[90px] !overflow-auto pointer-events-auto"
+    >
       <ul class="[&>*:not(:last-child)]:mb-[20px]">
         <li v-for="item in categories" :key="item.name">
           <a
@@ -31,17 +33,25 @@
             {{ item.name }}
           </a>
         </li>
+        <li class="menu-link">fdfafdadf</li>
+        <li class="menu-link">fdfafdadf</li>
+        <li class="menu-link">fdfafdadf</li>
+        <li class="menu-link">fdfafdadf</li>
+        <li class="menu-link">fdfafdadf</li>
+        <li class="menu-link">fdfafdadf</li>
+        <li class="menu-link">fdfafdadf</li>
+        <li class="menu-link">fdfafdadf</li>
+        <li class="menu-link">fdfafdadf</li>
+        <li class="menu-link">fdfafdadf</li>
       </ul>
     </div>
-    <div class="relative w-full flex flex-col mt-[150px] [&>*:not(:last-child)]:mb-[20px]">
+    <div class="relative w-full flex flex-col mb-[50px] mt-[50px] [&>*:not(:last-child)]:mb-[20px]">
       <!-- <div class="relative flex items-center !pointer-events-auto">
         <img class="w-[32px] h-[32px]" src="/icons/IconExclamation.svg" alt="" />
         <span class="menu-link ml-[15px]">Интерактивы</span>
       </div> -->
       <div class="relative flex items-center">
-        <span @click="toOrderView" class="pl-[32px] menu-link ml-[15px] !pointer-events-auto"
-          >Мой заказ</span
-        >
+        <span @click="toOrderView" class="menu-link !pointer-events-auto">Мой заказ</span>
       </div>
     </div>
   </div>

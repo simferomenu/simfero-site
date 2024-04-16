@@ -1,11 +1,11 @@
 <template>
   <div class="relative flex w-screen h-screen pointer-events-none">
-    <SideMenu :categories="categories" @select="onCategorySelect"/>
+    <SideMenu :categories="categories" @select="onCategorySelect" />
     <div
       class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
     >
       <!-- Спиннер при загрузке категорий -->
-      <div class="fixed top-[35vh] right-[30vw] w-[200px] h-[200px] z-[3]">
+      <div class="fixed top-[35vh] right-[30vw] w-[200px] h-[200px] z-[3] pointer-events-none">
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
       <MenuSection v-for="item in categories" :name="item.name" :key="item.id">
@@ -41,22 +41,22 @@ const toTuna = () => {
 // const visibleEl = ref(null)
 // const { x, y, top, right, bottom, left, width, height } = useElementBounding(visibleEl)
 
-const menuData = ref(null);
-const menu = ref([]);
-const categories = ref([]);
-const selectedCategory = ref(null);
-const products = ref([]);
+const menuData = ref(null)
+const menu = ref([])
+const categories = ref([])
+const selectedCategory = ref(null)
+const products = ref([])
 
 const onCategorySelect = ({ item }) => {
-  selectedCategory.value = item;
+  selectedCategory.value = item
 
   menuData.value.products.forEach((el) => {
     if (el.productCategoryId == item.id) {
-      console.log(el);
+      console.log(el)
     }
   })
   console.log(item, menuData.value)
-};
+}
 
 onMounted(async () => {
   const storageMenu = window.localStorage.getItem('menu')
@@ -66,20 +66,19 @@ onMounted(async () => {
     menuData.value = (await axios.get('/menu')).data
   }
 
-  const productCategories = menuData.value.productCategories;
-  categories.value = productCategories.filter(({isDeleted}) => !isDeleted);
+  const productCategories = menuData.value.productCategories
+  categories.value = productCategories.filter(({ isDeleted }) => !isDeleted)
 
   menuData.value.products.forEach((p) => {
-    const group = menuData.value.groups.find((group) => group.id === p.groupId);
-    const parentGroup = menuData.value.groups.find((group) => group.id === p.parentGroup);
+    const group = menuData.value.groups.find((group) => group.id === p.groupId)
+    const parentGroup = menuData.value.groups.find((group) => group.id === p.parentGroup)
 
     if (group) {
       // console.log(p.name, '---',group.name, '-----', parentGroup.name);
     } else {
-      console.log(p.name, '-----', parentGroup);
+      console.log(p.name, '-----', parentGroup)
     }
-  });
-
+  })
 
   // console.log(groups)
   // const groupsIdArr = groups.map((obj) => obj.id)
