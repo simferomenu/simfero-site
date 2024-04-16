@@ -1,23 +1,32 @@
 <template>
   <div class="relative flex w-screen h-screen pointer-events-none">
-    <SideMenu :categories="categories" @select="onCategorySelect"/>
+    <SideMenu :categories="menu" @select="onCategorySelect"/>
     <div
       class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
     >
       <!-- Спиннер при загрузке категорий -->
-      <div class="fixed top-[35vh] right-[30vw] w-[200px] h-[200px] z-[3]">
-        <img src="/icons/loadingBlack.gif" alt="" />
+<!--      <div class="fixed top-[35vh] right-[30vw] w-[200px] h-[200px] z-[3]">-->
+<!--        <img src="/icons/loadingBlack.gif" alt="" />-->
+<!--      </div>-->
+
+      <div v-if="selectedCategory">
+        <MenuSection
+          v-for="item in productsList"
+          :name="item.name"
+          :key="item.name"
+        >
+          <MenuCard
+            v-for="product in item.products"
+            :key="product.id"
+            :name="product.name"
+            :price="product.sizePrices[0].price.currentPrice"
+            :imgUrl="product.imageLinks[0] || '/images/ImageBasicDish.png'"
+            @click="toTuna"
+          />
+          <!-- Заполняющий div, блокирующий тапы -->
+          <div class="flex-1 mr-auto !pointer-events-none"></div>
+        </MenuSection>
       </div>
-      <MenuSection v-for="item in categories" :name="item.name" :key="item.id">
-        <MenuCard
-          @click="toTuna"
-          name="Тунец Мацухиса"
-          :price="1200"
-          imgUrl="/images/ImageBasicDish.png"
-        />
-        <!-- Заполняющий div, блокирующий тапы -->
-        <div class="flex-1 mr-auto !pointer-events-none"></div>
-      </MenuSection>
     </div>
   </div>
 </template>
@@ -29,34 +38,41 @@ import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { SideMenu, MenuSection, WaiterMenu, MenuCard } from '@/components'
-import { useElementBounding } from '@vueuse/core'
+import { SideMenu, MenuSection, MenuCard } from '@/components'
 
-const router = useRouter()
-
-const toTuna = () => {
-  router.push('dish/tuna')
-}
-
-// const visibleEl = ref(null)
-// const { x, y, top, right, bottom, left, width, height } = useElementBounding(visibleEl)
-
+const router = useRouter();
 const menuData = ref(null);
 const menu = ref([]);
 const categories = ref([]);
 const selectedCategory = ref(null);
-const products = ref([]);
+const productsList = ref([]);
 
 const onCategorySelect = ({ item }) => {
   selectedCategory.value = item;
 
-  menuData.value.products.forEach((el) => {
-    if (el.productCategoryId == item.id) {
-      console.log(el);
+  productsList.value = [];
+
+  selectedCategory.value.products.forEach((p) => {
+    if (p.sizePrices[0].price.currentPrice > 0) {
+      p.chain.forEach((category) => {
+        const categoryExisted = productsList.value.find(({ name }) => name === category);
+
+        if (!categoryExisted) {
+          productsList.value.push({
+            name: category,
+            products: [p],
+          });
+        } else {
+          categoryExisted.products.push(p)
+        }
+      })
     }
-  })
-  console.log(item, menuData.value)
+  });
 };
+
+const toTuna = () => {
+  router.push('dish/tuna')
+}
 
 onMounted(async () => {
   const storageMenu = window.localStorage.getItem('menu')
@@ -70,46 +86,75 @@ onMounted(async () => {
   categories.value = productCategories.filter(({isDeleted}) => !isDeleted);
 
   menuData.value.products.forEach((p) => {
-    const group = menuData.value.groups.find((group) => group.id === p.groupId);
     const parentGroup = menuData.value.groups.find((group) => group.id === p.parentGroup);
 
-    if (group) {
-      // console.log(p.name, '---',group.name, '-----', parentGroup.name);
-    } else {
-      console.log(p.name, '-----', parentGroup);
+    if (parentGroup) {
+      const searchedGroup = menu.value.find((g) => g.id === p.parentGroup);
+      const isGroupExist = Boolean(searchedGroup);
+
+      if (!isGroupExist) {
+        menu.value.push({
+          ...parentGroup,
+          products: [p],
+        });
+      } else {
+        searchedGroup.products.push(p);
+      }
     }
   });
 
 
-  // console.log(groups)
-  // const groupsIdArr = groups.map((obj) => obj.id)
-  // const products = menu.value.products
-  // console.log(products)
-  // const productsIdArr = products.map((obj) => obj.id)
-  //
-  // products.forEach((product) => {
-  //   const groupId = product.parentGroup
-  //   // console.log(groupId)
-  //   const group = groups.find(({ id }) => {
-  //     // console.log(id, groupId, id === groupId)
-  //     return id === groupId
-  //   })
-  //   console.log(group)
-  //   const existingItem = menu.find(({ id }) => id === group.id)
-  //
-  //   if (!existingItem) {
-  //     menu.push({
-  //       id: group.id,
-  //       name: group.name,
-  //       products: [product]
-  //     })
-  //   } else {
-  //     existingItem.products.push(product)
-  //   }
-  // })
+  let filteredGroups = menuData.value.groups
+    .filter((p) => !p.isDeleted)
+    // .filter((p) => !p.isIncludedInMenu);
 
-  // const stringifiedMenu = JSON.stringify(menu)
+  menuData.value.products = menuData.value.products
+    .filter((p) => !p.isDeleted)
+    .filter((p) => p.type === 'Dish')
 
-  // localStorage.setItem('menu', stringifiedMenu)
+  let currentProductIndex = 0;
+  let currentParentGroup = null;
+  let groupsList = [];
+  const menuGroups = [];
+
+  while (true) {
+    if (currentProductIndex >= menuData.value.products.length) break;
+
+    const product = menuData.value.products[currentProductIndex];
+
+    if (!currentParentGroup) {
+      currentParentGroup = filteredGroups.find((group) => group.id === product.parentGroup);
+
+      if (!currentParentGroup) {
+        ++currentProductIndex;
+        console.log('Продукт: ', product.name);
+      } else {
+        groupsList.push(currentParentGroup.name);
+      }
+    }
+    else if (currentParentGroup.parentGroup) {
+      currentParentGroup = filteredGroups.find((group) => group.id === currentParentGroup.parentGroup);
+      groupsList.push(currentParentGroup.name);
+    }
+    else {
+      const groupExisted = menuGroups.find((g) => g.id === currentParentGroup.id);
+      if (!groupExisted) {
+        menuGroups.push({
+          ...currentParentGroup,
+          products: [{ ...product, chain: [...groupsList.reverse()] }]
+        })
+      } else {
+        groupExisted.products.push({ ...product, chain: [...groupsList.reverse()] })
+      }
+
+      groupsList = [];
+      ++currentProductIndex;
+      currentParentGroup = null;
+    }
+  }
+
+  menu.value = menuGroups;
+
+  onCategorySelect({ item: menu.value[0] });
 })
 </script>
