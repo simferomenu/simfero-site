@@ -3,7 +3,7 @@
     class="fixed box-border py-[110px] w-screen h-screen flex flex-col items-center justify-center z-[5] waiter-bg"
   >
     <IconCross @click="toMain" />
-    <div class="relative w-fit flex items-center h-[93px] shrink-0 mb-[45px]">
+    <div class="relative w-fit flex items-center h-[93px] shrink-0 mb-[45px] animated-down">
       <img class="h-full w-auto" src="/icons/IconLogo.png" alt="" />
       <div class="relative flex flex-col ml-[15px]">
         <h1
@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="relative flex items-center shrink h-full">
-      <div class="flex flex-col items-center justify-center h-full" @click="toTables">
+      <div class="flex flex-col items-center justify-center h-full animated-up" @click="toTables">
         <div class="h-[250px] w-[250px] mb-[70px]">
           <img class="w-full h-full" src="/icons/IconKnifeFork.svg" alt="" />
         </div>

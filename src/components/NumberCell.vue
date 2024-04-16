@@ -2,7 +2,7 @@
   <div
     ref="cell"
     :class="[
-      'w-[100px] h-[44px] flex justify-center items-center font-bold text-[16px] tracking-[0.17em] uppercase text-center text-[#fff] mr-[20px] mb-[30px]',
+      'w-[100px] h-[44px] flex justify-center items-center font-bold text-[16px] tracking-[0.17em] uppercase text-center text-[#fff] mr-[20px] mb-[30px] default-transition',
       {
         'opacity-50': disabled,
         'border-solid border-b-[1px] border-b-[#fff]': !disabled,

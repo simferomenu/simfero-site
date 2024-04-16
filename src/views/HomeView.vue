@@ -4,11 +4,6 @@
     <div
       class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
     >
-      <!-- Спиннер при загрузке категорий -->
-<!--      <div class="fixed top-[35vh] right-[30vw] w-[200px] h-[200px] z-[3]">-->
-<!--        <img src="/icons/loadingBlack.gif" alt="" />-->
-<!--      </div>-->
-
       <div v-if="selectedCategory">
         <MenuSection
           v-for="item in productsList"
@@ -26,6 +21,10 @@
           <!-- Заполняющий div, блокирующий тапы -->
           <div class="flex-1 mr-auto !pointer-events-none"></div>
         </MenuSection>
+
+<!--        <div class="fixed top-[35vh] right-[30vw] w-[200px] h-[200px] z-[3] pointer-events-none">-->
+<!--          <img src="/icons/loadingBlack.gif" alt="" />-->
+<!--        </div>-->
       </div>
     </div>
   </div>
@@ -48,8 +47,7 @@ const selectedCategory = ref(null);
 const productsList = ref([]);
 
 const onCategorySelect = ({ item }) => {
-  selectedCategory.value = item;
-
+  selectedCategory.value = item
   productsList.value = [];
 
   selectedCategory.value.products.forEach((p) => {
@@ -82,8 +80,8 @@ onMounted(async () => {
     menuData.value = (await axios.get('/menu')).data
   }
 
-  const productCategories = menuData.value.productCategories;
-  categories.value = productCategories.filter(({isDeleted}) => !isDeleted);
+  const productCategories = menuData.value.productCategories
+  categories.value = productCategories.filter(({ isDeleted }) => !isDeleted)
 
   menuData.value.products.forEach((p) => {
     const parentGroup = menuData.value.groups.find((group) => group.id === p.parentGroup);
@@ -101,8 +99,7 @@ onMounted(async () => {
         searchedGroup.products.push(p);
       }
     }
-  });
-
+  })
 
   let filteredGroups = menuData.value.groups
     .filter((p) => !p.isDeleted)
