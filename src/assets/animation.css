@@ -6,14 +6,18 @@
   animation: fadeAnimationDown 1s ease forwards;
 }
 
+.animated-right {
+  animation: fadeAnimationRight 1s ease forwards;
+}
+
 .animated {
-  animation: fadeAnimation 1s ease forwards;
+  animation: fadeAnimation 2s ease forwards;
 }
 
 @keyframes fadeAnimationUp {
   0% {
     opacity: 0;
-    transform: translateY(50px);
+    transform: translateY(100px);
   }
   100% {
     opacity: 1;
@@ -24,7 +28,18 @@
 @keyframes fadeAnimationDown {
   0% {
     opacity: 0;
-    transform: translateY(-50px);
+    transform: translateY(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeAnimationRight {
+  0% {
+    opacity: 0;
+    transform: translateX(-350px);
   }
   100% {
     opacity: 1;

@@ -12,8 +12,8 @@ import { computed } from 'vue'
 
 const checkColor = computed(() => {
   return props.isBlack
-    ? 'absolute bg-[#000] w-[71px] h-[45px] bottom-[20px] right-[-7%] flex justify-center items-center rounded-tl-[33px] rounded-tr-[33px] rounded-br-[33px]'
-    : 'absolute bg-[#D2AF96] w-[71px] h-[45px] bottom-[20px] right-[-7%] flex justify-center items-center rounded-tl-[33px] rounded-tr-[33px] rounded-br-[33px]'
+    ? 'absolute bg-[#000] w-[91px] h-[45px] bottom-0 right-[-10px] flex justify-center items-center rounded-tl-[33px] rounded-tr-[33px] rounded-br-[33px]'
+    : 'absolute bg-[#D2AF96] w-[91px] h-[45px] bottom-0 right-[-10px] flex justify-center items-center rounded-tl-[33px] rounded-tr-[33px] rounded-br-[33px]'
 })
 const props = defineProps({
   isBlack: {
