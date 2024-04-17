@@ -36,42 +36,43 @@
         <AddButton class="mt-[30px] self-end !pointer-events-auto" />
       </div>
     </div>
-    <div class="relative flex flex-col shrink-0 !pointer-events-auto">
-      <div class="relative flex justify-between w-full items-center px-[40px] mb-[20px]">
-        <span
-          class="font-Segoe block text-[#fff] font-semibold text-[18px] leading-[221%] tracking-[0.15em] uppercase"
-          >С этой позицией берут</span
-        >
-        <div class="flex items-center">
-          <div class="dish-scrollbar"></div>
-          <div class="dish-button-prev ml-[30px]"></div>
-          <div class="dish-button-next rotate-180 ml-[30px]"></div>
-        </div>
-      </div>
-      <div class="relative h-[158px] w-full">
-        <swiper
-          class="w-full h-full px-[40px]"
-          :slidesPerView="'auto'"
-          :spaceBetween="40"
-          :navigation="navigation"
-          :allowTouchMove="true"
-          :scrollbar="scrollbar"
-        >
-          <swiper-slide class="h-fit w-fit">
-            <MenuSmallCard name="Тунец Мацухиса" />
-          </swiper-slide>
-          <swiper-slide class="h-fit w-fit">
-            <MenuSmallCard name="Тунец Мацухиса" />
-          </swiper-slide>
-          <swiper-slide class="h-fit w-fit">
-            <MenuSmallCard name="Тунец Мацухиса" />
-          </swiper-slide>
-          <swiper-slide class="h-fit w-fit">
-            <MenuSmallCard name="Тунец Мацухиса" />
-          </swiper-slide>
-        </swiper>
-      </div>
-    </div>
+
+<!--    <div class="relative flex flex-col shrink-0 !pointer-events-auto">-->
+<!--      <div class="relative flex justify-between w-full items-center px-[40px] mb-[20px]">-->
+<!--        <span-->
+<!--          class="font-Segoe block text-[#fff] font-semibold text-[18px] leading-[221%] tracking-[0.15em] uppercase"-->
+<!--          >С этой позицией берут</span-->
+<!--        >-->
+<!--        <div class="flex items-center">-->
+<!--          <div class="dish-scrollbar"></div>-->
+<!--          <div class="dish-button-prev ml-[30px]"></div>-->
+<!--          <div class="dish-button-next rotate-180 ml-[30px]"></div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="relative h-[158px] w-full">-->
+<!--        <swiper-->
+<!--          class="w-full h-full px-[40px]"-->
+<!--          :slidesPerView="'auto'"-->
+<!--          :spaceBetween="40"-->
+<!--          :navigation="navigation"-->
+<!--          :allowTouchMove="true"-->
+<!--          :scrollbar="scrollbar"-->
+<!--        >-->
+<!--          <swiper-slide class="h-fit w-fit">-->
+<!--            <MenuSmallCard name="Тунец Мацухиса" />-->
+<!--          </swiper-slide>-->
+<!--          <swiper-slide class="h-fit w-fit">-->
+<!--            <MenuSmallCard name="Тунец Мацухиса" />-->
+<!--          </swiper-slide>-->
+<!--          <swiper-slide class="h-fit w-fit">-->
+<!--            <MenuSmallCard name="Тунец Мацухиса" />-->
+<!--          </swiper-slide>-->
+<!--          <swiper-slide class="h-fit w-fit">-->
+<!--            <MenuSmallCard name="Тунец Мацухиса" />-->
+<!--          </swiper-slide>-->
+<!--        </swiper>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 
