@@ -1,9 +1,17 @@
 <template>
   <div class="relative flex w-screen h-screen pointer-events-none">
-    <DishScreen v-show="isDishVisible" @closeDish="toggleDish" class="default-transition" />
+    <DishScreen
+      :class="
+        !isDishVisible
+          ? 'default-transition hidden-screen animated-out'
+          : 'default-transition visible-screen animated'
+      "
+      @closeDish="isDishVisible = false"
+    />
     <SideMenu :categories="menu" @select="onCategorySelect" />
     <div
       class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
+      ref="scrollBody"
     >
       <div
         v-if="isLoading"
@@ -12,7 +20,7 @@
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
 
-      <div id="menu-body" v-if="selectedCategory">
+      <div ref="scrollElement" v-if="selectedCategory">
         <MenuSection v-for="item in productsList" :name="item.name" :key="item.name">
           <MenuCard
             class="animated-up"
@@ -52,6 +60,9 @@ const selectedCategory = ref(null)
 const productsList = ref([])
 const isLoading = ref(false)
 
+const scrollElement = ref(null)
+const scrollBody = ref(null)
+
 const onCategorySelect = ({ item }) => {
   selectedCategory.value = item
   productsList.value = []
@@ -73,18 +84,14 @@ const onCategorySelect = ({ item }) => {
     }
   })
 
-  let element = ref(document.getElementById('menu-body'))
-  element.value.scrollIntoView()
+  scrollElement.value.scrollIntoView()
+  scrollBody.value.scrollBy(0, -40)
 }
 
 const isDishVisible = ref(false)
 
 const toggleDish = () => {
   isDishVisible.value = !isDishVisible.value
-}
-
-const toTuna = () => {
-  router.push('dish/tuna')
 }
 
 onMounted(async () => {

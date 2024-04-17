@@ -149,6 +149,11 @@ body {
 }
 
 .hidden-screen {
-  pointer-events: none;
-  visibility: hidden;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+.visible-screen {
+  pointer-events: all;
+  visibility: visible;
 }

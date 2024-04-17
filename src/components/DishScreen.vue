@@ -1,8 +1,8 @@
 <template>
   <div
-    class="fixed top-0 left-0 flex flex-col justify-between w-screen h-screen dish-bg box-border py-[40px] overflow-hidden pointer-events-none z-[3]"
+    class="fixed top-0 left-0 flex flex-col justify-between w-screen h-screen dish-bg box-border py-[40px] overflow-hidden z-[3]"
   >
-    <IconCross @click="closeDish" class="!pointer-events-auto" />
+    <IconCross @click="$emit('closeDish')" />
     <div class="relative flex items-center shrink w-full box-border px-[20px] h-full">
       <div class="relative max-h-full w-full shrink z-[2]">
         <img class="max-h-full max-w-full h-auto w-full" src="/images/ImageSalad.png" alt="" />
@@ -33,10 +33,10 @@
           </div>
           <div class="absolute bottom-0 right-0 h-[1px] bg-[#fff] w-[70vw]"></div>
         </div>
-        <AddButton class="mt-[30px] self-end !pointer-events-auto" />
+        <AddButton class="mt-[30px] self-end" />
       </div>
     </div>
-    <div class="relative flex flex-col shrink-0 !pointer-events-auto">
+    <div class="relative flex flex-col shrink-0">
       <div class="relative flex justify-between w-full items-center px-[40px] mb-[20px]">
         <span
           class="font-Segoe block text-[#fff] font-semibold text-[18px] leading-[221%] tracking-[0.15em] uppercase"
@@ -76,15 +76,9 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineEmits } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { SideMenu, MenuSmallCard, AddButton, IconCross } from '@/components'
-
-const emit = defineEmits(['closeDish'])
-
-const closeDish = () => {
-  emit('closeDish', true)
-}
 
 const navigation = ref({
   enabled: true,

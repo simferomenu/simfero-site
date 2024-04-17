@@ -6,12 +6,12 @@
   animation: fadeAnimationDown 1s ease forwards;
 }
 
-.animated-right {
-  animation: fadeAnimationRight 1s ease forwards;
+.animated {
+  animation: fadeAnimation 0.5s ease forwards;
 }
 
-.animated {
-  animation: fadeAnimation 2s ease forwards;
+.animated-out {
+  animation: fadeOutAnimation 0.5s ease forwards;
 }
 
 @keyframes fadeAnimationUp {
@@ -36,22 +36,20 @@
   }
 }
 
-@keyframes fadeAnimationRight {
-  0% {
-    opacity: 0;
-    transform: translateX(-350px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes fadeAnimation {
   0% {
     opacity: 0;
   }
   100% {
     opacity: 1;
+  }
+}
+
+@keyframes fadeOutAnimation {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
