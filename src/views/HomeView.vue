@@ -13,10 +13,7 @@
       class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
       ref="scrollBody"
     >
-      <div
-        v-if="isLoading"
-        class="fixed top-[35vh] w-[200px] h-[200px] z-[3] pointer-events-none loader"
-      >
+      <div v-if="isLoading" class="fixed top-[35vh] w-[200px] h-[200px] z-[3] pointer-events-none right-[calc(50vw-200px)]">
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
 
@@ -29,7 +26,7 @@
             :name="product.name"
             :price="product.sizePrices[0].price.currentPrice"
             :imgUrl="product.imageLinks[0] || '/images/ImageBasicDish.png'"
-            @click="toggleDish"
+            @choose="toggleDish"
           />
           <!-- Заполняющий div, блокирующий тапы -->
           <div class="flex-1 mr-auto !pointer-events-none"></div>
@@ -39,11 +36,7 @@
   </div>
 </template>
 
-<style scoped>
-.loader {
-  right: calc(50vw - 200px);
-}
-</style>
+<style scoped></style>
 
 <script setup>
 import axios from 'axios'
