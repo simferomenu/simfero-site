@@ -23,6 +23,7 @@
       </span>
       <Counter
         v-show="isProductInOrder"
+        isBlack
         class="pointer-events-auto"
         :quantity="1"
         @update="onProductCounterUpdate"
@@ -46,35 +47,35 @@ const props = defineProps({
   product: {
     type: Object,
   }
-});
+})
 
-const emit = defineEmits(['choose']);
+const emit = defineEmits(['choose'])
 
 const isProductInOrder = ref(false);
 
 const onChoose = () => emit('choose', props.product);
 
 const onAddToOrder = (event) => {
-  event.stopPropagation();
+  event.stopPropagation()
 
-  const rawOrderData = window.localStorage.getItem('order');
-  const selectedTables = window.localStorage.getItem('selectedTables');
+  const rawOrderData = window.localStorage.getItem('order')
+  const selectedTables = window.localStorage.getItem('selectedTables')
 
   try {
-    let order = null;
+    let order = null
 
     if (rawOrderData) {
-      order = JSON.parse(rawOrderData);
+      order = JSON.parse(rawOrderData)
     } else {
       order = {
-        tables: [ ...JSON.parse(selectedTables) ],
-      };
+        tables: [...JSON.parse(selectedTables)]
+      }
     }
 
     isProductInOrder.value = true;
     console.log(order);
   } catch (error) {
-    console.log('Ошибка добавления в заказа', error);
+    console.log('Ошибка добавления в заказа', error)
   }
 }
 
