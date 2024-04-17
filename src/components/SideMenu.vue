@@ -2,7 +2,7 @@
   <div
     class="relative w-[312px] !h-screen bg-darkBlue flex flex-col box-border py-[30px] px-[28px] shrink-0 border-r-gold border-solid border-r-[2px] default-transition pointer-events-none overflow-hidden"
   >
-    <div class="relative w-full flex items-center h-[71px]">
+    <div class="relative w-full flex items-center h-[71px] animated-down">
       <img class="h-full w-auto" src="/icons/IconLogo.png" alt="" />
       <div class="relative flex flex-col ml-[15px]">
         <h1
@@ -11,15 +11,15 @@
         >
           SIMFERO
         </h1>
-        <span class="font-Sitka font-normal text-[11px] text-gold tracking-[0.07em]"
+        <span class="font-Sitka font-normal text-[14px] text-gold tracking-[0.07em]"
           >панорамный ресторан</span
         >
       </div>
     </div>
     <div
-      class="relative w-full flex-1 h-full flex flex-col mt-[90px] !overflow-auto pointer-events-auto custom-scrollbar"
+      class="relative w-full flex-1 h-full flex flex-col mt-[90px] !overflow-auto pointer-events-auto custom-scrollbar animated-up"
     >
-      <ul class="[&>*:not(:last-child)]:mb-[20px]">
+      <ul class="[&>*:not(:last-child)]:mb-[27px]">
         <li v-for="item in categories" :key="item.name">
           <a
             :class="[
@@ -35,7 +35,9 @@
         </li>
       </ul>
     </div>
-    <div class="relative w-full flex flex-col mb-[50px] mt-[50px] [&>*:not(:last-child)]:mb-[20px]">
+    <div
+      class="relative w-full flex flex-col mb-[50px] mt-[50px] [&>*:not(:last-child)]:mb-[20px] animated-up"
+    >
       <!-- <div class="relative flex items-center !pointer-events-auto">
         <img class="w-[32px] h-[32px]" src="/icons/IconExclamation.svg" alt="" />
         <span class="menu-link ml-[15px]">Интерактивы</span>
@@ -59,7 +61,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['select'])
+const emit = defineEmits(['select, scroll'])
 const router = useRouter()
 const activeItem = ref([])
 

@@ -7,6 +7,7 @@ import AddButton from '@/components/AddButton.vue'
 import Counter from '@/components/Counter.vue'
 import OrderCard from '@/components/OrderCard.vue'
 import NumberCell from '@/components/NumberCell.vue'
+import DishScreen from '@/components/DishScreen.vue'
 
 import IconPlus from '@/components/icons/IconPlus.vue'
 import IconCross from '@/components/icons/IconCross.vue'
@@ -24,5 +25,6 @@ export {
   IconBack,
   Counter,
   OrderCard,
-  NumberCell
+  NumberCell,
+  DishScreen
 }

@@ -2,7 +2,7 @@
   <div
     class="fixed box-border py-[110px] w-screen h-screen flex flex-col items-center justify-center z-[5] waiter-bg"
   >
-    <IconCross @click="toMain" />
+    <IconCross class="animated" @click="toMain" />
     <div class="relative w-fit flex items-center h-[93px] shrink-0 mb-[45px] animated-down">
       <img class="h-full w-auto" src="/icons/IconLogo.png" alt="" />
       <div class="relative flex flex-col ml-[15px]">

@@ -5,7 +5,7 @@
     class="relative w-screen h-screen box-border waiter-bg flex flex-col py-[35px] !overflow-hidden pointer-events-none"
   >
     <div
-      class="relative flex w-full h-fit box-border justify-center items-center mt-[70px] shrink-0"
+      class="relative flex w-full h-fit box-border justify-center items-center mt-[70px] shrink-0 animated"
     >
       <div class="font-Sitka text-[36px] tracking-[0.11em] uppercase font-[400] text-[#fff]">
         Выберите столик для гостей
@@ -13,11 +13,16 @@
       <div class="relative box-border flex items-center"></div>
     </div>
 
-    <div v-if="isFetchingTables" class="absolute left-1/2 translate-x-[-70%] w-[150px] h-[150px] loader-top-position">
+    <div
+      v-if="isFetchingTables"
+      class="absolute left-1/2 translate-x-[-50%] w-[150px] h-[150px] loader-top-position"
+    >
       <img src="/icons/loading.gif" alt="" />
     </div>
 
-    <div class="flex relative w-full h-[100%] mt-[40px] box-border pl-[40px] overflow-hidden">
+    <div
+      class="flex relative w-full h-[100%] mt-[40px] box-border pl-[40px] overflow-hidden animated-up"
+    >
       <div
         class="relative w-1/2 shrink-0 h-full flex flex-col mr-[20px]"
         v-for="zone in zones"
@@ -88,12 +93,12 @@ const toWaiter = () => {
   router.push('/waiter')
 }
 
-const selectedTables = ref([]);
-const zones = ref([]);
-const isFetchingTables = ref(true);
+const selectedTables = ref([])
+const zones = ref([])
+const isFetchingTables = ref(true)
 
 const onCellSelected = ({ id }) => {
-  const isExist = selectedTables.value.find((item) => item === id);
+  const isExist = selectedTables.value.find((item) => item === id)
 
   if (!isExist) {
     selectedTables.value.push(id)
@@ -105,7 +110,7 @@ const onCellSelected = ({ id }) => {
 }
 
 const isSelected = ({ id }) => {
-  return Boolean(selectedTables.value.find((item) => item === id));
+  return Boolean(selectedTables.value.find((item) => item === id))
 }
 
 const onTablesSelected = () => {
@@ -114,15 +119,15 @@ const onTablesSelected = () => {
 
 onMounted(() => {
   axios.get('/tables').then((response) => {
-    zones.value = response.data;
-    selectedTables.value = JSON.parse(window.localStorage.getItem('selectedTables')) || [];
-    isFetchingTables.value = false;
+    zones.value = response.data
+    selectedTables.value = JSON.parse(window.localStorage.getItem('selectedTables')) || []
+    isFetchingTables.value = false
   })
 })
 </script>
 
 <style scoped>
-  .loader-top-position {
-    top: calc(50% - 75px);
-  }
+.loader-top-position {
+  top: calc(50% - 75px);
+}
 </style>
