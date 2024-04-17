@@ -1,23 +1,30 @@
 <template>
   <div class="relative flex w-screen h-screen pointer-events-none">
-    <DishScreen v-show="isDishVisible" @closeDish="toggleDish" class="default-transition" />
+    <DishScreen
+      :class="
+        !isDishVisible
+          ? 'default-transition hidden-screen animated-out'
+          : 'default-transition visible-screen animated'
+      "
+      :product="selectedProduct"
+      @closeDish="isDishVisible = false"
+    />
     <SideMenu :categories="menu" @select="onCategorySelect" />
     <div
       class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
+      ref="scrollBody"
     >
       <div v-if="isLoading" class="fixed top-[35vh] w-[200px] h-[200px] z-[3] pointer-events-none right-[calc(50vw-200px)]">
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
 
-      <div id="menu-body" v-if="selectedCategory">
+      <div ref="scrollElement" v-if="selectedCategory">
         <MenuSection v-for="item in productsList" :name="item.name" :key="item.name">
           <MenuCard
             class="animated-up"
             v-for="product in item.products"
+            :product="product"
             :key="product.id"
-            :name="product.name"
-            :price="product.sizePrices[0].price.currentPrice"
-            :imgUrl="product.imageLinks[0] || '/images/ImageBasicDish.png'"
             @choose="toggleDish"
           />
           <!-- Заполняющий div, блокирующий тапы -->
@@ -31,19 +38,23 @@
 <style scoped></style>
 
 <script setup>
-import axios from 'axios'
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
-import { SideMenu, MenuSection, MenuCard, DishScreen } from '@/components'
+import { SideMenu, MenuSection, MenuCard, DishScreen } from '@/components';
 
-const router = useRouter()
-const menuData = ref(null)
-const menu = ref([])
-const categories = ref([])
-const selectedCategory = ref(null)
-const productsList = ref([])
-const isLoading = ref(false)
+const router = useRouter();
+const menuData = ref(null);
+const menu = ref([]);
+const categories = ref([]);
+const selectedCategory = ref(null);
+const productsList = ref([]);
+const isLoading = ref(false);
+const selectedProduct = ref(null);
+
+const scrollElement = ref(null);
+const scrollBody = ref(null);
 
 const onCategorySelect = ({ item }) => {
   selectedCategory.value = item
@@ -66,14 +77,17 @@ const onCategorySelect = ({ item }) => {
     }
   })
 
-  let element = ref(document.getElementById('menu-body'))
-  element.value.scrollIntoView()
+  if (scrollElement.value) {
+    scrollElement.value.scrollIntoView()
+  }
+  scrollBody.value.scrollBy(0, -40)
 }
 
 const isDishVisible = ref(false)
 
-const toggleDish = () => {
-  isDishVisible.value = !isDishVisible.value
+const toggleDish = (product) => {
+  isDishVisible.value = !isDishVisible.value;
+  selectedProduct.value = product;
 }
 
 onMounted(async () => {

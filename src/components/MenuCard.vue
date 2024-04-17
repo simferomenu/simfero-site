@@ -7,7 +7,7 @@
       <div
         class="absolute w-[183px] h-auto top-[-30px] left-[-25px] overflow-hidden rounded-[100px]"
       >
-        <img :src="imgUrl" alt="" />
+        <img :src="product.imageLinks[0] || '/images/ImageBasicDish.png'" alt="" />
       </div>
       <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">
         <img src="/icons/IconThreeDots.svg" alt="" />
@@ -16,13 +16,22 @@
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
       <span
         class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000]"
-        >{{ name }}</span
+        >{{ product.name }}</span
       >
       <span class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue">
-        {{ price }} Руб.
+        {{ product.sizePrices[0].price.currentPrice }} Руб.
       </span>
-      <!-- <Counter class="pointer-events-auto" :quantity="3" /> -->
-      <IconPlus :isBlack="true" @click="onAddToOrder"/>
+      <Counter
+        v-show="isProductInOrder"
+        class="pointer-events-auto"
+        :quantity="1"
+        @update="onProductCounterUpdate"
+      />
+      <IconPlus
+        v-show="!isProductInOrder"
+        :isBlack="true"
+        @click="onAddToOrder"
+      />
     </div>
   </div>
 </template>
@@ -30,26 +39,20 @@
 <style scoped></style>
 
 <script setup>
-import { defineEmits } from 'vue';
+import { ref, defineEmits } from 'vue';
 import { IconPlus, Counter } from '@/components'
 
-defineProps({
-  name: {
-    type: String,
-    required: true
-  },
-  price: {
-    type: Number,
-    required: true
-  },
-  imgUrl: {
-    type: String,
+const props = defineProps({
+  product: {
+    type: Object,
   }
 });
 
 const emit = defineEmits(['choose']);
 
-const onChoose = () => emit('choose');
+const isProductInOrder = ref(false);
+
+const onChoose = () => emit('choose', props.product);
 
 const onAddToOrder = (event) => {
   event.stopPropagation();
@@ -68,9 +71,14 @@ const onAddToOrder = (event) => {
       };
     }
 
+    isProductInOrder.value = true;
     console.log(order);
   } catch (error) {
     console.log('Ошибка добавления в заказа', error);
   }
+}
+
+const onProductCounterUpdate = (value) => {
+  console.log(value);
 }
 </script>
