@@ -17,7 +17,7 @@
       </div>
     </div>
     <div
-      class="relative w-full flex-1 h-full flex flex-col mt-[90px] !overflow-auto pointer-events-auto"
+      class="relative w-full flex-1 h-full flex flex-col mt-[90px] !overflow-auto pointer-events-auto custom-scrollbar"
     >
       <ul class="[&>*:not(:last-child)]:mb-[20px]">
         <li v-for="item in categories" :key="item.name">
@@ -33,16 +33,6 @@
             {{ item.name }}
           </a>
         </li>
-        <li class="menu-link">fdfafdadf</li>
-        <li class="menu-link">fdfafdadf</li>
-        <li class="menu-link">fdfafdadf</li>
-        <li class="menu-link">fdfafdadf</li>
-        <li class="menu-link">fdfafdadf</li>
-        <li class="menu-link">fdfafdadf</li>
-        <li class="menu-link">fdfafdadf</li>
-        <li class="menu-link">fdfafdadf</li>
-        <li class="menu-link">fdfafdadf</li>
-        <li class="menu-link">fdfafdadf</li>
       </ul>
     </div>
     <div class="relative w-full flex flex-col mb-[50px] mt-[50px] [&>*:not(:last-child)]:mb-[20px]">
