@@ -21,8 +21,9 @@
       <span class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue">
         {{ price }} Руб.
       </span>
-      <!-- <Counter class="pointer-events-auto" :quantity="3" /> -->
-      <IconPlus :isBlack="true" @click="onAddToOrder"/>
+      <!-- ИКОНКА ПЛЮСА И СЧЕТЧИК ПРИ ДОБАВЛЕНИИ БЛЮДА -->
+      <!-- <Counter isBlack class="pointer-events-auto" :quantity="3" /> -->
+      <IconPlus isBlack @click="onAddToOrder" />
     </div>
   </div>
 </template>
@@ -30,7 +31,7 @@
 <style scoped></style>
 
 <script setup>
-import { defineEmits } from 'vue';
+import { defineEmits } from 'vue'
 import { IconPlus, Counter } from '@/components'
 
 defineProps({
@@ -43,34 +44,34 @@ defineProps({
     required: true
   },
   imgUrl: {
-    type: String,
+    type: String
   }
-});
+})
 
-const emit = defineEmits(['choose']);
+const emit = defineEmits(['choose'])
 
-const onChoose = () => emit('choose');
+const onChoose = () => emit('choose')
 
 const onAddToOrder = (event) => {
-  event.stopPropagation();
+  event.stopPropagation()
 
-  const rawOrderData = window.localStorage.getItem('order');
-  const selectedTables = window.localStorage.getItem('selectedTables');
+  const rawOrderData = window.localStorage.getItem('order')
+  const selectedTables = window.localStorage.getItem('selectedTables')
 
   try {
-    let order = null;
+    let order = null
 
     if (rawOrderData) {
-      order = JSON.parse(rawOrderData);
+      order = JSON.parse(rawOrderData)
     } else {
       order = {
-        tables: [ ...JSON.parse(selectedTables) ],
-      };
+        tables: [...JSON.parse(selectedTables)]
+      }
     }
 
-    console.log(order);
+    console.log(order)
   } catch (error) {
-    console.log('Ошибка добавления в заказа', error);
+    console.log('Ошибка добавления в заказа', error)
   }
 }
 </script>
