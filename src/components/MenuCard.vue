@@ -1,6 +1,7 @@
 <template>
   <div
     class="relative flex flex-col h-[340px] w-[214px] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto"
+    @click="onChoose"
   >
     <div class="relative h-1/2 w-full shrink-0">
       <div class="absolute w-full h-auto top-[-15%] left-[-15%] overflow-hidden rounded-[100px]">
@@ -20,7 +21,7 @@
       >
         {{ price }} Руб.
       </span>
-      <IconPlus :isBlack="true" />
+      <IconPlus :isBlack="true" @click="onAddToOrder"/>
     </div>
   </div>
 </template>
@@ -28,8 +29,10 @@
 <style scoped></style>
 
 <script setup>
-import { IconPlus } from '@/components'
-const props = defineProps({
+import { defineEmits } from 'vue';
+import { IconPlus } from '@/components';
+
+defineProps({
   name: {
     type: String,
     required: true
@@ -38,7 +41,36 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  imgUrl: String,
-  required: true
-})
+  imgUrl: {
+    type: String,
+  }
+});
+
+const emit = defineEmits(['choose']);
+
+const onChoose = () => emit('choose');
+
+const onAddToOrder = (event) => {
+  event.stopPropagation();
+
+  const rawOrderData = window.localStorage.getItem('order');
+  const selectedTables = window.localStorage.getItem('selectedTables');
+
+  try {
+    let order = null;
+
+    if (rawOrderData) {
+      order = JSON.parse(rawOrderData);
+    } else {
+      order = {
+        tables: [ ...JSON.parse(selectedTables) ],
+      };
+    }
+
+    console.log(order);
+  } catch (error) {
+    console.log('Ошибка добавления в заказа', error);
+  }
+}
+
 </script>
