@@ -45,7 +45,7 @@
       </div> -->
       <div class="relative flex items-center ml-[50px]">
         <span @click="toOrderView" class="menu-link !pointer-events-auto shrink-0">Мой заказ</span>
-        <SmallCounter :value="2" />
+        <SmallCounter v-if="orderCount" :value="orderCount" />
       </div>
     </div>
   </div>
@@ -61,6 +61,9 @@ import { SmallCounter } from '@/components'
 const props = defineProps({
   categories: {
     type: Array
+  },
+  orderCount: {
+    type: Number,
   }
 })
 

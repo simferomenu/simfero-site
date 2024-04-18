@@ -9,7 +9,7 @@
       :product="selectedProduct"
       @closeDish="isDishVisible = false"
     />
-    <SideMenu :categories="menu" @select="onCategorySelect" />
+    <SideMenu :categories="menu" @select="onCategorySelect" :order-count="menuOrderCount"/>
     <div
       class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
       ref="scrollBody"
@@ -26,6 +26,7 @@
             :product="product"
             :key="product.id"
             @choose="toggleDish"
+            @order-update="onOrderUpdate"
           />
           <!-- Заполняющий div, блокирующий тапы -->
           <div class="flex-1 mr-auto !pointer-events-none"></div>
@@ -52,6 +53,7 @@ const selectedCategory = ref(null);
 const productsList = ref([]);
 const isLoading = ref(false);
 const selectedProduct = ref(null);
+const menuOrderCount = ref(null);
 
 const scrollElement = ref(null);
 const scrollBody = ref(null);
@@ -65,6 +67,25 @@ const onCategorySelect = ({ item }) => {
       p.chain.forEach((category) => {
         const categoryExisted = productsList.value.find(({ name }) => name === category)
 
+        /* Мапим с данными из заказа */
+        const rawOrderData = window.localStorage.getItem('order')
+
+        if (rawOrderData) {
+          try {
+            const order = JSON.parse(rawOrderData);
+
+            if (order.products) {
+              const existedProduct = order.products.find((item) => item.id === p.id);
+
+              if (existedProduct) {
+                p.selected = existedProduct;
+              }
+            }
+          } catch (error) {
+            console.log('Ошибка добавления в заказа', error)
+          }
+        }
+
         if (!categoryExisted) {
           productsList.value.push({
             name: category,
@@ -77,21 +98,6 @@ const onCategorySelect = ({ item }) => {
     }
   });
 
-  /* Мапим с данными из заказа */
-  const rawOrderData = window.localStorage.getItem('order')
-
-  if (rawOrderData) {
-    try {
-      const order = JSON.parse(rawOrderData);
-
-      if (order.products) {
-        console.log(order.products);
-      }
-    } catch (error) {
-      console.log('Ошибка добавления в заказа', error)
-    }
-  }
-
   if (scrollElement.value) {
     scrollElement.value.scrollIntoView()
   }
@@ -103,6 +109,19 @@ const isDishVisible = ref(false)
 const toggleDish = (product) => {
   isDishVisible.value = !isDishVisible.value;
   selectedProduct.value = product;
+}
+
+const onOrderUpdate = () => {
+  const rawOrderData = window.localStorage.getItem('order')
+
+  try {
+    if (rawOrderData) {
+      const order = JSON.parse(rawOrderData);
+      menuOrderCount.value = order.products.reduce((accumulator, item) => accumulator + item.amount, 0);
+    }
+  } catch (error) {
+    console.log('Ошибка добавления в заказа', error)
+  }
 }
 
 onMounted(async () => {
