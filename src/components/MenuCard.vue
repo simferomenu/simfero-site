@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative flex flex-col h-[350px] w-[230px] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto"
+    class="relative flex flex-col h-[350px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto"
     @click="onChoose"
   >
     <div class="relative h-[145px] w-full shrink-0">
@@ -28,11 +28,7 @@
         :quantity="1"
         @update="onProductCounterUpdate"
       />
-      <IconPlus
-        v-show="!isProductInOrder"
-        :isBlack="true"
-        @click="onAddToOrder"
-      />
+      <IconPlus v-show="!isProductInOrder" :isBlack="true" @click="onAddToOrder" />
     </div>
   </div>
 </template>
@@ -40,20 +36,20 @@
 <style scoped></style>
 
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref, defineEmits } from 'vue'
 import { IconPlus, Counter } from '@/components'
 
 const props = defineProps({
   product: {
-    type: Object,
+    type: Object
   }
 })
 
 const emit = defineEmits(['choose'])
 
-const isProductInOrder = ref(false);
+const isProductInOrder = ref(false)
 
-const onChoose = () => emit('choose', props.product);
+const onChoose = () => emit('choose', props.product)
 
 const onAddToOrder = (event) => {
   event.stopPropagation()
@@ -72,14 +68,14 @@ const onAddToOrder = (event) => {
       }
     }
 
-    isProductInOrder.value = true;
-    console.log(order);
+    isProductInOrder.value = true
+    console.log(order)
   } catch (error) {
     console.log('Ошибка добавления в заказа', error)
   }
 }
 
 const onProductCounterUpdate = (value) => {
-  console.log(value);
+  console.log(value)
 }
 </script>
