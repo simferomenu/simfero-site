@@ -6,6 +6,7 @@
           ? 'default-transition hidden-screen animated-out'
           : 'default-transition visible-screen animated'
       "
+      :product="selectedProduct"
       @closeDish="isDishVisible = false"
     />
     <SideMenu :categories="menu" @select="onCategorySelect" />
@@ -22,10 +23,8 @@
           <MenuCard
             class="animated-up"
             v-for="product in item.products"
+            :product="product"
             :key="product.id"
-            :name="product.name"
-            :price="product.sizePrices[0].price.currentPrice"
-            :imgUrl="product.imageLinks[0] || '/images/ImageBasicDish.png'"
             @choose="toggleDish"
           />
           <!-- Заполняющий div, блокирующий тапы -->
@@ -39,22 +38,23 @@
 <style scoped></style>
 
 <script setup>
-import axios from 'axios'
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
-import { SideMenu, MenuSection, MenuCard, DishScreen } from '@/components'
+import { SideMenu, MenuSection, MenuCard, DishScreen } from '@/components';
 
-const router = useRouter()
-const menuData = ref(null)
-const menu = ref([])
-const categories = ref([])
-const selectedCategory = ref(null)
-const productsList = ref([])
-const isLoading = ref(false)
+const router = useRouter();
+const menuData = ref(null);
+const menu = ref([]);
+const categories = ref([]);
+const selectedCategory = ref(null);
+const productsList = ref([]);
+const isLoading = ref(false);
+const selectedProduct = ref(null);
 
-const scrollElement = ref(null)
-const scrollBody = ref(null)
+const scrollElement = ref(null);
+const scrollBody = ref(null);
 
 const onCategorySelect = ({ item }) => {
   selectedCategory.value = item
@@ -77,14 +77,17 @@ const onCategorySelect = ({ item }) => {
     }
   })
 
-  scrollElement.value.scrollIntoView()
+  if (scrollElement.value) {
+    scrollElement.value.scrollIntoView()
+  }
   scrollBody.value.scrollBy(0, -40)
 }
 
 const isDishVisible = ref(false)
 
-const toggleDish = () => {
-  isDishVisible.value = !isDishVisible.value
+const toggleDish = (product) => {
+  isDishVisible.value = !isDishVisible.value;
+  selectedProduct.value = product;
 }
 
 onMounted(async () => {
