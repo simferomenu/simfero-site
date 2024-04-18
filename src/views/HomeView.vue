@@ -75,7 +75,22 @@ const onCategorySelect = ({ item }) => {
         }
       })
     }
-  })
+  });
+
+  /* Мапим с данными из заказа */
+  const rawOrderData = window.localStorage.getItem('order')
+
+  if (rawOrderData) {
+    try {
+      const order = JSON.parse(rawOrderData);
+
+      if (order.products) {
+        console.log(order.products);
+      }
+    } catch (error) {
+      console.log('Ошибка добавления в заказа', error)
+    }
+  }
 
   if (scrollElement.value) {
     scrollElement.value.scrollIntoView()
@@ -127,6 +142,7 @@ onMounted(async () => {
   menuData.value.products = menuData.value.products
     .filter((p) => !p.isDeleted)
     .filter((p) => p.type === 'Dish')
+    // .filter((p) => !p.doNotPrintInCheque)
 
   let currentProductIndex = 0
   let currentParentGroup = null

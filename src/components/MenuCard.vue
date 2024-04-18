@@ -9,9 +9,9 @@
       >
         <img :src="product.imageLinks[0] || '/images/ImageBasicDish.png'" alt="" />
       </div>
-      <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">
-        <img src="/icons/IconThreeDots.svg" alt="" />
-      </div>
+<!--      <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">-->
+<!--        <img src="/icons/IconThreeDots.svg" alt="" />-->
+<!--      </div>-->
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
       <span
@@ -25,10 +25,14 @@
         v-show="isProductInOrder"
         isBlack
         class="pointer-events-auto"
-        :quantity="1"
         @update="onProductCounterUpdate"
+        @empty="onDeleteFromOrder"
       />
-      <IconPlus v-show="!isProductInOrder" :isBlack="true" @click="onAddToOrder" />
+      <IconPlus
+        v-show="!isProductInOrder"
+        :isBlack="true"
+        @click="onAddToOrder"
+      />
     </div>
   </div>
 </template>
@@ -51,31 +55,52 @@ const isProductInOrder = ref(false)
 
 const onChoose = () => emit('choose', props.product)
 
-const onAddToOrder = (event) => {
-  event.stopPropagation()
+const onAddToOrder = (event, amount = 1) => {
+  event && event.stopPropagation();
 
   const rawOrderData = window.localStorage.getItem('order')
   const selectedTables = window.localStorage.getItem('selectedTables')
 
   try {
-    let order = null
+    let order = null;
 
     if (rawOrderData) {
-      order = JSON.parse(rawOrderData)
+      order = JSON.parse(rawOrderData);
+      const product = order.products.find((p) => p.id === props.product.id);
+
+      if (product) {
+        product.amount = amount;
+      } else {
+        order.products.push({ id: props.product.id, amount });
+      }
     } else {
       order = {
-        tables: [...JSON.parse(selectedTables)]
+        tables: [...JSON.parse(selectedTables)],
+        products: [{ id: props.product.id, amount }],
       }
     }
 
-    isProductInOrder.value = true
-    console.log(order)
+    isProductInOrder.value = true;
+    window.localStorage.setItem('order', JSON.stringify(order));
   } catch (error) {
     console.log('Ошибка добавления в заказа', error)
   }
 }
 
-const onProductCounterUpdate = (value) => {
-  console.log(value)
+const onDeleteFromOrder = () => {
+  const rawOrderData = window.localStorage.getItem('order');
+
+  try {
+    let order = JSON.parse(rawOrderData);
+    order.products = order.products.filter((p) => p.id !== props.product.id);
+    isProductInOrder.value = false;
+    window.localStorage.setItem('order', JSON.stringify(order));
+  } catch (error) {
+    console.log('Ошибка удаления из заказа', error)
+  }
+}
+
+const onProductCounterUpdate = (amount) => {
+  onAddToOrder(null, amount.value);
 }
 </script>
