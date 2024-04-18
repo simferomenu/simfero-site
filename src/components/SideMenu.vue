@@ -19,7 +19,7 @@
     <div
       class="relative w-full flex-1 h-full flex flex-col mt-[90px] !overflow-auto pointer-events-auto custom-scrollbar animated-up"
     >
-      <ul class="[&>*:not(:last-child)]:mb-[27px]">
+      <ul class="[&>*:not(:last-child)]:mb-[27px] box-border pb-[20px]">
         <li v-for="item in categories" :key="item.name">
           <a
             :class="[
@@ -36,14 +36,16 @@
       </ul>
     </div>
     <div
-      class="relative w-full flex flex-col mb-[50px] mt-[50px] [&>*:not(:last-child)]:mb-[20px] animated-up"
+      class="relative w-full flex flex-col mb-[50px] pt-[50px] [&>*:not(:last-child)]:mb-[30px] animated-up"
     >
+      <div class="absolute left-0 top-0 w-[312px] translate-x-[-28px] h-[150%] bg-[#27282b]"></div>
       <!-- <div class="relative flex items-center !pointer-events-auto">
         <img class="w-[32px] h-[32px]" src="/icons/IconExclamation.svg" alt="" />
         <span class="menu-link ml-[15px]">Интерактивы</span>
       </div> -->
-      <div class="relative flex items-center">
-        <span @click="toOrderView" class="menu-link !pointer-events-auto">Мой заказ</span>
+      <div class="relative flex items-center ml-[50px]">
+        <span @click="toOrderView" class="menu-link !pointer-events-auto shrink-0">Мой заказ</span>
+        <SmallCounter :value="2" />
       </div>
     </div>
   </div>
@@ -54,6 +56,7 @@
 <script setup>
 import { ref, watch, defineEmits } from 'vue'
 import { useRouter } from 'vue-router'
+import { SmallCounter } from '@/components'
 
 const props = defineProps({
   categories: {
