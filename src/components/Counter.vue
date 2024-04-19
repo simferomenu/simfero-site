@@ -38,7 +38,10 @@
 import { ref, defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
-  quantity: Number,
+  quantity: {
+    type: Number,
+    default: 1,
+  },
   isBlack: Boolean
 });
 const emit = defineEmits(['update']);
@@ -50,7 +53,12 @@ const onQuantityChange = (event, iterator) => {
 
   counterValue.value += iterator;
 
-  emit('update', counterValue);
+  if (counterValue.value <= 0) {
+    counterValue.value = 1;
+    emit('empty');
+  } else {
+    emit('update', counterValue);
+  }
 }
 
 </script>
