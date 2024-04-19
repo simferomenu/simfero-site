@@ -1,8 +1,10 @@
 <template>
   <div
-    class="relative flex flex-col h-[350px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto"
+    class="relative flex flex-col h-[350px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition"
+    :class="{ 'active-menu-card border-animation': isProductInOrder }"
     @click="onChoose"
   >
+    <div class="menu-card-border"></div>
     <div class="relative h-[145px] w-full shrink-0">
       <div
         class="absolute w-[183px] h-auto top-[-30px] left-[-25px] overflow-hidden rounded-[100px]"
@@ -25,6 +27,7 @@
         v-show="isProductInOrder"
         isBlack
         class="pointer-events-auto"
+        :class="{ 'animated-counter': isProductInOrder }"
         :quantity="1"
         @update="onProductCounterUpdate"
       />

@@ -5,7 +5,7 @@
     class="relative w-screen h-screen box-border waiter-bg flex flex-col py-[35px] !overflow-hidden pointer-events-none"
   >
     <div
-      class="relative flex w-full h-fit box-border justify-center items-center mt-[70px] shrink-0 animated"
+      class="relative flex w-full h-fit box-border justify-center items-center mt-[50px] shrink-0 animated"
     >
       <div class="font-Sitka text-[36px] tracking-[0.11em] uppercase font-[400] text-[#fff]">
         Выберите столик для гостей
@@ -52,7 +52,9 @@
       </div>
     </div>
 
-    <div class="w-full relative flex justify-between box-border px-[40px] mt-[40px] shrink-0 h-fit">
+    <div
+      class="w-full relative flex justify-between box-border px-[40px] mt-[40px] mb-[30px] shrink-0 h-fit"
+    >
       <div class="flex flex-col w-[320px]">
         <!--        <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"-->
         <!--          >10 стол, основной зал</span-->

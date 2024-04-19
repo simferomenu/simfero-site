@@ -64,26 +64,23 @@ body {
   @apply w-[100px] h-[44px] flex justify-center items-center font-bold text-[16px] tracking-[0.17em] uppercase text-center !text-[#000] mr-[20px] mb-[30px] !bg-gold !border-none;
 }
 
-/* .active-menu-card {
-  border: 4px solid;
-  border-image: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(159, 121, 91, 1) 100%);
-  border-image-slice: 1;
-  border-radius: 19px;
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-} */
-
-/* .active-menu-card::after {
-  position: absolute;
-  top: -4px;
-  bottom: -4px;
-  left: -4px;
-  right: -4px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(159, 121, 91, 1) 100%);
+.active-menu-card::before {
   content: '';
-  z-index: -1;
-  border-radius: 19px;
-} */
+  position: absolute;
+  inset: -4px;
+  padding: 4px;
+  background: -webkit-linear-gradient(
+    270deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(159, 121, 91, 1) 100%
+  );
+  border-radius: 25px;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
 
 .menu-card-bg {
   backdrop-filter: blur(15.800000190734863px);
