@@ -1,7 +1,7 @@
 <template>
   <div
     class="relative flex flex-col h-[350px] w-[calc(50%-40px)] xs:w-[calc(33%-40px)] md:w-[calc(25%-40px)] box-border rounded-[19px] order-card-bg shrink-0 pointer-events-auto default-transition mb-[40px] mr-[40px]"
-    :class="{ 'active-menu-card border-animation': isProductInOrder }"
+    :class="{ 'active-menu-card border-animation': false }"
   >
     <div class="menu-card-border"></div>
     <div class="relative h-[145px] w-full shrink-0">
@@ -30,7 +30,12 @@
       <span class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-[#fff]">
         {{ product.sizePrices[0].price.currentPrice }} Руб.
       </span>
-      <Counter :quantity="product.amount" class="pointer-events-auto" />
+      <Counter
+        class="pointer-events-auto"
+        :quantity="product.amount"
+        @update="onProductCounterUpdate"
+        @empty='onDeleteFromOrder'
+      />
       <IconPlus />
     </div>
   </div>
@@ -49,10 +54,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['choose', 'order-update'])
-
-// const isProductInOrder = ref(props.product.selected);
-
-const onChoose = () => emit('choose', props.product)
 
 const isDescrHidden = ref(false)
 const productName = ref(null)
@@ -87,10 +88,7 @@ const onAddToOrder = (event, amount = 1) => {
         products: [{ id: props.product.id, amount }]
       }
     }
-
-    isProductInOrder.value = true
     window.localStorage.setItem('order', JSON.stringify(order))
-
     emit('order-update')
   } catch (error) {
     console.log('Ошибка добавления в заказа', error)
@@ -103,7 +101,6 @@ const onDeleteFromOrder = () => {
   try {
     let order = JSON.parse(rawOrderData)
     order.products = order.products.filter((p) => p.id !== props.product.id)
-    isProductInOrder.value = false
     window.localStorage.setItem('order', JSON.stringify(order))
     emit('order-update')
   } catch (error) {

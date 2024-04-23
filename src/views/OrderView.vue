@@ -23,6 +23,7 @@
         v-for="item in orderItems"
         :product='item'
         :key="item.id"
+        @order-update="onOrderUpdate"
       />
     </div>
     <div
@@ -59,20 +60,36 @@ import { IconCross, IconBack, OrderCard } from '@/components'
 
 const router = useRouter();
 const orderItems = ref([]);
-const totalPrice = ref(3200);
+const totalPrice = ref(0);
+const order = ref(null);
 
 const toMain = () => router.push('/');
 
-onMounted(() => {
+const getOrderData = () => {
   const rawOrderData = window.localStorage.getItem('order');
 
   try {
     if (rawOrderData) {
-      const order = JSON.parse(rawOrderData);
-      orderItems.value = order.products;
+      order.value = JSON.parse(rawOrderData);
+      orderItems.value = order.value.products;
+      return order.value;
     }
   } catch (error) {
     console.log('Ошибка получение состояния корзины', error)
   }
-})
+}
+
+const calcTotalPrice = () => {
+  const items = getOrderData().products;
+  totalPrice.value = items.reduce((acc, item) => {
+    return acc + (item.amount * item.sizePrices[0].price.currentPrice);
+  }, 0);
+}
+
+const onOrderUpdate = () => calcTotalPrice()
+
+onMounted(() => {
+  getOrderData();
+  calcTotalPrice();
+});
 </script>
