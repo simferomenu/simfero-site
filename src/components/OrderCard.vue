@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative flex flex-col h-[350px] w-[calc(33%-40px)] md:w-[calc(25%-40px)] box-border rounded-[19px] order-card-bg shrink-0 pointer-events-auto default-transition mb-[40px] mr-[40px]"
+    class="relative flex flex-col h-[350px] w-[calc(50%-40px)] xs:w-[calc(33%-40px)] md:w-[calc(25%-40px)] box-border rounded-[19px] order-card-bg shrink-0 pointer-events-auto default-transition mb-[40px] mr-[40px]"
     :class="{ 'active-menu-card border-animation': isProductInOrder }"
   >
     <div class="menu-card-border"></div>

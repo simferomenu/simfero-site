@@ -3,6 +3,7 @@ export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     screens: {
+      xs: '860px',
       sm: '1024px',
       md: '1112px',
       lg: '1194px',
