@@ -8,9 +8,9 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => {
-        // const selectedTables = window.localStorage.getItem('selectedTables');
-        // return selectedTables ? HomeView : import('../views/WaiterView.vue');
-        return HomeView;
+        const selectedTables = window.localStorage.getItem('selectedTables');
+        console.log('selectedTables: ', selectedTables);
+        return selectedTables ? HomeView : import('../views/WaiterView.vue');
       }
     },
     // {

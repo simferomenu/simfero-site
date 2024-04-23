@@ -116,7 +116,7 @@ const isSelected = ({ id }) => {
 }
 
 const onTablesSelected = () => {
-  router.push('/')
+  window.location = '/';
 }
 
 onMounted(() => {
