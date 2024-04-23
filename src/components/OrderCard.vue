@@ -23,7 +23,6 @@
       </span>
       <span
         class="font-Segoe font-[350] text-[14px] leading-[136%] text-gold clip-4"
-        :class="{ 'clip-3': isClip3 }"
         v-if="!isDescrHidden"
       >
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quos enim nostrum
@@ -58,15 +57,10 @@ const emit = defineEmits(['choose', 'order-update'])
 const onChoose = () => emit('choose', props.product)
 
 const isDescrHidden = ref(false)
-const isClip3 = ref(false)
 const productName = ref(null)
 
 onMounted(() => {
-  if (productName.value.clientHeight >= 48 && productName.value.clientHeight < 72) {
-    isClip3.value = false
-  } else if (productName.value.clientHeight >= 72 && productName.value.clientHeight < 96) {
-    isClip3.value = true
-  } else if (productName.value.clientHeight >= 96) {
+  if (productName.value.clientHeight > 48) {
     isDescrHidden.value = true
   }
 })
