@@ -10,7 +10,7 @@ const router = createRouter({
       component: () => {
         // const selectedTables = window.localStorage.getItem('selectedTables');
         // return selectedTables ? HomeView : import('../views/WaiterView.vue');
-        return import('../views/WaiterView.vue');
+        return HomeView;
       }
     },
     // {
