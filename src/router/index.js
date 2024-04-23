@@ -7,7 +7,11 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: () => {
+        // const selectedTables = window.localStorage.getItem('selectedTables');
+        // return selectedTables ? HomeView : import('../views/WaiterView.vue');
+        return import('../views/WaiterView.vue');
+      }
     },
     // {
     //   path: '/dish/:dishNickname',

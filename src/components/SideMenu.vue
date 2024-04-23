@@ -45,7 +45,7 @@
       </div> -->
       <div class="relative flex items-center ml-[50px]">
         <span @click="toOrderView" class="menu-link !pointer-events-auto shrink-0">Мой заказ</span>
-        <SmallCounter v-if="orderCount" :value="orderCount" />
+        <SmallCounter v-if="orderAmount" :value="orderAmount" />
       </div>
     </div>
   </div>
@@ -54,7 +54,7 @@
 <style scoped></style>
 
 <script setup>
-import { ref, watch, defineEmits } from 'vue'
+import { ref, watch, defineEmits, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { SmallCounter } from '@/components'
 
@@ -70,10 +70,15 @@ const props = defineProps({
 const emit = defineEmits(['select, scroll'])
 const router = useRouter()
 const activeItem = ref([])
+const orderAmount = ref(0);
 
-watch(props, (data) => {
-  activeItem.value = data.categories[0]
-})
+watch(() => props.categories, (data) => {
+  activeItem.value = data[0];
+});
+
+watch(() => props.orderCount, (data) => {
+  orderAmount.value = data;
+});
 
 const onCategorySelect = (item) => {
   activeItem.value = item
@@ -87,4 +92,17 @@ const toWaiterView = () => {
   window.localStorage.removeItem('selectedTables')
   router.push('/waiter')
 }
+
+onMounted(() => {
+  const rawOrderData = window.localStorage.getItem('order');
+
+  try {
+    if (rawOrderData) {
+      const order = JSON.parse(rawOrderData);
+      orderAmount.value = order.products.reduce((accumulator, item) => accumulator + item.amount, 0);
+    }
+  } catch (error) {
+    console.log('Ошибка получение состояния корзины', error)
+  }
+});
 </script>

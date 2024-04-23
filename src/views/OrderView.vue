@@ -10,9 +10,11 @@
       Мой заказ
     </div>
     <div class="w-full flex flex-wrap box-border px-[80px] flex-1 !pointer-events-auto">
-      <OrderCard name="Обожженая говядина с соусом Якинику" :price="1200" />
-      <OrderCard name="Обожженая говядина с соусом Якинику" :price="1200" />
-      <OrderCard name="Обожженая говядина с соусом Якинику" :price="1200" />
+      <OrderCard
+        v-for="item in orderItems"
+        :key="item.id"
+        v-bind="item"
+      />
     </div>
     <div
       class="relative flex justify-between items-center border-solid border-t-[1px] border-t-[#fff] min-h-[60px] box-border mx-[80px] pt-[15px] mt-[15px] mb-[55px]"
@@ -41,15 +43,26 @@
 <style scoped></style>
 
 <script setup>
-import { useRoute, useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router'
 import { IconCross, IconBack, OrderCard } from '@/components'
-import { ref } from 'vue'
 
-const totalPrice = ref(3200)
+const router = useRouter();
+const orderItems = ref([]);
+const totalPrice = ref(3200);
 
-const router = useRouter()
+const toMain = () => router.push('/');
 
-const toMain = () => {
-  router.push('/')
-}
+onMounted(() => {
+  const rawOrderData = window.localStorage.getItem('order');
+
+  try {
+    if (rawOrderData) {
+      const order = JSON.parse(rawOrderData);
+      orderItems.value = order.products;
+    }
+  } catch (error) {
+    console.log('Ошибка получение состояния корзины', error)
+  }
+})
 </script>

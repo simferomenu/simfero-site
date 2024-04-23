@@ -71,12 +71,12 @@ const onAddToOrder = (event, amount = 1) => {
       if (product) {
         product.amount = amount;
       } else {
-        order.products.push({ id: props.product.id, amount });
+        order.products.push({ ...props.product, amount });
       }
     } else {
       order = {
         tables: [...JSON.parse(selectedTables)],
-        products: [{ id: props.product.id, amount }],
+        products: [{ ...props.product, amount }],
       }
     }
 
