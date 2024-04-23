@@ -44,7 +44,9 @@
         <span class="menu-link ml-[15px]">Интерактивы</span>
       </div> -->
       <div class="relative flex items-center ml-[50px]">
-        <span @click="toOrderView" class="menu-link !pointer-events-auto shrink-0">Мой заказ</span>
+        <span @click="toOrderView" class="menu-link !pointer-events-auto shrink-0 text-nowrap"
+          >Мой заказ</span
+        >
         <SmallCounter v-if="orderCount" :value="orderCount" />
       </div>
     </div>
@@ -63,7 +65,7 @@ const props = defineProps({
     type: Array
   },
   orderCount: {
-    type: Number,
+    type: Number
   }
 })
 

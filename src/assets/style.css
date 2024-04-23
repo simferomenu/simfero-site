@@ -87,6 +87,11 @@ body {
   background: rgba(255, 255, 255, 0.25);
 }
 
+.order-card-bg {
+  backdrop-filter: blur(15.800000190734863px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .main-bg {
   background-image: url('/images/ImageMainBg.jpg');
   background-position: center;
@@ -103,6 +108,11 @@ body {
   background-image: url('/images/ImageOrderBg.jpg');
   background-position: center;
   background-size: cover;
+}
+
+.order-fade {
+  background: rgb(22, 27, 33);
+  background: linear-gradient(180deg, rgba(22, 27, 33, 0) 0%, rgba(22, 27, 33, 1) 60%);
 }
 
 .waiter-bg {
@@ -153,4 +163,16 @@ body {
 .visible-screen {
   pointer-events: all;
   visibility: visible;
+}
+
+.clip-4,
+.clip-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.clip-3 {
+  -webkit-line-clamp: 3 !important;
 }

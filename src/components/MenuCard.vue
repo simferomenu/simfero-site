@@ -11,15 +11,24 @@
       >
         <img :src="product.imageLinks[0] || '/images/ImageBasicDish.png'" alt="" />
       </div>
-      <!--      <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">-->
-      <!--        <img src="/icons/IconThreeDots.svg" alt="" />-->
-      <!--      </div>-->
+      <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">
+        <img src="/icons/IconThreeDots.svg" alt="" />
+      </div>
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
       <span
+        ref="productName"
         class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000]"
       >
         {{ product.name }}
+      </span>
+      <span
+        class="font-Segoe font-[350] text-[14px] leading-[136%] text-darkBlue clip-4"
+        v-if="!isDescrHidden"
+      >
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quos enim nostrum
+        provident, aliquam sit molestias doloribus voluptate minus quam aperiam pariatur id beatae
+        possimus corporis modi sapiente nam labore?
       </span>
       <span class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue">
         {{ product.sizePrices[0].price.currentPrice }} Руб.
@@ -41,7 +50,7 @@
 <style scoped></style>
 
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, onMounted } from 'vue'
 import { IconPlus, Counter } from '@/components'
 
 const props = defineProps({
@@ -55,6 +64,15 @@ const emit = defineEmits(['choose', 'order-update'])
 const isProductInOrder = ref(props.product.selected)
 
 const onChoose = () => emit('choose', props.product)
+
+const isDescrHidden = ref(false)
+const productName = ref(null)
+
+onMounted(() => {
+  if (productName.value.clientHeight > 48) {
+    isDescrHidden.value = true
+  }
+})
 
 const onAddToOrder = (event, amount = 1) => {
   event && event.stopPropagation()
