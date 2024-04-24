@@ -155,16 +155,6 @@ body {
   height: 22px;
 }
 
-.hidden-screen {
-  pointer-events: none !important;
-  visibility: hidden !important;
-}
-
-.visible-screen {
-  pointer-events: all;
-  visibility: visible;
-}
-
 .clip-4,
 .clip-3 {
   display: -webkit-box;
@@ -175,4 +165,8 @@ body {
 
 .clip-3 {
   -webkit-line-clamp: 3 !important;
+}
+
+.stop-scrolling {
+  overflow: hidden;
 }

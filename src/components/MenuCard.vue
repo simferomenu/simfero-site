@@ -31,16 +31,22 @@
       <span class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue">
         {{ product.sizePrices[0].price.currentPrice }} Руб.
       </span>
-      <Counter
-        v-show="isProductInOrder"
-        isBlack
-        class="pointer-events-auto"
-        :class="{ 'animated-counter': isProductInOrder }"
-        :quantity="product?.selected?.amount"
-        @update="onProductCounterUpdate"
-        @empty="onDeleteFromOrder"
-      />
-      <IconPlus v-show="!isProductInOrder" :isBlack="true" @click="onAddToOrder" />
+      <Transition name="expand">
+        <Counter
+          v-if="isProductInOrder"
+          isBlack
+          class="pointer-events-auto"
+          :quantity="product?.selected?.amount"
+          @update="onProductCounterUpdate"
+          @empty="onDeleteFromOrder"
+        />
+        <IconPlus
+          ref="iconPlus"
+          v-else-if="!isProductInOrder"
+          :isBlack="true"
+          @click="onAddToOrder"
+        />
+      </Transition>
     </div>
   </div>
 </template>
@@ -88,12 +94,12 @@ const onAddToOrder = (event, amount = 1) => {
       if (product) {
         product.amount = amount
       } else {
-        order.products.push({ ...props.product, amount });
+        order.products.push({ ...props.product, amount })
       }
     } else {
       order = {
         tables: [...JSON.parse(selectedTables)],
-        products: [{ ...props.product, amount }],
+        products: [{ ...props.product, amount }]
       }
     }
 

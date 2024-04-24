@@ -1,20 +1,23 @@
 <template>
   <div class="relative flex w-screen h-screen pointer-events-none">
-    <DishScreen
-      :class="
-        !isDishVisible
-          ? 'default-transition hidden-screen animated-out'
-          : 'default-transition visible-screen animated'
-      "
-      :product="selectedProduct"
-      @closeDish="isDishVisible = false"
-    />
-    <SideMenu :categories="menu" @select="onCategorySelect" :order-count="menuOrderCount"/>
+    <Transition name="fade">
+      <DishScreen
+        :class="!isDishVisible ? 'pointer-events-none' : 'pointer-events-auto'"
+        v-if="isDishVisible"
+        :product="selectedProduct"
+        @closeDish="isDishVisible = false"
+      />
+    </Transition>
+
+    <SideMenu :categories="menu" @select="onCategorySelect" :order-count="menuOrderCount" />
     <div
       class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
       ref="scrollBody"
     >
-      <div v-if="isLoading" class="fixed top-[35vh] w-[200px] h-[200px] z-[3] pointer-events-none right-[calc(50vw-200px)]">
+      <div
+        v-if="isLoading"
+        class="fixed top-[35vh] w-[200px] h-[200px] z-[3] pointer-events-none right-[calc(50vw-200px)]"
+      >
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
 
@@ -39,26 +42,33 @@
 <style scoped></style>
 
 <script setup>
-import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import axios from 'axios'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useScrollLock } from '@vueuse/core'
 
-import { SideMenu, MenuSection, MenuCard, DishScreen } from '@/components';
+import { SideMenu, MenuSection, MenuCard, DishScreen } from '@/components'
 
-const router = useRouter();
-const menuData = ref(null);
-const menu = ref([]);
-const categories = ref([]);
-const selectedCategory = ref(null);
-const productsList = ref([]);
-const isLoading = ref(false);
-const selectedProduct = ref(null);
-const menuOrderCount = ref(null);
+const router = useRouter()
+const menuData = ref(null)
+const menu = ref([])
+const categories = ref([])
+const selectedCategory = ref(null)
+const productsList = ref([])
+const isLoading = ref(false)
+const selectedProduct = ref(null)
+const menuOrderCount = ref(null)
 
-const scrollElement = ref(null);
-const scrollBody = ref(null);
+const scrollElement = ref(null)
+const scrollBody = ref(null)
 
 const onCategorySelect = ({ item }) => {
+  scrollBody.value.scrollBy(0, -1)
+  scrollBody.value.classList.add('stop-scrolling')
+  scrollBody.value.classList.remove('stop-scrolling')
+
+  scrollBody.value.scrollBy(0, -1)
+
   selectedCategory.value = item
   productsList.value = []
 
@@ -72,13 +82,13 @@ const onCategorySelect = ({ item }) => {
 
         if (rawOrderData) {
           try {
-            const order = JSON.parse(rawOrderData);
+            const order = JSON.parse(rawOrderData)
 
             if (order.products) {
-              const existedProduct = order.products.find((item) => item.id === p.id);
+              const existedProduct = order.products.find((item) => item.id === p.id)
 
               if (existedProduct) {
-                p.selected = existedProduct;
+                p.selected = existedProduct
               }
             }
           } catch (error) {
@@ -96,7 +106,7 @@ const onCategorySelect = ({ item }) => {
         }
       })
     }
-  });
+  })
 
   if (scrollElement.value) {
     scrollElement.value.scrollIntoView()
@@ -107,8 +117,8 @@ const onCategorySelect = ({ item }) => {
 const isDishVisible = ref(false)
 
 const toggleDish = (product) => {
-  isDishVisible.value = !isDishVisible.value;
-  selectedProduct.value = product;
+  isDishVisible.value = !isDishVisible.value
+  selectedProduct.value = product
 }
 
 const onOrderUpdate = () => {
@@ -116,8 +126,11 @@ const onOrderUpdate = () => {
 
   try {
     if (rawOrderData) {
-      const order = JSON.parse(rawOrderData);
-      menuOrderCount.value = order.products.reduce((accumulator, item) => accumulator + item.amount, 0);
+      const order = JSON.parse(rawOrderData)
+      menuOrderCount.value = order.products.reduce(
+        (accumulator, item) => accumulator + item.amount,
+        0
+      )
     }
   } catch (error) {
     console.log('Ошибка добавления в заказа', error)
@@ -161,7 +174,7 @@ onMounted(async () => {
   menuData.value.products = menuData.value.products
     .filter((p) => !p.isDeleted)
     .filter((p) => p.type === 'Dish')
-    // .filter((p) => !p.doNotPrintInCheque)
+  // .filter((p) => !p.doNotPrintInCheque)
 
   let currentProductIndex = 0
   let currentParentGroup = null

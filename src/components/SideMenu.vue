@@ -44,8 +44,12 @@
         <span class="menu-link ml-[15px]">Интерактивы</span>
       </div> -->
       <div class="relative flex items-center ml-[50px]">
-        <span @click="toOrderView" class="menu-link !pointer-events-auto shrink-0 text-nowrap">Мой заказ</span>
-        <SmallCounter v-if="orderAmount" :value="orderAmount" />
+        <span @click="toOrderView" class="menu-link !pointer-events-auto shrink-0 text-nowrap"
+          >Мой заказ</span
+        >
+        <Transition name="fade">
+          <SmallCounter v-if="orderAmount" :value="orderAmount" />
+        </Transition>
       </div>
     </div>
   </div>
@@ -70,15 +74,21 @@ const props = defineProps({
 const emit = defineEmits(['select, scroll'])
 const router = useRouter()
 const activeItem = ref([])
-const orderAmount = ref(0);
+const orderAmount = ref(0)
 
-watch(() => props.categories, (data) => {
-  activeItem.value = data[0];
-});
+watch(
+  () => props.categories,
+  (data) => {
+    activeItem.value = data[0]
+  }
+)
 
-watch(() => props.orderCount, (data) => {
-  orderAmount.value = data;
-});
+watch(
+  () => props.orderCount,
+  (data) => {
+    orderAmount.value = data
+  }
+)
 
 const onCategorySelect = (item) => {
   activeItem.value = item
@@ -94,15 +104,15 @@ const toWaiterView = () => {
 }
 
 onMounted(() => {
-  const rawOrderData = window.localStorage.getItem('order');
+  const rawOrderData = window.localStorage.getItem('order')
 
   try {
     if (rawOrderData) {
-      const order = JSON.parse(rawOrderData);
-      orderAmount.value = order.products.reduce((accumulator, item) => accumulator + item.amount, 0);
+      const order = JSON.parse(rawOrderData)
+      orderAmount.value = order.products.reduce((accumulator, item) => accumulator + item.amount, 0)
     }
   } catch (error) {
     console.log('Ошибка получение состояния корзины', error)
   }
-});
+})
 </script>

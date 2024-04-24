@@ -1,3 +1,23 @@
+/* TRANSITION TAG ANIMATIONS */
+
+.expand-enter-active {
+  animation: width 0.7s ease;
+}
+.expand-leave-active {
+  animation: width 0.7s ease;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* CLASSES ANIMATIONS */
 .animated-up {
   animation: fadeAnimationUp 1s ease forwards;
 }
@@ -8,6 +28,10 @@
 
 .animated {
   animation: fadeAnimation 0.5s ease forwards;
+}
+
+.animated-long {
+  animation: fadeAnimation 1s ease forwards;
 }
 
 .animated-out {
@@ -68,7 +92,7 @@
 
 @keyframes counterAnimation {
   0% {
-    transform: translateY(-50px);
+    transform: translateY(-60px);
     opacity: 0;
   }
   100% {
@@ -83,7 +107,7 @@
     opacity: 1;
   }
   100% {
-    transform: translateY(50px);
+    transform: translateY(60px);
     opacity: 0;
   }
 }
