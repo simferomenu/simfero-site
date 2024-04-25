@@ -24,7 +24,7 @@
         class="font-Segoe font-[350] text-[14px] leading-[136%] text-gold clip-4"
         v-if="!isDescrHidden"
       >
-        {{ product.description }}
+        {{ description }}
       </span>
       <span class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-[#fff]">
         {{ product.sizePrices[0].price.currentPrice }} Руб.
@@ -54,8 +54,9 @@ const props = defineProps({
 
 const emit = defineEmits(['choose', 'order-update'])
 
-const isDescrHidden = ref(false)
-const productName = ref(null)
+const isDescrHidden = ref(false);
+const productName = ref(null);
+const description = props.product.description || 'Lorem Ipsum является текст-заполнитель обычно используется в графических, печать и издательской индустрии для предварительного просмотра макета и визуальных макетах.';
 
 onMounted(() => {
   if (productName.value.clientHeight > 48) {
