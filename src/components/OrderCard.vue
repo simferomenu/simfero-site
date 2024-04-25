@@ -3,7 +3,6 @@
     class="relative flex flex-col h-[350px] w-[calc(50%-40px)] xs:w-[calc(33%-40px)] md:w-[calc(25%-40px)] box-border rounded-[19px] order-card-bg shrink-0 pointer-events-auto default-transition mb-[40px] mr-[40px] animated-up"
     :class="{ 'active-menu-card border-animation': false }"
   >
-    <div class="menu-card-border"></div>
     <div class="relative h-[145px] w-full shrink-0">
       <div
         class="absolute w-[183px] h-auto top-[-30px] left-[-25px] overflow-hidden rounded-[100px]"

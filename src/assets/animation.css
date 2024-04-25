@@ -1,10 +1,10 @@
 /* TRANSITION TAG ANIMATIONS */
 
 .expand-enter-active {
-  animation: width 0.7s ease;
+  animation: expandAnimation 0.2s ease-out;
 }
 .expand-leave-active {
-  animation: width 0.7s ease;
+  animation: expandAnimation 0.2s ease-out reverse;
 }
 
 .fade-enter-active,
@@ -50,6 +50,10 @@
   animation: fadeAnimation 0.5s ease forwards;
 }
 
+.border-out-animation:before {
+  animation: fadeOutAnimation 0.5s ease forwards;
+}
+
 @keyframes fadeAnimationUp {
   0% {
     opacity: 0;
@@ -58,6 +62,15 @@
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes expandAnimation {
+  0% {
+    width: 91px;
+  }
+  100% {
+    width: 104px;
   }
 }
 

@@ -4,7 +4,6 @@
     :class="{ 'active-menu-card border-animation': isProductInOrder }"
     @click="onChoose"
   >
-    <div class="menu-card-border"></div>
     <div class="relative h-[145px] w-full shrink-0">
       <div
         class="absolute w-[183px] h-auto top-[-30px] left-[-25px] overflow-hidden rounded-[100px]"
