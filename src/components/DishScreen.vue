@@ -18,7 +18,7 @@
           {{ product.name }}
         </div>
         <span class="simple-text">
-         {{ product.description }}
+         {{ description }}
         </span>
         <div class="relative flex w-full items-center justify-between h-[107px] mt-[15px]">
           <div class="absolute top-0 right-0 h-[1px] bg-[#fff] w-[70vw]"></div>
@@ -84,11 +84,12 @@ import { onMounted, ref, defineProps } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { SideMenu, MenuSmallCard, AddButton, IconCross } from '@/components';
 
-defineProps({
+const props = defineProps({
   product: {
     type: Object
   }
 })
+const description = props.product.description || 'Lorem Ipsum является текст-заполнитель обычно используется в графических, печать и издательской индустрии для предварительного просмотра макета и визуальных макетах.';
 
 const navigation = ref({
   enabled: true,
