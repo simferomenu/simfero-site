@@ -20,7 +20,6 @@
       >
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
-
       <div ref="scrollElement" v-if="selectedCategory">
         <MenuSection v-for="item in productsList" :name="item.name" :key="item.name">
           <MenuCard
@@ -63,12 +62,6 @@ const scrollElement = ref(null)
 const scrollBody = ref(null)
 
 const onCategorySelect = ({ item }) => {
-  scrollBody.value.scrollBy(0, -1)
-  scrollBody.value.classList.add('stop-scrolling')
-  scrollBody.value.classList.remove('stop-scrolling')
-
-  scrollBody.value.scrollBy(0, -1)
-
   selectedCategory.value = item
   productsList.value = []
 
