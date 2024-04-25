@@ -17,7 +17,7 @@
       </div>
     </div>
     <div
-      class="relative w-full flex-1 h-full flex flex-col mt-[90px] !overflow-auto pointer-events-auto custom-scrollbar animated-up"
+      class="relative w-full flex-1 h-full flex flex-col mt-[30px] !overflow-auto pointer-events-auto custom-scrollbar animated-up"
     >
       <ul class="[&>*:not(:last-child)]:mb-[27px] box-border pb-[20px]">
         <li v-for="item in categories" :key="item.name">

@@ -8,7 +8,7 @@
   >
     <div
       class="flex justify-center items-center h-full w-auto !pointer-events-auto"
-      @click="onQuantityChange($event,-1)"
+      @click="onQuantityChange($event, -1)"
     >
       <img v-if="isBlack" src="/icons/IconMinusGold.svg" alt="" />
       <img v-if="!isBlack" src="/icons/IconMinusBlack.svg" alt="" />
@@ -16,8 +16,8 @@
     <div
       :class="
         isBlack
-          ? 'font-Segoe font-semibold text-[18px] tracking-[0.15em] uppercase text-gold text-center mx-[15px]'
-          : 'font-Segoe font-semibold text-[18px] tracking-[0.15em] uppercase text-[#000] text-center mx-[15px]'
+          ? 'font-Segoe font-semibold text-[18px] tracking-[0.15em] uppercase text-gold text-center mx-[15px] pointer-events-none'
+          : 'font-Segoe font-semibold text-[18px] tracking-[0.15em] uppercase text-[#000] text-center mx-[15px] pointer-events-none'
       "
     >
       {{ counterValue }}
@@ -35,30 +35,29 @@
 <style scoped></style>
 
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue'
 
 const props = defineProps({
   quantity: {
     type: Number,
-    default: 1,
+    default: 1
   },
   isBlack: Boolean
-});
-const emit = defineEmits(['update']);
+})
+const emit = defineEmits(['update'])
 
-const counterValue = ref(props.quantity);
+const counterValue = ref(props.quantity)
 
 const onQuantityChange = (event, iterator) => {
-  event.stopPropagation();
+  event.stopPropagation()
 
-  counterValue.value += iterator;
+  counterValue.value += iterator
 
   if (counterValue.value <= 0) {
-    counterValue.value = 1;
-    emit('empty');
+    counterValue.value = 1
+    emit('empty')
   } else {
-    emit('update', counterValue);
+    emit('update', counterValue)
   }
 }
-
 </script>
