@@ -8,8 +8,20 @@
         @closeDish="isDishVisible = false"
       />
     </Transition>
+    <Transition name="fade">
+      <OrderScreen
+        :class="!isOrderVisible ? 'pointer-events-none' : 'pointer-events-auto'"
+        v-if="isOrderVisible"
+        @closeOrder="isOrderVisible = false"
+      />
+    </Transition>
 
-    <SideMenu :categories="menu" @select="onCategorySelect" :order-count="menuOrderCount" />
+    <SideMenu
+      :categories="menu"
+      @select="onCategorySelect"
+      :order-count="menuOrderCount"
+      @openOrder="isOrderVisible = true"
+    />
     <div
       class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
       ref="scrollBody"
@@ -46,7 +58,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useScrollLock } from '@vueuse/core'
 
-import { SideMenu, MenuSection, MenuCard, DishScreen } from '@/components'
+import { SideMenu, MenuSection, MenuCard, DishScreen, OrderScreen } from '@/components'
 
 const router = useRouter()
 const menuData = ref(null)
@@ -108,6 +120,7 @@ const onCategorySelect = ({ item }) => {
 }
 
 const isDishVisible = ref(false)
+const isOrderVisible = ref(false)
 
 const toggleDish = (product) => {
   isDishVisible.value = !isDishVisible.value

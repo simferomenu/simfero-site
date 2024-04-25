@@ -10,8 +10,13 @@
       class="flex justify-center items-center h-full w-auto !pointer-events-auto"
       @click="onQuantityChange($event, -1)"
     >
-      <img v-if="isBlack" src="/icons/IconMinusGold.svg" alt="" />
-      <img v-if="!isBlack" src="/icons/IconMinusBlack.svg" alt="" />
+      <img v-if="isBlack" src="/icons/IconMinusGold.svg" alt="" class="shrink-0 w-[23px] h-auto" />
+      <img
+        v-if="!isBlack"
+        src="/icons/IconMinusBlack.svg"
+        alt=""
+        class="shrink-0 w-[23px] h-auto"
+      />
     </div>
     <div
       :class="
@@ -26,8 +31,8 @@
       class="flex justify-center items-center h-full w-auto !pointer-events-auto"
       @click="onQuantityChange($event, 1)"
     >
-      <img v-if="!isBlack" src="/icons/IconPlusBlack.svg" alt="" />
-      <img v-if="isBlack" src="/icons/IconPlusGold.svg" alt="" />
+      <img v-if="!isBlack" src="/icons/IconPlusBlack.svg" alt="" class="shrink-0 w-[23px] h-auto" />
+      <img v-if="isBlack" src="/icons/IconPlusGold.svg" alt="" class="shrink-0 w-[23px] h-auto" />
     </div>
   </div>
 </template>

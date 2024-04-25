@@ -8,16 +8,10 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => {
-        const selectedTables = window.localStorage.getItem('selectedTables');
-        return selectedTables ? import('../views/HomeView.vue') : import('../views/WaiterView.vue');
+        const selectedTables = window.localStorage.getItem('selectedTables')
+        return selectedTables ? import('../views/HomeView.vue') : import('../views/WaiterView.vue')
       }
     },
-    // {
-    //   path: '/dish/:dishNickname',
-    //   path: '/dish/tuna',
-    //   name: 'dish',
-    //   component: () => import('../views/DishView.vue')
-    // },
     {
       path: '/order',
       name: 'order',

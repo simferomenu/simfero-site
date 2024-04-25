@@ -44,7 +44,9 @@
         <span class="menu-link ml-[15px]">Интерактивы</span>
       </div> -->
       <div class="relative flex items-center ml-[50px]">
-        <span @click="toOrderView" class="menu-link !pointer-events-auto shrink-0 text-nowrap"
+        <span
+          @click="$emit('openOrder')"
+          class="menu-link !pointer-events-auto shrink-0 text-nowrap"
           >Мой заказ</span
         >
         <Transition name="fade">
@@ -93,9 +95,6 @@ watch(
 const onCategorySelect = (item) => {
   activeItem.value = item
   emit('select', { item })
-}
-const toOrderView = () => {
-  router.push('/order')
 }
 
 const toWaiterView = () => {
