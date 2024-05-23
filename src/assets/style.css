@@ -24,7 +24,7 @@ body {
   width: 67px;
   max-width: 100%;
   background-color: #d2af96;
-  bottom: -10px;
+  bottom: -3px;
   left: 0;
   opacity: 0;
   transition: all 0.3s ease;
@@ -156,15 +156,15 @@ body {
 }
 
 .clip-4,
-.clip-3 {
+.clip-5 {
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.clip-3 {
-  -webkit-line-clamp: 3 !important;
+.clip-5 {
+  -webkit-line-clamp: 5 !important;
 }
 
 .stop-scrolling {

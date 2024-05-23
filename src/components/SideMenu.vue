@@ -19,11 +19,11 @@
     <div
       class="relative w-full flex-1 h-full flex flex-col mt-[30px] !overflow-auto pointer-events-auto custom-scrollbar animated-up"
     >
-      <ul class="[&>*:not(:last-child)]:mb-[27px] box-border pb-[20px]">
+      <ul class="box-border pb-[20px]">
         <li v-for="item in categories" :key="item.name">
-          <a
+          <div
             :class="[
-              'menu-link',
+              'menu-link accordion',
               {
                 active: item.id === activeItem.id
               }
@@ -31,7 +31,25 @@
             @click="onCategorySelect(item)"
           >
             {{ item.name }}
-          </a>
+          </div>
+          <div class="panel [&>*:not(:last-child)]:mb-[5px]">
+            <div class="panel-link">
+              <img class="h-[24px] w-[24px] mr-[10px]" src="/icons/IconCircleArrow.svg" alt="" />
+              <div
+                class="font-Sitka text-[#fff] text-[15px] tracking-[0.17em] uppercase leading-[160%] font-normal"
+              >
+                Белые вина
+              </div>
+            </div>
+            <div class="panel-link">
+              <img class="h-[24px] w-[24px] mr-[10px]" src="/icons/IconCircleArrow.svg" alt="" />
+              <div
+                class="font-Sitka text-[#fff] text-[15px] tracking-[0.17em] uppercase leading-[160%] font-normal"
+              >
+                Французкие вина
+              </div>
+            </div>
+          </div>
         </li>
       </ul>
     </div>
@@ -57,7 +75,22 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.panel {
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  max-height: 0px;
+  transition: max-height 0.2s ease-out;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.panel-link {
+  @apply relative flex items-center;
+}
+</style>
 
 <script setup>
 import { ref, watch, defineEmits, onMounted } from 'vue'
@@ -77,6 +110,7 @@ const emit = defineEmits(['select, scroll'])
 const router = useRouter()
 const activeItem = ref([])
 const orderAmount = ref(0)
+const acc = document.getElementsByClassName('accordion')
 
 watch(
   () => props.categories,
@@ -92,9 +126,33 @@ watch(
   }
 )
 
+// const accActivate = () => {
+//   for (let i = 0; i < acc.length; i++) {
+//     acc[i].addEventListener('click', onCategorySelect)
+//   }
+// }
+
 const onCategorySelect = (item) => {
   activeItem.value = item
   emit('select', { item })
+
+  for (let i = 0; i < acc.length; i++) {
+    acc[i].nextElementSibling.style.maxHeight = 0
+    acc[i].classList.remove('active')
+  }
+
+  const clickedAcc = event.target.closest('.accordion')
+  if (clickedAcc) {
+    clickedAcc.nextElementSibling.style.maxHeight =
+      clickedAcc.nextElementSibling.scrollHeight + 'px'
+    clickedAcc.classList.add('active')
+  }
+}
+
+const selectFirstAcc = () => {
+  for (let i = 0; i < acc.length; i++) {
+    acc[0].click()
+  }
 }
 
 const toWaiterView = () => {
@@ -113,5 +171,6 @@ onMounted(() => {
   } catch (error) {
     console.log('Ошибка получение состояния корзины', error)
   }
+  setTimeout(selectFirstAcc, 100)
 })
 </script>
