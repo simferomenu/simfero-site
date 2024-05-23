@@ -13,6 +13,8 @@
         :class="!isOrderVisible ? 'pointer-events-none' : 'pointer-events-auto'"
         v-if="isOrderVisible"
         @closeOrder="isOrderVisible = false"
+        @chooseFromOrder="toggleDish"
+        @updateOrder="onOrderUpdate"
       />
     </Transition>
 
@@ -35,7 +37,7 @@
       <div ref="scrollElement" v-if="selectedCategory">
         <MenuSection v-for="item in productsList" :name="item.name" :key="item.name">
           <MenuCard
-            class="animated-up"
+            ref="target"
             v-for="product in item.products"
             :product="product"
             :key="product.id"
@@ -43,7 +45,7 @@
             @order-update="onOrderUpdate"
           />
           <!-- Заполняющий div, блокирующий тапы -->
-          <div class="flex-1 mr-auto !pointer-events-none"></div>
+          <!-- <div class="flex-1 mr-auto !pointer-events-none"></div> -->
         </MenuSection>
       </div>
     </div>

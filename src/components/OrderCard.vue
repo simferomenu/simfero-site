@@ -1,11 +1,11 @@
 <template>
   <div
     class="relative flex flex-col h-[350px] w-[calc(50%-40px)] xs:w-[calc(33%-40px)] md:w-[calc(25%-40px)] box-border rounded-[19px] order-card-bg shrink-0 pointer-events-auto default-transition mb-[40px] mr-[40px] animated-up"
-    :class="{ 'active-menu-card border-animation': false }"
+    @click="$emit('chooseFromOrder')"
   >
     <div class="relative h-[145px] w-full shrink-0">
       <div
-        class="absolute w-[183px] h-auto top-[-30px] left-[-25px] overflow-hidden rounded-[100px]"
+        class="absolute w-[183px] h-[183px] top-[-30px] left-[-25px] overflow-hidden rounded-[100px]"
       >
         <img :src="product.imageLinks[0] || '/images/ImageBasicDish.png'" alt="" />
       </div>
@@ -54,9 +54,11 @@ const props = defineProps({
 
 const emit = defineEmits(['choose', 'order-update'])
 
-const isDescrHidden = ref(false);
-const productName = ref(null);
-const description = props.product.description || 'Lorem Ipsum является текст-заполнитель обычно используется в графических, печать и издательской индустрии для предварительного просмотра макета и визуальных макетах.';
+const isDescrHidden = ref(false)
+const productName = ref(null)
+const description =
+  props.product.description ||
+  'Lorem Ipsum является текст-заполнитель обычно используется в графических, печать и издательской индустрии для предварительного просмотра макета и визуальных макетах.'
 
 onMounted(() => {
   if (productName.value.clientHeight > 48) {
@@ -110,5 +112,6 @@ const onDeleteFromOrder = () => {
 
 const onProductCounterUpdate = (amount) => {
   onAddToOrder(null, amount.value)
+  emit('orderCardUpdate')
 }
 </script>

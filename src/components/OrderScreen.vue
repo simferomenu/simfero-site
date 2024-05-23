@@ -16,6 +16,7 @@
         v-for="item in orderItems"
         :product="item"
         :key="item.id"
+        @chooseFromOrder="$emit('chooseFromOrder')"
         @order-update="onOrderUpdate"
       />
     </div>
@@ -77,7 +78,10 @@ const calcTotalPrice = () => {
   }, 0)
 }
 
-const onOrderUpdate = () => calcTotalPrice()
+const onOrderUpdate = () => {
+  calcTotalPrice()
+  emit('updateOrder')
+}
 
 onMounted(() => {
   getOrderData()
