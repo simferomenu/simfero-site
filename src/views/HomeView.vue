@@ -118,7 +118,7 @@ const onCategorySelect = ({ item }) => {
   if (scrollElement.value) {
     scrollElement.value.scrollIntoView()
   }
-  scrollBody.value.scrollBy(0, -40)
+  scrollBody.value.scrollBy(0, -40);
 }
 
 const isDishVisible = ref(false)
@@ -147,7 +147,7 @@ const onOrderUpdate = () => {
 
 onMounted(async () => {
   const storageMenu = window.localStorage.getItem('menu')
-  menuData.value = storageMenu ? JSON.parse(storageMenu) : null
+  menuData.value = storageMenu ? JSON.parse(storageMenu) : null;
 
   if (!menuData.value) {
     isLoading.value = true
@@ -201,22 +201,23 @@ onMounted(async () => {
         ++currentProductIndex
         console.log('Продукт: ', product.name)
       } else {
-        groupsList.push(currentParentGroup.name)
+        console.log('currentParentGroup: ', currentParentGroup.name);
+        groupsList.push(currentParentGroup)
       }
     } else if (currentParentGroup.parentGroup) {
       currentParentGroup = filteredGroups.find(
         (group) => group.id === currentParentGroup.parentGroup
       )
-      groupsList.push(currentParentGroup.name)
+      groupsList.push(currentParentGroup)
     } else {
       const groupExisted = menuGroups.find((g) => g.id === currentParentGroup.id)
       if (!groupExisted) {
         menuGroups.push({
           ...currentParentGroup,
-          products: [{ ...product, chain: [...groupsList.reverse()] }]
+          products: [{ ...product, chain: [...groupsList.map(({name}) => name).reverse()] }]
         })
       } else {
-        groupExisted.products.push({ ...product, chain: [...groupsList.reverse()] })
+        groupExisted.products.push({ ...product, chain: [...groupsList.map(({name}) => name).reverse()] })
       }
 
       groupsList = []
@@ -225,7 +226,16 @@ onMounted(async () => {
     }
   }
 
-  menu.value = menuGroups
+  menu.value = menuGroups;
+
+  menu.value.forEach((item) => {
+    item.sub = [];
+    filteredGroups.map((sub) => {
+      if (sub.parentGroup === item.id) {
+        item.sub.push(sub)
+      }
+    });
+  });
 
   onCategorySelect({ item: menu.value[0] })
 
