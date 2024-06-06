@@ -41,14 +41,30 @@
           </div>
           <div class="absolute bottom-0 right-0 h-[1px] bg-[#fff] w-[70vw]"></div>
         </div>
-        <AddButton :quantity="2" :isActive="false" class="mt-[30px] self-end" />
+        <div class="relative w-full flex items-center justify-between mt-[30px]">
+          <div class="relative h-full flex flex-col justify-between">
+            <span
+              class="font-Segoe font-semibold text-[24px] leading-[110%] tracking-[0.03em] upppercase text-[#fff]"
+              >{{ product.sizePrices[0].price.currentPrice }} Руб.</span
+            >
+            <span
+              class="font-Segoe font-semibold text-[21px] leading-[110%] tracking-[0.03em] upppercase text-darkGold mt-[18px]"
+              >{{ product.weight }} Г.</span
+            >
+          </div>
+          <AddButton
+            @click="onAddToOrder"
+            :isActive="isProductInOrder"
+            :value="product?.selected?.amount"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, defineProps } from 'vue'
+import { onMounted, ref, defineProps, defineEmits } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { SideMenu, MenuSmallCard, AddButton, IconCross } from '@/components'
 
@@ -70,6 +86,10 @@ const navigation = ref({
 const scrollbar = ref({
   enabled: true,
   el: '.dish-scrollbar'
+})
+
+onMounted(() => {
+  const isProductInOrder = ref(props.product.selected)
 })
 </script>
 
