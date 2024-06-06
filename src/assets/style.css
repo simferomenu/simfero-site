@@ -20,11 +20,11 @@ body {
 .menu-link::before {
   content: '';
   position: absolute;
-  height: 2px;
+  height: 1px;
   width: 67px;
   max-width: 100%;
   background-color: #d2af96;
-  bottom: -3px;
+  bottom: 0;
   left: 0;
   opacity: 0;
   transition: all 0.3s ease;

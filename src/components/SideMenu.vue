@@ -33,10 +33,12 @@
             {{ item.name }}
           </div>
 
-          <div class="panel [&>*:not(:last-child)]:mb-[5px]">
+          <div class="panel [&>*:not(:last-child)]:mb-[10px]">
             <div class="panel-link" v-for="sub in item.sub" :key="sub.id">
               <img class="h-[24px] w-[24px] mr-[10px]" src="/icons/IconCircleArrow.svg" alt="" />
-              <div class="font-Sitka text-[#fff] text-[15px] tracking-[0.17em] uppercase leading-[160%] font-normal">
+              <div
+                class="font-Sitka text-[#fff] text-[15px] tracking-[0.17em] uppercase leading-[160%] font-normal"
+              >
                 {{ sub.name }}
               </div>
             </div>
@@ -79,7 +81,7 @@
 }
 
 .panel-link {
-  @apply relative flex items-center;
+  @apply relative flex;
 }
 </style>
 
