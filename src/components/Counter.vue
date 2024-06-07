@@ -7,7 +7,7 @@
     "
   >
     <div
-      class="flex justify-center items-center h-full w-auto !pointer-events-auto"
+      class="flex justify-center items-center h-full w-auto !pointer-events-auto animated"
       @click="onQuantityChange($event, -1)"
     >
       <img v-if="isBlack" src="/icons/IconMinusGold.svg" alt="" class="shrink-0 w-[23px] h-auto" />
@@ -28,7 +28,7 @@
       {{ counterValue }}
     </div>
     <div
-      class="flex justify-center items-center h-full w-auto !pointer-events-auto"
+      class="flex justify-center items-center h-full w-auto !pointer-events-auto animated"
       @click="onQuantityChange($event, 1)"
     >
       <img v-if="!isBlack" src="/icons/IconPlusBlack.svg" alt="" class="shrink-0 w-[23px] h-auto" />

@@ -1,7 +1,7 @@
 <template>
   <div
     class="relative flex flex-col h-[350px] w-[calc(50%-40px)] xs:w-[calc(33%-40px)] md:w-[calc(25%-40px)] box-border rounded-[19px] order-card-bg shrink-0 pointer-events-auto default-transition mb-[40px] mr-[40px] animated-up"
-    @click="$emit('chooseFromOrder')"
+    @click="onChoose"
   >
     <div class="relative h-[145px] w-full shrink-0">
       <div
@@ -43,7 +43,7 @@
 <style scoped></style>
 
 <script setup>
-import { ref, defineEmits, onMounted } from 'vue'
+import { ref, defineEmits, defineProps, onMounted } from 'vue'
 import { IconPlus, Counter } from '@/components'
 
 const props = defineProps({
@@ -52,13 +52,17 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['choose', 'order-update'])
+const emit = defineEmits(['chooseFromOrder', 'order-update'])
+
+const isProductInOrder = ref(props.product.selected)
 
 const isDescrHidden = ref(false)
 const productName = ref(null)
 const description =
   props.product.description ||
   'Lorem Ipsum является текст-заполнитель обычно используется в графических, печать и издательской индустрии для предварительного просмотра макета и визуальных макетах.'
+
+const onChoose = () => emit('chooseFromOrder', props.product)
 
 onMounted(() => {
   if (productName.value.clientHeight > 48) {
@@ -82,15 +86,18 @@ const onAddToOrder = (event, amount = 1) => {
       if (product) {
         product.amount = amount
       } else {
-        order.products.push({ id: props.product.id, amount })
+        order.products.push({ ...props.product, amount })
       }
     } else {
       order = {
         tables: [...JSON.parse(selectedTables)],
-        products: [{ id: props.product.id, amount }]
+        products: [{ ...props.product, amount }]
       }
     }
+
+    isProductInOrder.value = true
     window.localStorage.setItem('order', JSON.stringify(order))
+
     emit('order-update')
   } catch (error) {
     console.log('Ошибка добавления в заказа', error)
@@ -103,6 +110,7 @@ const onDeleteFromOrder = () => {
   try {
     let order = JSON.parse(rawOrderData)
     order.products = order.products.filter((p) => p.id !== props.product.id)
+    isProductInOrder.value = false
     window.localStorage.setItem('order', JSON.stringify(order))
     emit('order-update')
   } catch (error) {

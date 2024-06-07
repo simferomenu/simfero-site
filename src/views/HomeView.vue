@@ -12,6 +12,7 @@
       <OrderScreen
         :class="!isOrderVisible ? 'pointer-events-none' : 'pointer-events-auto'"
         v-if="isOrderVisible"
+        :product="product"
         @closeOrder="isOrderVisible = false"
         @chooseFromOrder="toggleDish"
         @updateOrder="onOrderUpdate"
@@ -35,17 +36,28 @@
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
       <div ref="scrollElement" v-if="selectedCategory">
-        <MenuSection v-for="item in productsList" :name="item.name" :key="item.name">
+        <!-- <MenuSection v-for="item in productsList" :name="item.name" :key="item.name">
           <MenuCard
-            ref="target"
             v-for="product in item.products"
             :product="product"
             :key="product.id"
             @choose="toggleDish"
             @order-update="onOrderUpdate"
           />
-          <!-- Заполняющий div, блокирующий тапы -->
-          <!-- <div class="flex-1 mr-auto !pointer-events-none"></div> -->
+        </MenuSection> -->
+        <MenuSection v-for="(item, sectionIndex) in bufferArr" :name="item.name" :key="item.name">
+          <MenuCard
+            v-for="(product, index) in bufferArr[sectionIndex].products"
+            :product="product"
+            :key="product.id"
+            :data-id="index + 1"
+            :renderedCount="renderedCount"
+            :productsLength="bufferArr[sectionIndex].products.length"
+            :sectionIndex="sectionIndex"
+            @choose="toggleDish"
+            @order-update="onOrderUpdate"
+            @expand="onBufferArrExpand"
+          />
         </MenuSection>
       </div>
     </div>
@@ -56,7 +68,7 @@
 
 <script setup>
 import axios from 'axios'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useScrollLock } from '@vueuse/core'
 
@@ -71,13 +83,46 @@ const productsList = ref([])
 const isLoading = ref(false)
 const selectedProduct = ref(null)
 const menuOrderCount = ref(null)
+const renderedCount = ref(null)
+const productsLength = ref([])
 
 const scrollElement = ref(null)
 const scrollBody = ref(null)
+const cardsPerLine = ref(null)
+const bufferArr = ref([])
+
+const viewWidth = window.innerWidth
+
+if (viewWidth < 1112) {
+  cardsPerLine.value = 2
+} else if (viewWidth >= 1112 && viewWidth < 1366) {
+  cardsPerLine.value = 3
+} else {
+  cardsPerLine.value = 4
+}
+
+renderedCount.value = cardsPerLine.value * 4
+
+const onBufferArrExpand = (sectionIndex, renderLineTrigger) => {
+  for (
+    let i = (renderLineTrigger - 1) * renderedCount.value;
+    i < renderLineTrigger * renderedCount.value;
+    i++
+  ) {
+    bufferArr.value[sectionIndex].products[i] = productsList.value[sectionIndex].products[i]
+  }
+  productsLength.value[sectionIndex] = renderLineTrigger * renderedCount.value
+  bufferArr.value[sectionIndex].products = bufferArr.value[sectionIndex].products.filter(
+    function (element) {
+      return element !== undefined
+    }
+  )
+}
 
 const onCategorySelect = ({ item }) => {
   selectedCategory.value = item
   productsList.value = []
+  bufferArr.value = []
 
   selectedCategory.value.products.forEach((p) => {
     if (p.sizePrices[0].price.currentPrice > 0) {
@@ -111,6 +156,15 @@ const onCategorySelect = ({ item }) => {
         } else {
           categoryExisted.products.push(p)
         }
+
+        for (let i = 0; i < productsList.value.length; i++) {
+          bufferArr.value[i] = {
+            name: productsList.value[i].name,
+            products: productsList.value[i].products.slice(0, cardsPerLine.value * 4),
+            id: i + 1
+          }
+          productsLength.value[i] = cardsPerLine.value * 4
+        }
       })
     }
   })
@@ -118,7 +172,7 @@ const onCategorySelect = ({ item }) => {
   if (scrollElement.value) {
     scrollElement.value.scrollIntoView()
   }
-  scrollBody.value.scrollBy(0, -40);
+  scrollBody.value.scrollBy(0, -40)
 }
 
 const isDishVisible = ref(false)
@@ -131,7 +185,6 @@ const toggleDish = (product) => {
 
 const onOrderUpdate = () => {
   const rawOrderData = window.localStorage.getItem('order')
-
   try {
     if (rawOrderData) {
       const order = JSON.parse(rawOrderData)
@@ -145,9 +198,16 @@ const onOrderUpdate = () => {
   }
 }
 
+// watch(
+//   () => bufferArr.value[0].products[0].selected,
+//   () => {
+//     console.log('sdsdsdsd')
+//   }
+// )
+
 onMounted(async () => {
   const storageMenu = window.localStorage.getItem('menu')
-  menuData.value = storageMenu ? JSON.parse(storageMenu) : null;
+  menuData.value = storageMenu ? JSON.parse(storageMenu) : null
 
   if (!menuData.value) {
     isLoading.value = true
@@ -199,9 +259,9 @@ onMounted(async () => {
 
       if (!currentParentGroup) {
         ++currentProductIndex
-        console.log('Продукт: ', product.name)
+        // console.log('Продукт: ', product.name)
       } else {
-        console.log('currentParentGroup: ', currentParentGroup.name);
+        // console.log('currentParentGroup: ', currentParentGroup.name)
         groupsList.push(currentParentGroup)
       }
     } else if (currentParentGroup.parentGroup) {
@@ -214,10 +274,13 @@ onMounted(async () => {
       if (!groupExisted) {
         menuGroups.push({
           ...currentParentGroup,
-          products: [{ ...product, chain: [...groupsList.map(({name}) => name).reverse()] }]
+          products: [{ ...product, chain: [...groupsList.map(({ name }) => name).reverse()] }]
         })
       } else {
-        groupExisted.products.push({ ...product, chain: [...groupsList.map(({name}) => name).reverse()] })
+        groupExisted.products.push({
+          ...product,
+          chain: [...groupsList.map(({ name }) => name).reverse()]
+        })
       }
 
       groupsList = []
@@ -226,16 +289,16 @@ onMounted(async () => {
     }
   }
 
-  menu.value = menuGroups;
+  menu.value = menuGroups
 
   menu.value.forEach((item) => {
-    item.sub = [];
+    item.sub = []
     filteredGroups.map((sub) => {
       if (sub.parentGroup === item.id) {
         item.sub.push(sub)
       }
-    });
-  });
+    })
+  })
 
   onCategorySelect({ item: menu.value[0] })
 

@@ -116,7 +116,7 @@ const isSelected = ({ id }) => {
 }
 
 const onTablesSelected = () => {
-  window.location = '/';
+  window.location = '/'
 }
 
 onMounted(() => {

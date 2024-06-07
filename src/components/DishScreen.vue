@@ -55,7 +55,7 @@
           <AddButton
             @click="onAddToOrder"
             :isActive="isProductInOrder"
-            :value="product?.selected?.amount"
+            :quantity="props.product?.selected?.amount"
           />
         </div>
       </div>

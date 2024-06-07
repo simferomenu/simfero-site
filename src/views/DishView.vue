@@ -33,7 +33,10 @@
           </div>
           <div class="absolute bottom-0 right-0 h-[1px] bg-[#fff] w-[70vw]"></div>
         </div>
-        <AddButton class="mt-[30px] self-end !pointer-events-auto" />
+        <div class="relative w-full flex items-center justify-between">
+          <span class="">1200 Руб.</span>
+          <AddButton class="mt-[30px] self-end !pointer-events-auto" />
+        </div>
       </div>
     </div>
     <div class="relative flex flex-col shrink-0 !pointer-events-auto">

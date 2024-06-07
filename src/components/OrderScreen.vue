@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed top-0 left-0 flex flex-col justify-between h-screen w-screen bg-darkBlue order-bg pt-[35px] overflow-hidden pointer-events-none pb-[140px] z-[3]"
+    class="fixed top-0 left-0 flex flex-col justify-between h-screen w-screen bg-darkBlue order-bg pt-[35px] overflow-auto pointer-events-none pb-[140px] z-[3]"
   >
     <IconCross @click="$emit('closeOrder')" />
     <IconBack @click="$emit('closeOrder')" />
@@ -16,7 +16,7 @@
         v-for="item in orderItems"
         :product="item"
         :key="item.id"
-        @chooseFromOrder="$emit('chooseFromOrder')"
+        @chooseFromOrder="onChooseFromOrder"
         @order-update="onOrderUpdate"
       />
     </div>
@@ -46,16 +46,18 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { onMounted, ref, defineEmits, defineProps } from 'vue'
 import { IconCross, IconBack, OrderCard } from '@/components'
 
-const router = useRouter()
+const emit = defineEmits(['updateOrder'])
+
+const onChooseFromOrder = () => {
+  emit('chooseFromOrder', props.product)
+}
+
 const orderItems = ref([])
 const totalPrice = ref(0)
 const order = ref(null)
-
-const toMain = () => router.push('/')
 
 const getOrderData = () => {
   const rawOrderData = window.localStorage.getItem('order')
