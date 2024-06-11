@@ -36,7 +36,11 @@
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
       <div ref="scrollElement" v-if="selectedCategory">
-        <!-- <MenuSection v-for="item in productsList" :name="item.name" :key="item.name">
+        <MenuSection
+          v-for="item in productsStore.productsList[18].subGroups"
+          :name="item.name"
+          :key="item.name"
+        >
           <MenuCard
             v-for="product in item.products"
             :product="product"
@@ -44,8 +48,12 @@
             @choose="toggleDish"
             @order-update="onOrderUpdate"
           />
-        </MenuSection> -->
-        <MenuSection v-for="(item, sectionIndex) in bufferArr" :name="item.name" :key="item.name">
+        </MenuSection>
+        <!-- <MenuSection
+          v-for="(item, sectionIndex) in productsStore.productsList[0]"
+          :name="item.name"
+          :key="item.name"
+        >
           <MenuCard
             v-for="(product, index) in bufferArr[sectionIndex].products"
             :product="product"
@@ -58,7 +66,7 @@
             @order-update="onOrderUpdate"
             @expand="onBufferArrExpand"
           />
-        </MenuSection>
+        </MenuSection> -->
       </div>
     </div>
   </div>
@@ -71,8 +79,11 @@ import axios from 'axios'
 import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useScrollLock } from '@vueuse/core'
+import { useProductsStore } from '@/stores/products.store'
 
 import { SideMenu, MenuSection, MenuCard, DishScreen, OrderScreen } from '@/components'
+
+const productsStore = useProductsStore()
 
 const router = useRouter()
 const menuData = ref(null)
@@ -85,6 +96,9 @@ const selectedProduct = ref(null)
 const menuOrderCount = ref(null)
 const renderedCount = ref(null)
 const productsLength = ref([])
+const expMenuData = ref([])
+const groupIndexRemove = ref([])
+const productsListExp = ref([])
 
 const scrollElement = ref(null)
 const scrollBody = ref(null)
@@ -118,6 +132,70 @@ const onBufferArrExpand = (sectionIndex, renderLineTrigger) => {
     }
   )
 }
+
+const isUpperCase = (str) => {
+  return str === str.toUpperCase()
+}
+
+const storageMenuExp = window.localStorage.getItem('menu')
+expMenuData.value = storageMenuExp ? JSON.parse(storageMenuExp) : null
+expMenuData.value.products.forEach(function (product) {
+  product.isRendered = 'false'
+  product.order = {
+    isInOrder: false,
+    orderCount: null
+  }
+})
+const filteredProducts = expMenuData.value.products
+  .filter((product) => product.type === 'Dish')
+  .filter((product) => !product.isDeleted)
+expMenuData.value.products = filteredProducts
+const groups = ref(expMenuData.value.groups)
+for (const group of groups.value) {
+  if (group.parentGroup == null && isUpperCase(group.name) == true) {
+    productsListExp.value.push(group)
+  }
+}
+
+for (const group of productsListExp.value) {
+  const subGroups = expMenuData.value.groups.filter((subGroup) => subGroup.parentGroup === group.id)
+  if (subGroups.length != 0) {
+    group.subGroups = subGroups
+  } else {
+    group.subGroups = [
+      {
+        name: group.name,
+        products: expMenuData.value.products.filter((subGroup) => subGroup.parentGroup === group.id)
+      }
+    ]
+  }
+  // Fill sub with products
+  for (const subGroup of group.subGroups) {
+    const products = expMenuData.value.products.filter(
+      (product) => product.parentGroup === subGroup.id
+    )
+    const subSubGroups = expMenuData.value.groups.filter(
+      (subSubGroups) => subSubGroups.parentGroup === subGroup.id
+    )
+    if (subSubGroups.length != 0) {
+      group.subGroups.push(...subSubGroups)
+    }
+    if (products.length != 0) {
+      subGroup.products = products
+    }
+  }
+  if (group.subGroups.length == 1 && group.subGroups[0].products.length == 0) {
+    groupIndexRemove.value.push(productsListExp.value.indexOf(group))
+  }
+}
+productsListExp.value = productsListExp.value.filter(
+  (_, index) => !groupIndexRemove.value.includes(index)
+)
+
+productsListExp.value.sort((a, b) => a.order - b.order)
+console.log(productsListExp)
+
+productsStore.setProductsList(productsListExp.value)
 
 const onCategorySelect = ({ item }) => {
   selectedCategory.value = item
@@ -305,5 +383,7 @@ onMounted(async () => {
   const showDish = () => {
     DishScreen.classlist.remove('hidden-screen')
   }
+
+  console.log(productsStore.productsList[0].name)
 })
 </script>
