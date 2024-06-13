@@ -48,6 +48,9 @@
 <script setup>
 import { onMounted, ref, defineEmits, defineProps } from 'vue'
 import { IconCross, IconBack, OrderCard } from '@/components'
+import { useOrderStore } from '@/stores/order.store'
+
+const orderStore = useOrderStore()
 
 const emit = defineEmits(['updateOrder'])
 
