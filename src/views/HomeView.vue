@@ -128,6 +128,10 @@ const onGroupSelect = ({ selectedGroupIndex }) => {
     for ( let i=0; i<productsStore.productsList[selectedGroupIndex].subGroups[0].products.length; i++) {
       productsStore.productsList[selectedGroupIndex].subGroups[0].products[i].isRendered=true
     }
+  } else {
+    for ( let i=0; i<cardsPerLine.value*4; i++) {
+      productsStore.productsList[selectedGroupIndex].subGroups[0].products[i].isRendered=true
+    }
   }
   displayedGroupIndex.value = selectedGroupIndex
   selectedCategory.value = selectedGroupIndex
