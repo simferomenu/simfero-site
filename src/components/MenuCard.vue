@@ -4,6 +4,7 @@
     :class="{ 'active-menu-card border-animation': isProductInOrder }"
     @click="onChoose"
     ref="cardElement"
+    v-if = product.isRendered
   >
     <div class="relative h-[145px] w-full shrink-0">
       <div

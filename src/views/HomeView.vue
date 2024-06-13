@@ -124,6 +124,11 @@ const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
 // }
 
 const onGroupSelect = ({ selectedGroupIndex }) => {
+  if (productsStore.productsList[selectedGroupIndex].subGroups.length == 1) {
+    for ( let i=0; i<productsStore.productsList[selectedGroupIndex].subGroups[0].products.length; i++) {
+      productsStore.productsList[selectedGroupIndex].subGroups[0].products[i].isRendered=true
+    }
+  }
   displayedGroupIndex.value = selectedGroupIndex
   selectedCategory.value = selectedGroupIndex
 
@@ -391,6 +396,5 @@ onMounted(async () => {
     DishScreen.classlist.remove('hidden-screen')
   }
 
-  console.log(productsStore.productsList[0].name)
 })
 </script>
