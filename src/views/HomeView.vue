@@ -22,6 +22,7 @@
     <SideMenu
       :categories="productsListExp"
       @selectGroup="onGroupSelect"
+      @selectSubGroup="onSubGroupSelect"
       :order-count="menuOrderCount"
       @openOrder="isOrderVisible = true"
     />
@@ -35,16 +36,19 @@
       >
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
-      <div ref="scrollElement">
+      <div>
         <MenuSection
           v-for="(item, sectionIndex) in productsStore.productsList[displayedGroupIndex].subGroups"
+          ref="scrollSection"
           :name="item.name"
           :key="item.name"
+          :id="sectionIndex"
         >
           <MenuCard
-            v-for="product in item.products"
+            v-for="(product, cardIndex) in item.products"
             :product="product"
             :key="product.id"
+            :data-id="cardIndex"
             @choose="toggleDish"
             @order-update="onOrderUpdate"
           />
@@ -98,11 +102,16 @@ const subGroupIndexRemove = ref([])
 const displayedGroupIndex = ref(0)
 // const selectedSubGroupIndex = ref(null)
 
-const scrollElement = ref(null)
 const scrollBody = ref(null)
 const cardsPerLine = ref(null)
 
 const viewWidth = window.innerWidth
+
+
+
+const onSubGroupSelect = ({selectedSubGroupIndex}) => { 
+  console.log(selectedSubGroupIndex)
+}
 
 const onGroupSelect = ({selectedGroupIndex}) => {
   displayedGroupIndex.value = selectedGroupIndex

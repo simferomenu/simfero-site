@@ -38,7 +38,7 @@
               <img class="h-[24px] w-[24px] mr-[10px]" src="/icons/IconCircleArrow.svg" alt="" />
               <div
                 class="font-Sitka text-[#fff] text-[15px] tracking-[0.17em] uppercase leading-[160%] font-normal"
-                @click="onSubGroupSelect(selectedGroupIndex, selectedSubGroupIndex)"
+                @click="onSubGroupSelect(selectedSubGroupIndex)"
               >
                 {{ sub.name }}
               </div>

@@ -120,17 +120,10 @@ const description =
 
 const cardElement = ref(null)
 
-const lineTriggerCount = ref(null)
-
 const handleVisibilityChange = (entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
       const cardId = entry.target.getAttribute('data-id')
-      lineTriggerCount.value = props.productsLength / props.renderedCount
-      if (cardId % props.renderedCount == 0 && props.productsLength <= cardId) {
-        lineTriggerCount.value++
-        emit('expand', props.sectionIndex, lineTriggerCount.value)
-      }
     }
   })
 }
