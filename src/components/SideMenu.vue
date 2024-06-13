@@ -116,12 +116,12 @@ const onGroupSelect = (selectedGroupIndex) => {
   }
 
   const clickedAcc = event.target.closest('.accordion')
-  if (props.categories[selectedGroupIndex].subGroups.length>1) {
     if (clickedAcc) {
-      clickedAcc.nextElementSibling.style.maxHeight =
-      clickedAcc.nextElementSibling.scrollHeight + 'px'
       clickedAcc.classList.add('active')
-    }
+      if (props.categories[selectedGroupIndex].subGroups.length>1) {
+        clickedAcc.nextElementSibling.style.maxHeight =
+        clickedAcc.nextElementSibling.scrollHeight + 'px'
+      }
   }
 }
 const onSubGroupSelect = (selectedSubGroupIndex) => {
