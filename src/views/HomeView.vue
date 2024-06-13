@@ -109,10 +109,24 @@ const cardsPerLine = ref(null)
 const viewWidth = window.innerWidth
 
 const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
+  if (productsStore.productsList[displayedGroupIndex.value].subGroups.length > 1 && productsStore.productsList[displayedGroupIndex.value].subGroups[selectedSubGroupIndex].products.length > cardsPerLine.value*4  ) {
+    for ( let i=0; i<cardsPerLine.value*4; i++) {
+      productsStore.productsList[displayedGroupIndex.value].subGroups[selectedSubGroupIndex].products[i].isRendered = true
+    }
+  } else {
+    for ( let i=0; i<productsStore.productsList[displayedGroupIndex.value].subGroups[selectedSubGroupIndex].products.length; i++) {
+      productsStore.productsList[displayedGroupIndex.value].subGroups[selectedSubGroupIndex].products[i].isRendered=true
+    }
+  }
+  // if (productsStore.productsList[displayedGroupIndex].subGroups.length > 1) {
+    // for ( let i=0; i<cardsPerLine.value*4; i++) {
+    //   productsStore.productsList[displayedGroupIndex].subGroups[1].products[i].isRendered=true
+    // }
+  // }
   const element = document.getElementById(selectedSubGroupIndex)
   const yOffset = -40
   const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
-  scrollBody.value.scrollTo({ top: y, behavior: 'smooth' })
+  scrollBody.value.scrollTo({ top: y})
 }
 
 // const onSubGroupSelect = async ({ selectedSubGroupIndex }) => {
