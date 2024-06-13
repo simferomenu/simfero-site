@@ -21,7 +21,7 @@
 
     <SideMenu
       :categories="productsListExp"
-      @select="onCategorySelect"
+      @selectGroup="onGroupSelect"
       :order-count="menuOrderCount"
       @openOrder="isOrderVisible = true"
     />
@@ -35,9 +35,9 @@
       >
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
-      <div ref="scrollElement" v-if="selectedCategory">
+      <div ref="scrollElement">
         <MenuSection
-          v-for="item in productsStore.productsList[18].subGroups"
+          v-for="(item, sectionIndex) in productsStore.productsList[displayedGroupIndex].subGroups"
           :name="item.name"
           :key="item.name"
         >
@@ -76,37 +76,38 @@
 
 <script setup>
 import axios from 'axios'
-import { ref, onMounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import { useScrollLock } from '@vueuse/core'
+import { ref, onMounted } from 'vue'
 import { useProductsStore } from '@/stores/products.store'
 
 import { SideMenu, MenuSection, MenuCard, DishScreen, OrderScreen } from '@/components'
 
 const productsStore = useProductsStore()
 
-const router = useRouter()
 const menuData = ref(null)
 const menu = ref([])
 const categories = ref([])
 const selectedCategory = ref(null)
-const productsList = ref([])
 const isLoading = ref(false)
 const selectedProduct = ref(null)
 const menuOrderCount = ref(null)
 const renderedCount = ref(null)
-const productsLength = ref([])
 const expMenuData = ref([])
 const groupIndexRemove = ref([])
 const productsListExp = ref([])
 const subGroupIndexRemove = ref([])
+const displayedGroupIndex = ref(0)
+// const selectedSubGroupIndex = ref(null)
 
 const scrollElement = ref(null)
 const scrollBody = ref(null)
 const cardsPerLine = ref(null)
-const bufferArr = ref([])
 
 const viewWidth = window.innerWidth
+
+const onGroupSelect = ({selectedGroupIndex}) => {
+  displayedGroupIndex.value = selectedGroupIndex
+  selectedCategory.value = selectedGroupIndex
+}
 
 if (viewWidth < 1112) {
   cardsPerLine.value = 2
@@ -117,22 +118,6 @@ if (viewWidth < 1112) {
 }
 
 renderedCount.value = cardsPerLine.value * 4
-
-const onBufferArrExpand = (sectionIndex, renderLineTrigger) => {
-  for (
-    let i = (renderLineTrigger - 1) * renderedCount.value;
-    i < renderLineTrigger * renderedCount.value;
-    i++
-  ) {
-    bufferArr.value[sectionIndex].products[i] = productsList.value[sectionIndex].products[i]
-  }
-  productsLength.value[sectionIndex] = renderLineTrigger * renderedCount.value
-  bufferArr.value[sectionIndex].products = bufferArr.value[sectionIndex].products.filter(
-    function (element) {
-      return element !== undefined
-    }
-  )
-}
 
 const isUpperCase = (str) => {
   return str === str.toUpperCase()
@@ -204,61 +189,61 @@ productsListExp.value.sort((a, b) => a.order - b.order)
 
 productsStore.setProductsList(productsListExp.value)
 
-const onCategorySelect = ({ item }) => {
-  selectedCategory.value = item
-  productsList.value = []
-  bufferArr.value = []
+// const onCategorySelect = ({ item }) => {
+//   selectedCategory.value = item
+//   productsList.value = []
+//   bufferArr.value = []
 
-  selectedCategory.value.products.forEach((p) => {
-    if (p.sizePrices[0].price.currentPrice > 0) {
-      p.chain.forEach((category) => {
-        const categoryExisted = productsList.value.find(({ name }) => name === category)
+//   selectedCategory.value.products.forEach((p) => {
+//     if (p.sizePrices[0].price.currentPrice > 0) {
+//       p.chain.forEach((category) => {
+//         const categoryExisted = productsList.value.find(({ name }) => name === category)
 
-        /* Мапим с данными из заказа */
-        const rawOrderData = window.localStorage.getItem('order')
+//         /* Мапим с данными из заказа */
+//         const rawOrderData = window.localStorage.getItem('order')
 
-        if (rawOrderData) {
-          try {
-            const order = JSON.parse(rawOrderData)
+//         if (rawOrderData) {
+//           try {
+//             const order = JSON.parse(rawOrderData)
 
-            if (order.products) {
-              const existedProduct = order.products.find((item) => item.id === p.id)
+//             if (order.products) {
+//               const existedProduct = order.products.find((item) => item.id === p.id)
 
-              if (existedProduct) {
-                p.selected = existedProduct
-              }
-            }
-          } catch (error) {
-            console.log('Ошибка добавления в заказа', error)
-          }
-        }
+//               if (existedProduct) {
+//                 p.selected = existedProduct
+//               }
+//             }
+//           } catch (error) {
+//             console.log('Ошибка добавления в заказа', error)
+//           }
+//         }
 
-        if (!categoryExisted) {
-          productsList.value.push({
-            name: category,
-            products: [p]
-          })
-        } else {
-          categoryExisted.products.push(p)
-        }
+//         if (!categoryExisted) {
+//           productsList.value.push({
+//             name: category,
+//             products: [p]
+//           })
+//         } else {
+//           categoryExisted.products.push(p)
+//         }
 
-        for (let i = 0; i < productsList.value.length; i++) {
-          bufferArr.value[i] = {
-            name: productsList.value[i].name,
-            products: productsList.value[i].products.slice(0, cardsPerLine.value * 4),
-            id: i + 1
-          }
-          productsLength.value[i] = cardsPerLine.value * 4
-        }
-      })
-    }
-  })
+//         for (let i = 0; i < productsList.value.length; i++) {
+//           bufferArr.value[i] = {
+//             name: productsList.value[i].name,
+//             products: productsList.value[i].products.slice(0, cardsPerLine.value * 4),
+//             id: i + 1
+//           }
+//           productsLength.value[i] = cardsPerLine.value * 4
+//         }
+//       })
+//     }
+//   })
 
-  if (scrollElement.value) {
-    scrollElement.value.scrollIntoView()
-  }
-  scrollBody.value.scrollBy(0, -40)
-}
+//   if (scrollElement.value) {
+//     scrollElement.value.scrollIntoView()
+//   }
+//   scrollBody.value.scrollBy(0, -40)
+// }
 
 const isDishVisible = ref(false)
 const isOrderVisible = ref(false)
@@ -378,7 +363,6 @@ onMounted(async () => {
     })
   })
 
-  onCategorySelect({ item: menu.value[0] })
 
   const showDish = () => {
     DishScreen.classlist.remove('hidden-screen')

@@ -20,24 +20,25 @@
       class="relative w-full flex-1 h-full flex flex-col mt-[30px] !overflow-auto pointer-events-auto custom-scrollbar animated-up"
     >
       <ul class="box-border pb-[20px]">
-        <li v-for="item in categories" :key="item.name">
+        <li v-for="(item, selectedGroupIndex) in categories" :key="item.name">
           <div
             :class="[
               'menu-link accordion',
               {
-                active: item.id === activeItem.id
+                active: activeGroupIndex === selectedGroupIndex
               }
             ]"
-            @click="onCategorySelect(item)"
+            @click="onGroupSelect(selectedGroupIndex)"
           >
             {{ item.name }}
           </div>
 
           <div class="panel [&>*:not(:last-child)]:mb-[10px]">
-            <div class="panel-link" v-for="sub in item.subGroups" :key="sub.id">
+            <div class="panel-link" v-for="(sub, selectedSubGroupIndex) in item.subGroups" :key="sub.id">
               <img class="h-[24px] w-[24px] mr-[10px]" src="/icons/IconCircleArrow.svg" alt="" />
               <div
                 class="font-Sitka text-[#fff] text-[15px] tracking-[0.17em] uppercase leading-[160%] font-normal"
+                @click="onSubGroupSelect(selectedGroupIndex, selectedSubGroupIndex)"
               >
                 {{ sub.name }}
               </div>
@@ -99,48 +100,34 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['select, scroll'])
+const emit = defineEmits(['select', 'selectGroup', 'selectSubGroup'])
 const router = useRouter()
-const activeItem = ref([])
+const activeGroupIndex = ref()
 const orderAmount = ref(0)
 const acc = document.getElementsByClassName('accordion')
 
-watch(
-  () => props.categories,
-  (data) => {
-    activeItem.value = data[0]
-  }
-)
 
-watch(
-  () => props.orderCount,
-  (data) => {
-    orderAmount.value = data
-  }
-)
-
-// const accActivate = () => {
-//   for (let i = 0; i < acc.length; i++) {
-//     acc[i].addEventListener('click', onCategorySelect)
-//   }
-// }
-
-const onCategorySelect = (item) => {
-  activeItem.value = item
-  emit('select', { item })
-
+const onGroupSelect = (selectedGroupIndex) => {
+  emit('selectGroup', {selectedGroupIndex})
+  activeGroupIndex.value = selectedGroupIndex
   for (let i = 0; i < acc.length; i++) {
     acc[i].nextElementSibling.style.maxHeight = 0
     acc[i].classList.remove('active')
   }
 
   const clickedAcc = event.target.closest('.accordion')
-  if (clickedAcc) {
-    clickedAcc.nextElementSibling.style.maxHeight =
+  if (props.categories[selectedGroupIndex].subGroups.length>1) {
+    if (clickedAcc) {
+      clickedAcc.nextElementSibling.style.maxHeight =
       clickedAcc.nextElementSibling.scrollHeight + 'px'
-    clickedAcc.classList.add('active')
+      clickedAcc.classList.add('active')
+    }
   }
 }
+const onSubGroupSelect = (selectedSubGroupIndex) => {
+  emit('selectSubGroup', {selectedSubGroupIndex})
+}
+
 
 const selectFirstAcc = () => {
   for (let i = 0; i < acc.length; i++) {
