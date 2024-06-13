@@ -34,7 +34,11 @@
           </div>
 
           <div class="panel [&>*:not(:last-child)]:mb-[10px]">
-            <div class="panel-link" v-for="(sub, selectedSubGroupIndex) in item.subGroups" :key="sub.id">
+            <div
+              class="panel-link"
+              v-for="(sub, selectedSubGroupIndex) in item.subGroups"
+              :key="sub.id"
+            >
               <img class="h-[24px] w-[24px] mr-[10px]" src="/icons/IconCircleArrow.svg" alt="" />
               <div
                 class="font-Sitka text-[#fff] text-[15px] tracking-[0.17em] uppercase leading-[160%] font-normal"
@@ -106,9 +110,8 @@ const activeGroupIndex = ref()
 const orderAmount = ref(0)
 const acc = document.getElementsByClassName('accordion')
 
-
 const onGroupSelect = (selectedGroupIndex) => {
-  emit('selectGroup', {selectedGroupIndex})
+  emit('selectGroup', { selectedGroupIndex })
   activeGroupIndex.value = selectedGroupIndex
   for (let i = 0; i < acc.length; i++) {
     acc[i].nextElementSibling.style.maxHeight = 0
@@ -116,18 +119,17 @@ const onGroupSelect = (selectedGroupIndex) => {
   }
 
   const clickedAcc = event.target.closest('.accordion')
-    if (clickedAcc) {
-      clickedAcc.classList.add('active')
-      if (props.categories[selectedGroupIndex].subGroups.length>1) {
-        clickedAcc.nextElementSibling.style.maxHeight =
+  if (clickedAcc) {
+    clickedAcc.classList.add('active')
+    if (props.categories[selectedGroupIndex].subGroups.length > 1) {
+      clickedAcc.nextElementSibling.style.maxHeight =
         clickedAcc.nextElementSibling.scrollHeight + 'px'
-      }
+    }
   }
 }
 const onSubGroupSelect = (selectedSubGroupIndex) => {
-  emit('selectSubGroup', {selectedSubGroupIndex})
+  emit('selectSubGroup', { selectedSubGroupIndex })
 }
-
 
 const selectFirstAcc = () => {
   for (let i = 0; i < acc.length; i++) {

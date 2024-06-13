@@ -36,7 +36,7 @@
       >
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
-      <div>
+      <div ref="scrollElement">
         <MenuSection
           v-for="(item, sectionIndex) in productsStore.productsList[displayedGroupIndex].subGroups"
           ref="scrollSection"
@@ -100,22 +100,37 @@ const groupIndexRemove = ref([])
 const productsListExp = ref([])
 const subGroupIndexRemove = ref([])
 const displayedGroupIndex = ref(0)
+const scrollElement = ref(null)
+const scrollSection = ref(null)
 // const selectedSubGroupIndex = ref(null)
-
 const scrollBody = ref(null)
 const cardsPerLine = ref(null)
 
 const viewWidth = window.innerWidth
 
-
-
-const onSubGroupSelect = ({selectedSubGroupIndex}) => { 
-  console.log(selectedSubGroupIndex)
+const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
+  const element = document.getElementById(selectedSubGroupIndex)
+  const yOffset = -40
+  const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+  scrollBody.value.scrollTo({ top: y, behavior: 'smooth' })
 }
 
-const onGroupSelect = ({selectedGroupIndex}) => {
+// const onSubGroupSelect = async ({ selectedSubGroupIndex }) => {
+//   let scrollPromise = new Promise(function (resolve) {
+//     resolve(document.getElementById(selectedSubGroupIndex).scrollIntoView({ behavior: 'smooth' }))
+//   })
+//   await scrollPromise
+//   scrollBody.value.scrollBy(0, -40)
+// }
+
+const onGroupSelect = ({ selectedGroupIndex }) => {
   displayedGroupIndex.value = selectedGroupIndex
   selectedCategory.value = selectedGroupIndex
+
+  if (scrollElement.value) {
+    scrollElement.value.scrollIntoView()
+  }
+  scrollBody.value.scrollBy(0, -40)
 }
 
 if (viewWidth < 1112) {
@@ -135,7 +150,7 @@ const isUpperCase = (str) => {
 const storageMenuExp = window.localStorage.getItem('menu')
 expMenuData.value = storageMenuExp ? JSON.parse(storageMenuExp) : null
 expMenuData.value.products.forEach(function (product) {
-  product.isRendered = 'false'
+  product.isRendered = false
   product.order = {
     isInOrder: false,
     orderCount: null
@@ -371,7 +386,6 @@ onMounted(async () => {
       }
     })
   })
-
 
   const showDish = () => {
     DishScreen.classlist.remove('hidden-screen')
