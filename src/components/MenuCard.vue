@@ -19,9 +19,9 @@
           v-show="isImageLoaded"
         />
       </div>
-      <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">
+      <!-- <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">
         <img src="/icons/IconThreeDots.svg" alt="" />
-      </div>
+      </div> -->
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
       <div class="relative flex flex-col">

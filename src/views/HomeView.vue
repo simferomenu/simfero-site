@@ -144,14 +144,6 @@ const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
   scrollBody.value.scrollTo({ top: y })
 }
 
-// const onSubGroupSelect = async ({ selectedSubGroupIndex }) => {
-//   let scrollPromise = new Promise(function (resolve) {
-//     resolve(document.getElementById(selectedSubGroupIndex).scrollIntoView({ behavior: 'smooth' }))
-//   })
-//   await scrollPromise
-//   scrollBody.value.scrollBy(0, -40)
-// }
-
 const onGroupSelect = ({ selectedGroupIndex }) => {
   // if (productsStore.productsList[selectedGroupIndex].subGroups.length == 1) {
   //   for (
