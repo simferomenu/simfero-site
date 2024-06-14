@@ -11,8 +11,8 @@
         class="relative max-h-full aspect-square w-full shrink z-[2] rounded-[50%] overflow-hidden"
       >
         <img
-          class="inner-img"
-          :src="product.imageLinks[0] || '/images/ImageBasicDish.png'"
+          class="inner-img scale-105"
+          :src="product.imageLinks[0] || '/images/ImageBasicDish2.png'"
           alt=""
         />
       </div>
