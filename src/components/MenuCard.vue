@@ -4,7 +4,6 @@
     :class="{ 'active-menu-card border-animation': isProductInOrder }"
     @click="onChoose"
     ref="cardElement"
-    v-if = product.isRendered
   >
     <div class="relative h-[145px] w-full shrink-0">
       <div
@@ -141,12 +140,13 @@ onMounted(() => {
   if (cardElement.value) {
     observer.observe(cardElement.value)
   }
-
-  if (cardElement.value) {
-    if (productName.value && productName.value.clientHeight > 48) {
-      isDescrHidden.value = true
+  setTimeout(() => {
+    if (cardElement.value) {
+      if (productName.value && productName.value.clientHeight > 48) {
+        isDescrHidden.value = true
+      }
     }
-  }
+  })
 })
 
 onBeforeUnmount(() => {
