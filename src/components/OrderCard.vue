@@ -60,7 +60,7 @@ const isDescrHidden = ref(false)
 const productName = ref(null)
 const description =
   props.product.description ||
-  'Lorem Ipsum является текст-заполнитель обычно используется в графических, печать и издательской индустрии для предварительного просмотра макета и визуальных макетах.'
+  'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'
 
 const onChoose = () => emit('chooseFromOrder', props.product)
 

@@ -33,9 +33,12 @@
         >
       </div>
       <div class="flex flex-col h-full !pointer-events-auto">
-        <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
-          >Пригласить официанта</span
+        <span
+          @click="onMakeOrder"
+          class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
         >
+          Пригласить официанта
+        </span>
         <div class="absolute bottom-[-10px] right-[-200px] w-[600px] flex shrink-1 items-center">
           <img class="block h-[15px] w-auto" src="/icons/IconRhombusGold.svg" alt="" />
           <div class="h-[1px] w-full bg-gold"></div>
@@ -46,16 +49,18 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineEmits, defineProps } from 'vue'
+import { onMounted, ref, defineEmits } from 'vue';
+import axios from 'axios';
+
 import { IconCross, IconBack, OrderCard } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 
-const orderStore = useOrderStore()
+const orderStore = useOrderStore();
 
 const emit = defineEmits(['updateOrder'])
 
 const onChooseFromOrder = () => {
-  emit('chooseFromOrder', props.product)
+  // emit('chooseFromOrder', props.product)
 }
 
 const orderItems = ref([])
@@ -86,6 +91,40 @@ const calcTotalPrice = () => {
 const onOrderUpdate = () => {
   calcTotalPrice()
   emit('updateOrder')
+}
+
+const onMakeOrder = async () => {
+  try {
+    const rawOrderData = JSON.parse(window.localStorage.getItem('order'));
+
+    const resp = await axios.post('/order', {
+      table: rawOrderData.tables[0],
+      items: rawOrderData.products.map((item) => ({
+        productId: item.id,
+        price: item.sizePrices[0].price.currentPrice,
+        type: 'Product',
+        amount: item.amount
+      })),
+    });
+
+    if (resp.data) {
+      alert('Заказ успешно направлен официанту')
+    }
+  } catch(error) {
+    console.log('Ошибка получения заказа', error);
+  }
+
+  /*
+  {
+    "table": "1c34b882-4261-4364-8339-d8459ad8bf16",
+    "items": [{
+        "productId": "045815e9-7577-46e5-aacd-4a5793d82791",
+        "price": 3250,
+        "type": "Product",
+        "amount": 1
+    }]
+  }
+*/
 }
 
 onMounted(() => {
