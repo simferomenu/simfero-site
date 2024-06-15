@@ -52,6 +52,7 @@ const props = defineProps({
 
 const cardElement = ref(null)
 const productName = ref(null)
+const isDescrHidden = ref(false)
 
 onMounted(() => {
   if (cardElement.value) {
