@@ -20,7 +20,7 @@
     </Transition>
 
     <SideMenu
-      :categories="productsListExp"
+      :categories="productsStore.productsList"
       @selectGroup="onGroupSelect"
       @selectSubGroup="onSubGroupSelect"
       :order-count="menuOrderCount"
@@ -38,17 +38,20 @@
       </div>
       <div ref="scrollElement">
         <MenuSection
-          v-for="(item, sectionIndex) in productsStore.productsList[displayedGroupIndex].subGroups"
+          v-for="(item, subGroupIndex) in productsStore.productsList[displayedGroupIndex].subGroups"
           ref="scrollSection"
           :name="item.name"
           :key="item.name"
-          :id="sectionIndex"
+          :id="subGroupIndex"
         >
           <MenuCard
             v-for="(product, cardIndex) in item.products"
             :product="product"
             :key="product.id"
             :data-id="cardIndex"
+            :groupIndex = "displayedGroupIndex"
+            :subGroupIndex = "subGroupIndex"
+            :cardIndex="cardIndex"
             @choose="toggleDish"
             @order-update="onOrderUpdate"
           />
@@ -82,6 +85,7 @@
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import { useProductsStore } from '@/stores/products.store'
+import { useOrderStore } from '@/stores/order.store'
 
 import { SideMenu, MenuSection, MenuCard, DishScreen, OrderScreen } from '@/components'
 
@@ -185,10 +189,7 @@ const storageMenuExp = window.localStorage.getItem('menu')
 expMenuData.value = storageMenuExp ? JSON.parse(storageMenuExp) : null
 expMenuData.value.products.forEach(function (product) {
   product.isRendered = false
-  product.order = {
-    isInOrder: false,
-    orderCount: null
-  }
+  product.amount = 0
 })
 const filteredProducts = expMenuData.value.products
   .filter((product) => product.type === 'Dish' || product.type === 'Good')
@@ -306,10 +307,10 @@ productsStore.setProductsList(productsListExp.value)
 const isDishVisible = ref(false)
 const isOrderVisible = ref(false)
 
-const toggleDish = (product) => {
-  isDishVisible.value = !isDishVisible.value
-  selectedProduct.value = product
-}
+// const toggleDish = (product) => {
+//   isDishVisible.value = !isDishVisible.value
+//   selectedProduct.value = product
+// }
 
 const onOrderUpdate = () => {
   const rawOrderData = window.localStorage.getItem('order')

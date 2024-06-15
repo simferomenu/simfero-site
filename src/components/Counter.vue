@@ -8,7 +8,7 @@
   >
     <div
       class="flex justify-center items-center h-full w-auto !pointer-events-auto animated"
-      @click="onQuantityChange($event, -1)"
+      @click="onQuantityChange(-1)"
     >
       <img v-if="isBlack" src="/icons/IconMinusGold.svg" alt="" class="shrink-0 w-[23px] h-auto" />
       <img
@@ -29,7 +29,7 @@
     </div>
     <div
       class="flex justify-center items-center h-full w-auto !pointer-events-auto animated"
-      @click="onQuantityChange($event, 1)"
+      @click="onQuantityChange(1)"
     >
       <img v-if="!isBlack" src="/icons/IconPlusBlack.svg" alt="" class="shrink-0 w-[23px] h-auto" />
       <img v-if="isBlack" src="/icons/IconPlusGold.svg" alt="" class="shrink-0 w-[23px] h-auto" />
@@ -45,7 +45,6 @@ import { ref, defineProps, defineEmits } from 'vue'
 const props = defineProps({
   quantity: {
     type: Number,
-    default: 1
   },
   isBlack: Boolean
 })
@@ -53,16 +52,8 @@ const emit = defineEmits(['update'])
 
 const counterValue = ref(props.quantity)
 
-const onQuantityChange = (event, iterator) => {
-  event.stopPropagation()
-
+const onQuantityChange = (iterator) => {
   counterValue.value += iterator
-
-  if (counterValue.value <= 0) {
-    counterValue.value = 1
-    emit('empty')
-  } else {
-    emit('update', counterValue)
-  }
+  emit('update', iterator)
 }
 </script>

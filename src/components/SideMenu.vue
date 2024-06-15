@@ -70,7 +70,7 @@
           >Мой заказ</span
         >
         <Transition name="fade">
-          <SmallCounter v-if="orderAmount" :value="orderAmount" />
+          <SmallCounter v-if="orderAmount" :value = "orderAmount"/>
         </Transition>
       </div>
     </div>
@@ -95,23 +95,20 @@
 </style>
 
 <script setup>
-import { ref, watch, defineEmits, onMounted } from 'vue'
+import { ref, watch, defineEmits, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { SmallCounter } from '@/components'
+import { useOrderStore } from '@/stores/order.store';
 
 const props = defineProps({
   categories: {
     type: Array
   },
-  orderCount: {
-    type: Number
-  }
 })
 
 const emit = defineEmits(['select', 'selectGroup', 'selectSubGroup'])
 const router = useRouter()
 const activeGroupIndex = ref()
-const orderAmount = ref(0)
 const acc = document.getElementsByClassName('accordion')
 
 const onGroupSelect = (selectedGroupIndex) => {
@@ -146,13 +143,19 @@ const toWaiterView = () => {
   router.push('/waiter')
 }
 
+const orderStore = useOrderStore()
+
+const orderAmount = computed(() => orderStore.orderInfo.orderAmount)
+
+
 onMounted(() => {
+
   const rawOrderData = window.localStorage.getItem('order')
 
   try {
     if (rawOrderData) {
       const order = JSON.parse(rawOrderData)
-      orderAmount.value = order.products.reduce((accumulator, item) => accumulator + item.amount, 0)
+      // orderAmount.value = order.products.reduce((accumulator, item) => accumulator + item.amount, 0)
     }
   } catch (error) {
     console.log('Ошибка получение состояния корзины', error)
