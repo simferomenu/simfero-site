@@ -55,8 +55,6 @@ import axios from 'axios';
 import { IconCross, IconBack, OrderCard } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 
-const orderStore = useOrderStore();
-
 const emit = defineEmits(['updateOrder'])
 
 const onChooseFromOrder = () => {
@@ -65,27 +63,28 @@ const onChooseFromOrder = () => {
 
 const orderItems = ref([])
 const totalPrice = ref(0)
-const order = ref(null)
+const orderStore = useOrderStore()
 
 const getOrderData = () => {
-  const rawOrderData = window.localStorage.getItem('order')
 
-  try {
-    if (rawOrderData) {
-      order.value = JSON.parse(rawOrderData)
-      orderItems.value = order.value.products
-      return order.value
-    }
-  } catch (error) {
-    console.log('Ошибка получение состояния корзины', error)
-  }
+  orderItems.value = orderStore.order
+  // const rawOrderData = window.localStorage.getItem('order')
+
+  // try {
+  //   if (rawOrderData) {
+  //     order.value = JSON.parse(rawOrderData)
+  //     orderItems.value = order.value.products
+  //     return order.value
+  //   }
+  // } catch (error) {
+  //   console.log('Ошибка получение состояния корзины', error)
+  // }
 }
 
 const calcTotalPrice = () => {
-  const items = getOrderData().products
-  totalPrice.value = items.reduce((acc, item) => {
-    return acc + item.amount * item.sizePrices[0].price.currentPrice
-  }, 0)
+  for (let i=0; i<orderStore.order.length; i++) {
+    totalPrice.value+=orderStore.order[i].amount * orderStore.order[i].sizePrices[0].price.currentPrice
+  }
 }
 
 const onOrderUpdate = () => {
