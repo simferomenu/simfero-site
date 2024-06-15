@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative w-[312px] !h-screen bg-darkBlue flex flex-col box-border py-[30px] px-[28px] shrink-0 border-r-gold border-solid border-r-[2px] default-transition pointer-events-none overflow-hidden"
+    class="relative w-[312px] !h-screen bg-darkBlue flex flex-col box-border py-[30px] px-[20px] shrink-0 border-r-gold border-solid border-r-[2px] default-transition pointer-events-none overflow-hidden"
   >
     <div class="relative w-full flex items-center h-[71px] animated-down">
       <img class="h-full w-auto" src="/icons/IconLogo.png" alt="" />

@@ -18,7 +18,7 @@
       </div>
       <div class="relative ml-[50px] w-[50%] shrink-0 flex flex-col">
         <div
-          class="font-Segoe font-semibold text-[42px] leading-[133%] tracking-[0.06em] uppercase text-[#fff] mb-[15px] w-[80%]"
+          class="font-Segoe font-semibold text-[38px] leading-[133%] tracking-[0.06em] uppercase text-[#fff] mb-[15px] w-[80%]"
         >
           {{ product.name }}
         </div>
