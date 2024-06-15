@@ -158,12 +158,17 @@ body {
   height: 22px;
 }
 
+.clip-3,
 .clip-4,
 .clip-5 {
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.clip-3 {
+  -webkit-line-clamp: 3 !important;
 }
 
 .clip-5 {

@@ -32,7 +32,7 @@
           {{ product.name }}
         </span>
         <span
-          class="font-Segoe font-[350] text-[14px] leading-[136%] text-darkBlue clip-4"
+          class="font-Segoe font-[350] text-[14px] leading-[136%] text-darkBlue clip-3"
           v-if="!isDescrHidden"
         >
           {{ description }}
