@@ -45,7 +45,6 @@ import { ref, defineProps, defineEmits } from 'vue'
 const props = defineProps({
   quantity: {
     type: Number,
-    default: 1
   },
   isBlack: Boolean
 })
@@ -57,12 +56,6 @@ const onQuantityChange = (event, iterator) => {
   event.stopPropagation()
 
   counterValue.value += iterator
-
-  if (counterValue.value <= 0) {
-    counterValue.value = 1
-    emit('empty')
-  } else {
-    emit('update', counterValue)
-  }
+  emit('update', iterator)
 }
 </script>

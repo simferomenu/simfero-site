@@ -46,7 +46,7 @@
           v-if="isProductInOrder"
           isBlack
           class="pointer-events-auto"
-          :quantity="product?.selected?.amount"
+          :quantity="product.amount"
           @update="onProductCounterUpdate"
           @empty="onDeleteFromOrder"
         />
@@ -81,8 +81,10 @@
 <style scoped></style>
 
 <script setup>
-import { ref, watch, defineEmits, defineProps, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, defineEmits, defineProps, onMounted, onBeforeUnmount, computed } from 'vue'
 import { IconPlus, Counter } from '@/components'
+import { useOrderStore } from '@/stores/order.store';
+import { useProductsStore } from '@/stores/products.store';
 
 const isImageLoaded = ref(false)
 const isCardReady = ref(false)
@@ -101,16 +103,27 @@ const props = defineProps({
   productsLength: {
     type: Number
   },
-  sectionIndex: {
+  cardIndex: {
+    type: Number
+  },
+  subGroupIndex: {
+    type: Number
+  },
+  groupIndex: {
     type: Number
   }
 })
 
+
 const emit = defineEmits(['choose', 'order-update', 'expand'])
 
-const isProductInOrder = ref(props.product.selected)
-
-const onChoose = () => emit('choose', props.product)
+const isProductInOrder = computed(() => {
+  if (props.product.amount>0) {
+    return true
+  } else {
+    return false
+  }
+})
 
 const isDescrHidden = ref(false)
 const productName = ref(null)
@@ -149,6 +162,9 @@ onMounted(() => {
   })
 })
 
+const orderStore = useOrderStore()
+const productsStore = useProductsStore()
+
 onBeforeUnmount(() => {
   if (observer && cardElement.value) {
     observer.unobserve(cardElement.value)
@@ -177,38 +193,41 @@ onBeforeUnmount(() => {
 //   }
 // )
 
-const onAddToOrder = (event, amount = 1) => {
+const onAddToOrder = (event) => {
   event && event.stopPropagation()
+  productsStore.productsList[props.groupIndex].subGroups[props.subGroupIndex].products[props.cardIndex].amount=1
+  orderStore.orderInfo.orderAmount++
+  orderStore.order.push(productsStore.productsList[props.groupIndex].subGroups[props.subGroupIndex].products[props.cardIndex])
+  isProductInOrder.value=true
+  // const rawOrderData = window.localStorage.getItem('order')
+  // const selectedTables = window.localStorage.getItem('selectedTables')
 
-  const rawOrderData = window.localStorage.getItem('order')
-  const selectedTables = window.localStorage.getItem('selectedTables')
+  // try {
+  //   let order = null
 
-  try {
-    let order = null
+  //   if (rawOrderData) {
+  //     order = JSON.parse(rawOrderData)
+  //     const product = order.products.find((p) => p.id === props.product.id)
 
-    if (rawOrderData) {
-      order = JSON.parse(rawOrderData)
-      const product = order.products.find((p) => p.id === props.product.id)
+  //     if (product) {
+  //       product.amount = amount
+  //     } else {
+  //       order.products.push({ ...props.product, amount })
+  //     }
+  //   } else {
+  //     order = {
+  //       tables: [...JSON.parse(selectedTables)],
+  //       products: [{ ...props.product, amount }]
+  //     }
+  //   }
 
-      if (product) {
-        product.amount = amount
-      } else {
-        order.products.push({ ...props.product, amount })
-      }
-    } else {
-      order = {
-        tables: [...JSON.parse(selectedTables)],
-        products: [{ ...props.product, amount }]
-      }
-    }
+  //   isProductInOrder.value = true
+  //   window.localStorage.setItem('order', JSON.stringify(order))
 
-    isProductInOrder.value = true
-    window.localStorage.setItem('order', JSON.stringify(order))
-
-    emit('order-update')
-  } catch (error) {
-    console.log('Ошибка добавления в заказа', error)
-  }
+  //   emit('order-update')
+  // } catch (error) {
+  //   console.log('Ошибка добавления в заказа', error)
+  // }
 }
 
 const onDeleteFromOrder = () => {
@@ -225,7 +244,13 @@ const onDeleteFromOrder = () => {
   }
 }
 
-const onProductCounterUpdate = (amount) => {
-  onAddToOrder(null, amount.value)
+const onProductCounterUpdate = (iterator) => {
+  const indexInOrder = orderStore.order.map(e => e.id).indexOf(props.product.id);
+  orderStore.order[indexInOrder].amount += iterator
+  orderStore.orderInfo.orderAmount += iterator
+  if (orderStore.order[indexInOrder].amount == 0) {
+    isProductInOrder.value=false
+    orderStore.order.splice(indexInOrder, 1)
+  }
 }
 </script>

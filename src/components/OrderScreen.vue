@@ -13,9 +13,11 @@
       class="w-full flex flex-wrap box-border pl-[60px] pr-[20px] flex-1 !pointer-events-auto mb-[40px]"
     >
       <OrderCard
-        v-for="item in orderItems"
+        v-for="(item, itemIndex) in orderItems"
         :product="item"
         :key="item.id"
+        :index="itemIndex"
+        :orderItemsPosition=orderItemsPosition[itemIndex]
         @chooseFromOrder="onChooseFromOrder"
         @order-update="onOrderUpdate"
       />
@@ -54,8 +56,7 @@ import axios from 'axios';
 
 import { IconCross, IconBack, OrderCard } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
-
-const orderStore = useOrderStore();
+import { useProductsStore } from '@/stores/products.store';
 
 const emit = defineEmits(['updateOrder'])
 
@@ -65,27 +66,43 @@ const onChooseFromOrder = () => {
 
 const orderItems = ref([])
 const totalPrice = ref(0)
-const order = ref(null)
+const orderItemsPosition = ref([])
+const orderStore = useOrderStore()
+const productsStore = useProductsStore()
 
 const getOrderData = () => {
-  const rawOrderData = window.localStorage.getItem('order')
 
-  try {
-    if (rawOrderData) {
-      order.value = JSON.parse(rawOrderData)
-      orderItems.value = order.value.products
-      return order.value
+  orderItems.value = orderStore.order
+  for (const item of orderItems.value) {
+    for (const group of productsStore.productsList) {
+      const groupIndex = productsStore.productsList.indexOf(group)
+      for (const subGroup of group.subGroups) {
+        const subGroupIndex = group.subGroups.indexOf(subGroup)
+        const index = subGroup.products.map(e=>e.id).indexOf(item.id)
+        if (index!=-1) {
+          orderItemsPosition.value.push({cardIndex: index, groupIndex: groupIndex, subGroupIndex:subGroupIndex})
+        }
+      }
     }
-  } catch (error) {
-    console.log('Ошибка получение состояния корзины', error)
   }
+
+  // const rawOrderData = window.localStorage.getItem('order')
+
+  // try {
+  //   if (rawOrderData) {
+  //     order.value = JSON.parse(rawOrderData)
+  //     orderItems.value = order.value.products
+  //     return order.value
+  //   }
+  // } catch (error) {
+  //   console.log('Ошибка получение состояния корзины', error)
+  // }
 }
 
 const calcTotalPrice = () => {
-  const items = getOrderData().products
-  totalPrice.value = items.reduce((acc, item) => {
-    return acc + item.amount * item.sizePrices[0].price.currentPrice
-  }, 0)
+  for (let i=0; i<orderStore.order.length; i++) {
+    totalPrice.value+=orderStore.order[i].amount * orderStore.order[i].sizePrices[0].price.currentPrice
+  }
 }
 
 const onOrderUpdate = () => {
