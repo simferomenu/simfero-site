@@ -34,7 +34,9 @@
           >{{ totalPrice }} Руб.</span
         >
       </div>
-      <div class="flex flex-col h-full !pointer-events-auto">
+      <div :class="['flex flex-col h-full !pointer-events-auto', {
+        'opacity-[0.3]': !orderStore.order.length
+      }]">
         <span
           @click="onMakeOrder"
           class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"

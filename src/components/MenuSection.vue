@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full flex flex-col mb-[40px]">
+  <div class="relative w-full flex flex-col">
     <div class="w-full flex items-center mb-[50px] animated-long">
       <span
         class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit"

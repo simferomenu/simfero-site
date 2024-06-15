@@ -37,7 +37,7 @@
       >
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
-      <div ref="scrollElement">
+      <div ref="scrollElement" class="[&>*:not(:nth-child(1))]:pt-[40px]">
         <MenuSection
           v-for="(item, subGroupIndex) in productsStore.productsList[displayedGroupIndex].subGroups"
           ref="scrollSection"
@@ -79,7 +79,6 @@
       </div>
     </div>
 
-
     <div
       class="relative flex flex-col shrink-1 w-full h-screen overflow-x-hidden box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
       v-if="businessStore.isBusinessVisible"
@@ -97,14 +96,19 @@
                 alt=""
               />
             </div>
-            <div class="relative w-full mt-[14px] font-[350] text-[14px] leading-[120%] text-darkBlue">
-              В зависимости от дня недели тут будет будет можно выбрать разные блюда. Сегодня вторник :)
+            <div
+              class="relative w-full mt-[14px] font-[350] text-[14px] leading-[120%] text-darkBlue"
+            >
+              В зависимости от дня недели тут будет будет можно выбрать разные блюда. Сегодня
+              вторник :)
             </div>
           </div>
         </div>
       </div>
       <div class="relative w-full mb-[55px]">
-        <span class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka">
+        <span
+          class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka"
+        >
           Выберите первое блюдо <span>(+200 руб)</span>
         </span>
       </div>
@@ -121,14 +125,16 @@
           :img-src="'https://img.iamcook.ru/2021/upl/recipes/cat/u-4d5483e91c88c79bb91cdfa162196a3f.jpg'"
           :price="1500"
         />
-<!--        <BusinessLunchCard-->
-<!--          :name="'Не выбирать'"-->
-<!--          :description="'-200 руб. от стоимости заказа'"-->
-<!--          :img-src="'/icons/IconCancel.svg'"-->
-<!--        />-->
+        <!--        <BusinessLunchCard-->
+        <!--          :name="'Не выбирать'"-->
+        <!--          :description="'-200 руб. от стоимости заказа'"-->
+        <!--          :img-src="'/icons/IconCancel.svg'"-->
+        <!--        />-->
       </div>
       <div class="relative w-full mb-[55px]">
-        <span class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka">
+        <span
+          class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka"
+        >
           Выберите второе блюдо <span>(+300 руб)</span>
         </span>
       </div>
@@ -143,11 +149,11 @@
           :description="'Тунец имеет плотную текстуру и насыщенный вкус, что делает его идеальным для стейков.'"
           :img-src="'https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_656b1d8105476c49d82b00c8_656b1ec26b9cdf31c05f2063/scale_1200'"
         />
-<!--        <BusinessLunchCard-->
-<!--          :name="'Не выбирать'"-->
-<!--          :description="'-200 руб. от стоимости заказа'"-->
-<!--          :img-src="'/icons/IconCancel.svg'"-->
-<!--        />-->
+        <!--        <BusinessLunchCard-->
+        <!--          :name="'Не выбирать'"-->
+        <!--          :description="'-200 руб. от стоимости заказа'"-->
+        <!--          :img-src="'/icons/IconCancel.svg'"-->
+        <!--        />-->
       </div>
       <div class="relative w-full mb-[55px]">
         <span
@@ -166,11 +172,11 @@
           :description="'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'"
           :img-src="'https://102922.selcdn.ru/nomenclature_images_test/306529/49f1d33a-63f6-4e70-9401-9b92a49d0970.jpg'"
         />
-<!--        <BusinessLunchCard-->
-<!--          :name="'Не выбирать'"-->
-<!--          :description="'-200 руб. от стоимости заказа'"-->
-<!--          :img-src="'/icons/IconCancel.svg'"-->
-<!--        />-->
+        <!--        <BusinessLunchCard-->
+        <!--          :name="'Не выбирать'"-->
+        <!--          :description="'-200 руб. от стоимости заказа'"-->
+        <!--          :img-src="'/icons/IconCancel.svg'"-->
+        <!--        />-->
       </div>
       <div class="relative w-full mb-[55px]">
         <span
@@ -189,11 +195,11 @@
           :description="'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'"
           :img-src="'https://102922.selcdn.ru/nomenclature_images_test/306529/a4fdfb4f-9969-486a-b77e-f86b0ee08f19.png'"
         />
-<!--        <BusinessLunchCard-->
-<!--          :name="'Не выбирать'"-->
-<!--          :description="'-200 руб. от стоимости заказа'"-->
-<!--          :img-src="'/icons/IconCancel.svg'"-->
-<!--        />-->
+        <!--        <BusinessLunchCard-->
+        <!--          :name="'Не выбирать'"-->
+        <!--          :description="'-200 руб. от стоимости заказа'"-->
+        <!--          :img-src="'/icons/IconCancel.svg'"-->
+        <!--        />-->
       </div>
       <div class="relative w-full mb-[30px]">
         <span
