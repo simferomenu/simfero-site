@@ -2,10 +2,9 @@
   <div
     class="relative flex flex-col h-[350px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated"
     :class="{ 'active-menu-card border-animation': isProductInOrder }"
-    @click="onChoose"
     ref="cardElement"
   >
-    <div class="relative h-[145px] w-full shrink-0">
+    <div class="relative h-[145px] w-full shrink-0" @click="onChoose">
       <div
         class="absolute w-[183px] h-[183px] top-[-30px] left-[-25px] overflow-hidden rounded-[100px] animated bg-[#fff] flex justify-center items-center"
       >
@@ -24,7 +23,7 @@
       </div> -->
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
-      <div class="relative flex flex-col">
+      <div class="relative flex flex-col" @click="onChoose">
         <span
           ref="productName"
           class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000] clip-5 mb-[5px]"
@@ -38,7 +37,10 @@
           {{ description }}
         </span>
       </div>
-      <span class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue">
+      <span
+        class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue"
+        @click="onChoose"
+      >
         {{ product.sizePrices[0].price.currentPrice }} Руб.
       </span>
       <Transition name="expand">
@@ -83,8 +85,8 @@
 <script setup>
 import { ref, watch, defineEmits, defineProps, onMounted, onBeforeUnmount, computed } from 'vue'
 import { IconPlus, Counter } from '@/components'
-import { useOrderStore } from '@/stores/order.store';
-import { useProductsStore } from '@/stores/products.store';
+import { useOrderStore } from '@/stores/order.store'
+import { useProductsStore } from '@/stores/products.store'
 
 const isImageLoaded = ref(false)
 const isCardReady = ref(false)
@@ -114,13 +116,12 @@ const props = defineProps({
   }
 })
 
-
 const emit = defineEmits(['choose', 'order-update', 'expand'])
 
 const onChoose = () => emit('choose', props.product)
 
 const isProductInOrder = computed(() => {
-  const index = orderStore.order.map(e=>e.id).indexOf(props.product.id)
+  const index = orderStore.order.map((e) => e.id).indexOf(props.product.id)
   if (index == -1) {
     return false
   } else {
@@ -198,10 +199,16 @@ onBeforeUnmount(() => {
 
 const onAddToOrder = (event) => {
   event && event.stopPropagation()
-  productsStore.productsList[props.groupIndex].subGroups[props.subGroupIndex].products[props.cardIndex].amount=1
+  productsStore.productsList[props.groupIndex].subGroups[props.subGroupIndex].products[
+    props.cardIndex
+  ].amount = 1
   orderStore.orderInfo.orderAmount++
-  orderStore.order.push(productsStore.productsList[props.groupIndex].subGroups[props.subGroupIndex].products[props.cardIndex])
-  isProductInOrder.value=true
+  orderStore.order.push(
+    productsStore.productsList[props.groupIndex].subGroups[props.subGroupIndex].products[
+      props.cardIndex
+    ]
+  )
+  isProductInOrder.value = true
   // const rawOrderData = window.localStorage.getItem('order')
   // const selectedTables = window.localStorage.getItem('selectedTables')
 
@@ -248,11 +255,11 @@ const onAddToOrder = (event) => {
 // }
 
 const onProductCounterUpdate = (iterator) => {
-  const indexInOrder = orderStore.order.map(e => e.id).indexOf(props.product.id);
+  const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
   orderStore.order[indexInOrder].amount += iterator
   orderStore.orderInfo.orderAmount += iterator
   if (orderStore.order[indexInOrder].amount == 0) {
-    isProductInOrder.value=false
+    isProductInOrder.value = false
     orderStore.order.splice(indexInOrder, 1)
   }
 }
