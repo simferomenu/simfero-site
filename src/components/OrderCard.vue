@@ -79,7 +79,6 @@ onMounted(() => {
 })
 
 const onProductCounterUpdate = (amount) => {
-  orderStore.orderInfo.orderAmount+=amount
   if (orderStore.order[props.index].amount == 1 && amount==(-1)) {
     orderStore.order.splice(props.index, 1)
   } else {
