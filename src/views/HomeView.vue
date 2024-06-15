@@ -44,6 +44,7 @@
           :name="item.name"
           :key="item.name"
           :id="subGroupIndex"
+          :data-sub-group-index="subGroupIndex"
         >
           <MenuCard
             v-for="(product, cardIndex) in item.products"
@@ -293,7 +294,21 @@ const cardsPerLine = ref(null)
 
 const viewWidth = window.innerWidth
 
+const scrollToSubGroup = (subGroupIndex) => {
+  const targetElement = scrollBody.value.querySelector(`[data-sub-group-index="${subGroupIndex}"]`)
+  if (targetElement) {
+    targetElement.scrollIntoView({ behavior: 'smooth' })
+  } else {
+    console.log(`"Элемент с индексом - " ${subGroupIndex} Не найден.`)
+  }
+}
+
 const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
+  scrollToSubGroup(selectedSubGroupIndex)
+  // const element = document.getElementById(selectedSubGroupIndex)
+  // const yOffset = -40
+  // const y = element.getBoundingClientRect().top + window.scrollY + yOffset
+  // scrollBody.value.scrollTo({ top: y })
   // if (
   //   productsStore.productsList[displayedGroupIndex.value].subGroups.length > 1 &&
   //   productsStore.productsList[displayedGroupIndex.value].subGroups[selectedSubGroupIndex].products
@@ -323,10 +338,6 @@ const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
   //   productsStore.productsList[displayedGroupIndex].subGroups[1].products[i].isRendered=true
   // }
   // }
-  const element = document.getElementById(selectedSubGroupIndex)
-  const yOffset = -40
-  const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
-  scrollBody.value.scrollTo({ top: y })
 }
 
 const onGroupSelect = ({ selectedGroupIndex }) => {
