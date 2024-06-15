@@ -56,7 +56,7 @@
     >
       <div class="absolute left-0 top-0 w-[312px] translate-x-[-28px] h-[150%] bg-[#27282b]"></div>
       <div class="relative flex items-center !pointer-events-auto">
-        <img class="w-[32px] h-[32px]" src="/icons/IconBriefcase.svg" alt="" />
+        <img class="w-[32px] h-[32px]" src="/icons/IconBriefcaseGold.svg" alt="" />
         <span class="menu-link ml-[15px]">Бизнес-ланч</span>
       </div>
       <!-- <div class="relative flex items-center !pointer-events-auto">

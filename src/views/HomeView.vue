@@ -26,34 +26,37 @@
       :order-count="menuOrderCount"
       @openOrder="isOrderVisible = true"
     />
-    <div
-      class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
-      ref="scrollBody"
-    >
+    <Transition name="fade">
       <div
-        v-if="isLoading"
-        class="fixed top-[35vh] w-[200px] h-[200px] z-[3] pointer-events-none right-[calc(50vw-200px)]"
+        class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
+        ref="scrollBody"
+        v-if="!isBusinessVisible"
       >
-        <img src="/icons/loadingBlack.gif" alt="" />
-      </div>
-      <div ref="scrollElement">
-        <MenuSection
-          v-for="(item, sectionIndex) in productsStore.productsList[displayedGroupIndex].subGroups"
-          ref="scrollSection"
-          :name="item.name"
-          :key="item.name"
-          :id="sectionIndex"
+        <div
+          v-if="isLoading"
+          class="fixed top-[35vh] w-[200px] h-[200px] z-[3] pointer-events-none right-[calc(50vw-200px)]"
         >
-          <MenuCard
-            v-for="(product, cardIndex) in item.products"
-            :product="product"
-            :key="product.id"
-            :data-id="cardIndex"
-            @choose="toggleDish"
-            @order-update="onOrderUpdate"
-          />
-        </MenuSection>
-        <!-- <MenuSection
+          <img src="/icons/loadingBlack.gif" alt="" />
+        </div>
+        <div ref="scrollElement">
+          <MenuSection
+            v-for="(item, sectionIndex) in productsStore.productsList[displayedGroupIndex]
+              .subGroups"
+            ref="scrollSection"
+            :name="item.name"
+            :key="item.name"
+            :id="sectionIndex"
+          >
+            <MenuCard
+              v-for="(product, cardIndex) in item.products"
+              :product="product"
+              :key="product.id"
+              :data-id="cardIndex"
+              @choose="toggleDish"
+              @order-update="onOrderUpdate"
+            />
+          </MenuSection>
+          <!-- <MenuSection
           v-for="(item, sectionIndex) in productsStore.productsList[0]"
           :name="item.name"
           :key="item.name"
@@ -71,8 +74,41 @@
             @expand="onBufferArrExpand"
           />
         </MenuSection> -->
+        </div>
       </div>
-    </div>
+      <div
+        class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
+        v-else-if="isBusinessVisible"
+      >
+        <MenuSection class="!mb-0" :name="'Бизнес Ланч'" />
+        <div class="relative pr-[37px] mb-[55px]">
+          <div
+            class="relative w-full flex flex-col border-solid border-y-[2px] border-y-gold box-border p-[16px]"
+          >
+            <div class="relative flex justify-between">
+              <div class="relative w-fit shrink-0 mr-[40px]">
+                <img
+                  src="/icons/IconBriefcaseBlack.svg"
+                  class="w-[43px] h-[43px] text-[25px]"
+                  alt=""
+                />
+              </div>
+              <div class="relative w-full font-[350] text-[14px] leading-[120%] text-darkBlue">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt ut labore et dolore magna aliqua. Diam quam nulla porttitor massa id
+                neque aliquam. Praesent tristique magna sit amet purus.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="relative w-full">
+          <span
+            class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka"
+            >Выберите первое блюдо</span
+          >
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -102,6 +138,7 @@ const subGroupIndexRemove = ref([])
 const displayedGroupIndex = ref(0)
 const scrollElement = ref(null)
 const scrollSection = ref(null)
+const isBusinessVisible = ref(false)
 // const selectedSubGroupIndex = ref(null)
 const scrollBody = ref(null)
 const cardsPerLine = ref(null)
