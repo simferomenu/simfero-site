@@ -26,40 +26,38 @@
       :order-count="menuOrderCount"
       @openOrder="isOrderVisible = true"
     />
-    <Transition name="fade">
+    <div
+      class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
+      ref="scrollBody"
+      v-if="!businessStore.isBusinessVisible"
+    >
       <div
-        class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
-        ref="scrollBody"
-        v-if="!isBusinessVisible"
+        v-if="isLoading"
+        class="fixed top-[35vh] w-[200px] h-[200px] z-[3] pointer-events-none right-[calc(50vw-200px)]"
       >
-        <div
-          v-if="isLoading"
-          class="fixed top-[35vh] w-[200px] h-[200px] z-[3] pointer-events-none right-[calc(50vw-200px)]"
+        <img src="/icons/loadingBlack.gif" alt="" />
+      </div>
+      <div ref="scrollElement">
+        <MenuSection
+          v-for="(item, subGroupIndex) in productsStore.productsList[displayedGroupIndex].subGroups"
+          ref="scrollSection"
+          :name="item.name"
+          :key="item.name"
+          :id="subGroupIndex"
         >
-          <img src="/icons/loadingBlack.gif" alt="" />
-        </div>
-        <div ref="scrollElement">
-          <MenuSection
-            v-for="(item, subGroupIndex) in productsStore.productsList[displayedGroupIndex]
-              .subGroups"
-            ref="scrollSection"
-            :name="item.name"
-            :key="item.name"
-            :id="subGroupIndex"
-          >
-            <MenuCard
-              v-for="(product, cardIndex) in item.products"
-              :product="product"
-              :key="product.id"
-              :data-id="cardIndex"
-              :groupIndex="displayedGroupIndex"
-              :subGroupIndex="subGroupIndex"
-              :cardIndex="cardIndex"
-              @choose="toggleDish"
-              @order-update="onOrderUpdate"
-            />
-          </MenuSection>
-          <!-- <MenuSection
+          <MenuCard
+            v-for="(product, cardIndex) in item.products"
+            :product="product"
+            :key="product.id"
+            :data-id="cardIndex"
+            :groupIndex="displayedGroupIndex"
+            :subGroupIndex="subGroupIndex"
+            :cardIndex="cardIndex"
+            @choose="toggleDish"
+            @order-update="onOrderUpdate"
+          />
+        </MenuSection>
+        <!-- <MenuSection
           v-for="(item, sectionIndex) in productsStore.productsList[0]"
           :name="item.name"
           :key="item.name"
@@ -77,41 +75,180 @@
             @expand="onBufferArrExpand"
           />
         </MenuSection> -->
-        </div>
       </div>
-      <div
-        class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
-        v-else-if="isBusinessVisible"
-      >
-        <MenuSection class="!mb-0" :name="'Бизнес Ланч'" />
-        <div class="relative pr-[37px] mb-[55px]">
-          <div
-            class="relative w-full flex flex-col border-solid border-y-[2px] border-y-gold box-border p-[16px]"
-          >
-            <div class="relative flex justify-between">
-              <div class="relative w-fit shrink-0 mr-[40px]">
-                <img
-                  src="/icons/IconBriefcaseBlack.svg"
-                  class="w-[43px] h-[43px] text-[25px]"
-                  alt=""
-                />
-              </div>
-              <div class="relative w-full font-[350] text-[14px] leading-[120%] text-darkBlue">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. Diam quam nulla porttitor massa id
-                neque aliquam. Praesent tristique magna sit amet purus.
-              </div>
+    </div>
+    <div
+      class="relative flex flex-col shrink-1 w-full h-screen overflow-x-hidden box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
+      v-if="businessStore.isBusinessVisible"
+    >
+      <MenuSection class="!mb-0" :name="'Бизнес Ланч'" />
+      <div class="relative pr-[37px] mb-[55px]">
+        <div
+          class="relative w-full flex flex-col border-solid border-y-[2px] border-y-gold box-border p-[16px]"
+        >
+          <div class="relative flex justify-between">
+            <div class="relative w-fit shrink-0 mr-[40px]">
+              <img
+                src="/icons/IconBriefcaseBlack.svg"
+                class="w-[43px] h-[43px] text-[25px]"
+                alt=""
+              />
+            </div>
+            <div class="relative w-full font-[350] text-[14px] leading-[120%] text-darkBlue">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+              incididunt ut labore et dolore magna aliqua. Diam quam nulla porttitor massa id neque
+              aliquam. Praesent tristique magna sit amet purus.
             </div>
           </div>
         </div>
-        <div class="relative w-full">
-          <span
-            class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka"
-            >Выберите первое блюдо</span
-          >
+      </div>
+      <div class="relative w-full mb-[55px]">
+        <span
+          class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka"
+          >Выберите первое блюдо</span
+        >
+      </div>
+      <div class="relative w-full flex flex-wrap">
+        <BusinessLunchCard
+          :name="'Тунец мицухиса'"
+          :description="'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'"
+          :img-src="'/images/ImageBusinessLunch1.png'"
+          :price="1500"
+        />
+        <BusinessLunchCard
+          :name="'Тунец мицухиса'"
+          :description="'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'"
+          :img-src="'/images/ImageBusinessLunch1.png'"
+          :price="1500"
+        />
+        <BusinessLunchCard
+          :name="'Не выбирать'"
+          :description="'-200 руб. от стоимости заказа'"
+          :img-src="'/icons/IconCancel.svg'"
+        />
+      </div>
+      <div class="relative w-full mb-[55px]">
+        <span
+          class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka"
+          >Выберите второе блюдо</span
+        >
+      </div>
+      <div class="relative w-full flex flex-wrap">
+        <BusinessLunchCard
+          :name="'Тунец мицухиса'"
+          :description="'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'"
+          :img-src="'/images/ImageBusinessLunch1.png'"
+        />
+        <BusinessLunchCard
+          :name="'Тунец мицухиса'"
+          :description="'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'"
+          :img-src="'/images/ImageBusinessLunch1.png'"
+        />
+        <BusinessLunchCard
+          :name="'Не выбирать'"
+          :description="'-200 руб. от стоимости заказа'"
+          :img-src="'/icons/IconCancel.svg'"
+        />
+      </div>
+      <div class="relative w-full mb-[55px]">
+        <span
+          class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka"
+          >Выберите третье блюдо</span
+        >
+      </div>
+      <div class="relative w-full flex flex-wrap">
+        <BusinessLunchCard
+          :name="'Тунец мицухиса'"
+          :description="'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'"
+          :img-src="'/images/ImageBusinessLunch1.png'"
+        />
+        <BusinessLunchCard
+          :name="'Тунец мицухиса'"
+          :description="'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'"
+          :img-src="'/images/ImageBusinessLunch1.png'"
+        />
+        <BusinessLunchCard
+          :name="'Не выбирать'"
+          :description="'-200 руб. от стоимости заказа'"
+          :img-src="'/icons/IconCancel.svg'"
+        />
+      </div>
+      <div class="relative w-full mb-[55px]">
+        <span
+          class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka"
+          >Выберите напиток</span
+        >
+      </div>
+      <div class="relative w-full flex flex-wrap">
+        <BusinessLunchCard
+          :name="'Тунец мицухиса'"
+          :description="'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'"
+          :img-src="'/images/ImageBusinessLunch1.png'"
+        />
+        <BusinessLunchCard
+          :name="'Тунец мицухиса'"
+          :description="'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'"
+          :img-src="'/images/ImageBusinessLunch1.png'"
+        />
+        <BusinessLunchCard
+          :name="'Не выбирать'"
+          :description="'-200 руб. от стоимости заказа'"
+          :img-src="'/icons/IconCancel.svg'"
+        />
+      </div>
+      <div class="relative w-full mb-[30px]">
+        <span
+          class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka"
+          >Дополнительно</span
+        >
+      </div>
+      <div class="relative w-full flex flex-wrap mb-[55px] [&>*:not(:last-child)]:mr-[10px]">
+        <div
+          class="relative w-fit box-border py-[7px] px-[20px] menu-card-bg h-[37px] rounded-[21px] font-Segoe font-[350] text-[14px] uppercase text-darkBlue"
+        >
+          Хлебная тарелка
+        </div>
+        <div
+          class="relative w-fit box-border py-[7px] px-[20px] menu-card-bg h-[37px] rounded-[21px] font-Segoe font-[350] text-[14px] uppercase text-darkBlue"
+        >
+          Красные
+        </div>
+        <div
+          class="relative w-fit box-border py-[7px] px-[20px] menu-card-bg h-[37px] rounded-[21px] font-Segoe font-[350] text-[14px] uppercase text-darkBlue"
+        >
+          Сладкие
+        </div>
+        <div
+          class="relative w-fit box-border py-[7px] px-[20px] menu-card-bg h-[37px] rounded-[21px] font-Segoe font-[350] text-[14px] uppercase text-darkBlue"
+        >
+          Полусладкие
         </div>
       </div>
-    </Transition>
+      <div
+        class="relative w-full flex justify-between items-center border-solid border-t-[1px] border-t-darkBlue min-h-[60px] box-border pr-[37px] pt-[15px] mt-[15px] mb-[55px] z-[4] animated-up"
+      >
+        <div class="flex items-center">
+          <span class="font-Segoe font-[350] text-[26px] tracking-[0.03em] text-darkBlue"
+            >Сумма заказа:</span
+          >
+          <span class="font-Segoe font-bold text-[26px] tracking-[0.03em] text-darkBlue ml-[30px]"
+            >3200 Руб.</span
+          >
+        </div>
+        <div class="flex flex-col h-full !pointer-events-auto">
+          <span
+            @click="onMakeOrder"
+            class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-darkBlue"
+          >
+            Добавить в корзину
+          </span>
+          <div class="absolute bottom-[-10px] right-[-270px] w-[600px] flex shrink-1 items-center">
+            <img class="block h-[15px] w-auto" src="/icons/IconRhombusBlack.svg" alt="" />
+            <div class="h-[1px] w-full bg-darkBlue"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -122,10 +259,19 @@ import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import { useProductsStore } from '@/stores/products.store'
 import { useOrderStore } from '@/stores/order.store'
+import { useBusinessStore } from '@/stores/business.store'
 
-import { SideMenu, MenuSection, MenuCard, DishScreen, OrderScreen } from '@/components'
+import {
+  SideMenu,
+  MenuSection,
+  MenuCard,
+  DishScreen,
+  OrderScreen,
+  BusinessLunchCard
+} from '@/components'
 
 const productsStore = useProductsStore()
+const businessStore = useBusinessStore()
 
 const menuData = ref(null)
 const menu = ref([])
@@ -142,7 +288,7 @@ const subGroupIndexRemove = ref([])
 const displayedGroupIndex = ref(0)
 const scrollElement = ref(null)
 const scrollSection = ref(null)
-const isBusinessVisible = ref(false)
+const isBusinessVisible = ref(true)
 // const selectedSubGroupIndex = ref(null)
 const scrollBody = ref(null)
 const cardsPerLine = ref(null)
