@@ -54,7 +54,7 @@
     <div
       class="relative w-full flex flex-col pt-[30px] [&>*:not(:last-child)]:mb-[30px] animated-up"
     >
-      <div class="absolute left-0 top-0 w-[312px] translate-x-[-28px] h-[150%] bg-[#27282b]"></div>
+      <div class="absolute left-0 top-0 w-[312px] translate-x-[-20px] h-[150%] bg-[#27282b]"></div>
       <div class="relative flex items-center !pointer-events-auto" @click="onBusinessClick">
         <img class="w-[32px] h-[32px]" src="/icons/IconBriefcaseGold.svg" alt="" />
         <span class="menu-link ml-[15px]" :class="{ active: businessStore.isBusinessVisible }"
