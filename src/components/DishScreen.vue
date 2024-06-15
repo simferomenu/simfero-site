@@ -111,8 +111,6 @@ const addToOrder = () => {
 }
 
 const onProductCounterUpdate = (iterator) => {
-  console.log('!!!!', iterator);
-
   const indexInOrder = orderStore.order.map(e=>e.id).indexOf(props.product.id)
   if (orderStore.order[props.index].amount == 1 && iterator==(-1)) {
     orderStore.order.splice(props.index, 1)
