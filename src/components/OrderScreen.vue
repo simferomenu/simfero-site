@@ -104,7 +104,7 @@ const totalPrice = computed(() => {
     final.value+=orderStore.order[i].amount * orderStore.order[i].sizePrices[0].price.currentPrice
   }
   return final
-  
+
 })
 
 const onOrderUpdate = () => {
@@ -113,11 +113,11 @@ const onOrderUpdate = () => {
 
 const onMakeOrder = async () => {
   try {
-    const rawOrderData = JSON.parse(window.localStorage.getItem('order'));
+    const tables = JSON.parse(window.localStorage.getItem('selectedTables'));
 
     const resp = await axios.post('/order', {
-      table: rawOrderData.tables[0],
-      items: rawOrderData.products.map((item) => ({
+      table: tables[0],
+      items: orderStore.order.map((item) => ({
         productId: item.id,
         price: item.sizePrices[0].price.currentPrice,
         type: 'Product',

@@ -9,9 +9,9 @@
       >
         <img :src="product.imageLinks[0] || '/images/ImageBasicDish.png'" alt="" />
       </div>
-      <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">
-        <img src="/icons/IconThreeDotsWhite.svg" alt="" />
-      </div>
+<!--      <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">-->
+<!--        <img src="/icons/IconThreeDotsWhite.svg" alt="" />-->
+<!--      </div>-->
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
       <span
