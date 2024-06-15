@@ -53,9 +53,9 @@
             >
           </div>
           <AddButton
-            @click="onAddToOrder"
+            @click=addToOrder()
             :isActive="isProductInOrder"
-            :quantity="props.product?.selected?.amount"
+            :quantity="props.product.amount"
           />
         </div>
       </div>
@@ -64,15 +64,22 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineProps, defineEmits } from 'vue'
+import { onMounted, ref, defineProps, computed } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { SideMenu, MenuSmallCard, AddButton, IconCross } from '@/components'
+import { useProductsStore } from '@/stores/products.store';
+import { useOrderStore } from '@/stores/order.store';
 
 const props = defineProps({
   product: {
     type: Object
   }
 })
+
+const productsStore = useProductsStore()
+const orderStore = useOrderStore()
+const cardInfo = ref()
+
 const description =
   props.product.description ||
   'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'
@@ -88,8 +95,31 @@ const scrollbar = ref({
   el: '.dish-scrollbar'
 })
 
+const isProductInOrder = computed(() => {
+  if (props.product.amount>0) {
+    return true
+  } else {
+    return false
+  }
+})
+
+const addToOrder = () => {
+  productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex].amount++
+  orderStore.order.push(productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex])
+  orderStore.orderInfo.orderAmount++
+}
+
 onMounted(() => {
-  const isProductInOrder = ref(props.product.selected)
+  for (const group of productsStore.productsList) {
+    const groupIndex = productsStore.productsList.indexOf(group)
+    for (const subGroup of group.subGroups) {
+      const subGroupIndex = group.subGroups.indexOf(subGroup)
+      const index = subGroup.products.map(e=>e.id).indexOf(props.product.id)
+      if (index!=-1) {
+        cardInfo.value = {cardIndex: index, groupIndex: groupIndex, subGroupIndex:subGroupIndex}
+      }
+    }
+  }
 })
 </script>
 
