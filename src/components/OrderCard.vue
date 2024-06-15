@@ -33,7 +33,6 @@
         class="pointer-events-auto"
         :quantity="product.amount"
         @update="onProductCounterUpdate"
-        @empty="onDeleteFromOrder"
       />
       <IconPlus />
     </div>
@@ -45,12 +44,14 @@
 <script setup>
 import { ref, defineEmits, defineProps, onMounted } from 'vue'
 import { IconPlus, Counter } from '@/components'
+import { useProductsStore } from '@/stores/products.store';
+import { useOrderStore } from '@/stores/order.store';
 
 const props = defineProps({
   product: {
     type: Object
   },
-  itemIndex: {
+  index: {
     type: Number
   },
   orderItemsPosition: {
@@ -61,6 +62,8 @@ const props = defineProps({
 const emit = defineEmits(['chooseFromOrder', 'order-update'])
 
 const isProductInOrder = ref(props.product.selected)
+const productsStore = useProductsStore()
+const orderStore = useOrderStore()
 const isDescrHidden = ref(false)
 const productName = ref(null)
 const description =
@@ -75,56 +78,13 @@ onMounted(() => {
   }
 })
 
-const onAddToOrder = (event, amount = 1) => {
-  event && event.stopPropagation()
-
-  const rawOrderData = window.localStorage.getItem('order')
-  const selectedTables = window.localStorage.getItem('selectedTables')
-
-  try {
-    let order = null
-
-    if (rawOrderData) {
-      order = JSON.parse(rawOrderData)
-      const product = order.products.find((p) => p.id === props.product.id)
-
-      if (product) {
-        product.amount = amount
-      } else {
-        order.products.push({ ...props.product, amount })
-      }
-    } else {
-      order = {
-        tables: [...JSON.parse(selectedTables)],
-        products: [{ ...props.product, amount }]
-      }
-    }
-
-    isProductInOrder.value = true
-    window.localStorage.setItem('order', JSON.stringify(order))
-
-    emit('order-update')
-  } catch (error) {
-    console.log('Ошибка добавления в заказа', error)
-  }
-}
-
-const onDeleteFromOrder = () => {
-  const rawOrderData = window.localStorage.getItem('order')
-
-  try {
-    let order = JSON.parse(rawOrderData)
-    order.products = order.products.filter((p) => p.id !== props.product.id)
-    isProductInOrder.value = false
-    window.localStorage.setItem('order', JSON.stringify(order))
-    emit('order-update')
-  } catch (error) {
-    console.log('Ошибка удаления из заказа', error)
-  }
-}
+console.log(props.orderItemsPosition)
 
 const onProductCounterUpdate = (amount) => {
-  onAddToOrder(null, amount.value)
-  emit('orderCardUpdate')
+  productsStore.productsList[props.orderItemsPosition.groupIndex].subGroups[props.orderItemsPosition.subGroupIndex].products[props.orderItemsPosition.cardIndex].amount+=amount
+  orderStore.orderInfo.orderAmount+=amount
+  if (orderStore.order[props.index].amount == 0) {
+    orderStore.order.splice(props.index, 1)
+  }
 }
 </script>

@@ -81,7 +81,7 @@
 <style scoped></style>
 
 <script setup>
-import { ref, watch, defineEmits, defineProps, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, defineEmits, defineProps, onMounted, onBeforeUnmount, computed } from 'vue'
 import { IconPlus, Counter } from '@/components'
 import { useOrderStore } from '@/stores/order.store';
 import { useProductsStore } from '@/stores/products.store';
@@ -117,15 +117,13 @@ const props = defineProps({
 
 const emit = defineEmits(['choose', 'order-update', 'expand'])
 
-const isProductInOrder = ref(null)
-
-if (props.product.amount>0) {
-  isProductInOrder.value=true
-} else {
-  isProductInOrder.value=false
-}
-
-const onChoose = () => emit('choose', props.product)
+const isProductInOrder = computed(() => {
+  if (props.product.amount>0) {
+    return true
+  } else {
+    return false
+  }
+})
 
 const isDescrHidden = ref(false)
 const productName = ref(null)

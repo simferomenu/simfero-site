@@ -17,7 +17,7 @@
         :product="item"
         :key="item.id"
         :index="itemIndex"
-        :orderItemsPosition="orderItemsPosition"
+        :orderItemsPosition=orderItemsPosition[itemIndex]
         @chooseFromOrder="onChooseFromOrder"
         @order-update="onOrderUpdate"
       />
