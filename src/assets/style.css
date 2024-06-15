@@ -17,7 +17,7 @@ body {
 }
 
 .menu-link {
-  @apply relative font-Sitka font-normal text-[#fff] text-[18px] leading-[162%] tracking-[0.15em] uppercase default-transition !pointer-events-auto;
+  @apply relative font-Sitka font-normal text-[#fff] text-[17px] leading-[162%] tracking-[0.15em] uppercase default-transition !pointer-events-auto;
 }
 
 .menu-link::before {

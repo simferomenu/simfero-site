@@ -18,7 +18,7 @@
       </div>
       <div class="relative ml-[50px] w-[50%] shrink-0 flex flex-col">
         <div
-          class="font-Segoe font-semibold text-[42px] leading-[133%] tracking-[0.06em] uppercase text-[#fff] mb-[15px] w-[80%]"
+          class="font-Segoe font-semibold text-[38px] leading-[133%] tracking-[0.06em] uppercase text-[#fff] mb-[15px] w-[80%]"
         >
           {{ product.name }}
         </div>
@@ -53,9 +53,10 @@
             >
           </div>
           <AddButton
-            @click="onAddToOrder"
+            @click=addToOrder()
             :isActive="isProductInOrder"
-            :quantity="props.product?.selected?.amount"
+            @update="onProductCounterUpdate"
+            :quantity="props.product.amount"
           />
         </div>
       </div>
@@ -64,15 +65,22 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineProps, defineEmits } from 'vue'
+import { onMounted, ref, defineProps, computed } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { SideMenu, MenuSmallCard, AddButton, IconCross } from '@/components'
+import { useProductsStore } from '@/stores/products.store';
+import { useOrderStore } from '@/stores/order.store';
 
 const props = defineProps({
   product: {
     type: Object
   }
 })
+
+const productsStore = useProductsStore()
+const orderStore = useOrderStore()
+const cardInfo = ref()
+
 const description =
   props.product.description ||
   'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'
@@ -88,8 +96,42 @@ const scrollbar = ref({
   el: '.dish-scrollbar'
 })
 
+const isProductInOrder = computed(() => {
+  if (props.product.amount>0) {
+    return true
+  } else {
+    return false
+  }
+})
+
+const addToOrder = () => {
+  productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex].amount++
+  orderStore.order.push(productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex])
+  orderStore.orderInfo.orderAmount++
+}
+
+const onProductCounterUpdate = (iterator) => {
+  const indexInOrder = orderStore.order.map(e=>e.id).indexOf(props.product.id)
+  if (orderStore.order[props.index].amount == 1 && iterator==(-1)) {
+    orderStore.order.splice(props.index, 1)
+  } else {
+    productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex].amount+=iterator
+    orderStore.order[indexInOrder].amount += iterator
+    orderStore.orderInfo.orderAmount
+  }
+}
+
 onMounted(() => {
-  const isProductInOrder = ref(props.product.selected)
+  for (const group of productsStore.productsList) {
+    const groupIndex = productsStore.productsList.indexOf(group)
+    for (const subGroup of group.subGroups) {
+      const subGroupIndex = group.subGroups.indexOf(subGroup)
+      const index = subGroup.products.map(e=>e.id).indexOf(props.product.id)
+      if (index!=-1) {
+        cardInfo.value = {cardIndex: index, groupIndex: groupIndex, subGroupIndex:subGroupIndex}
+      }
+    }
+  }
 })
 </script>
 
