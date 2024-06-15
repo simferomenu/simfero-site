@@ -7,23 +7,27 @@
       >Добавить</span
     >
     <div class="relative flex items-center justify-center">
-      <img
-        class="h-full w-auto"
-        src="/icons/IconMinusGold.svg"
-        alt=""
-        @click="onQuantityChange(-1)"
-      />
+      <div class="relative box-border px-[5px]">
+        <img
+          class="h-full w-auto"
+          src="/icons/IconMinusGold.svg"
+          alt=""
+          @click="onQuantityChange(-1)"
+        />
+      </div>
       <div
         class="font-Segoe font-semibold text-[23px] leading-[165%] tracking-[0.12em] uppercase text-center text-gold mx-[20px]"
       >
         {{ counter }}
       </div>
-      <img
-        class="h-full w-auto"
-        src="/icons/IconPlusGold.svg"
-        alt=""
-        @click="onQuantityChange(1)"
-      />
+      <div class="relative box-border px-[5px]">
+        <img
+          class="h-full w-auto"
+          src="/icons/IconPlusGold.svg"
+          alt=""
+          @click="onQuantityChange(1)"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -49,9 +53,7 @@ const counter = computed(() => {
   return props.quantity
 })
 
-
 const onQuantityChange = (iterator) => {
-
   counter.value += iterator
   emit('update', iterator)
 }
