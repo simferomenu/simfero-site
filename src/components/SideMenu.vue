@@ -170,5 +170,9 @@ onMounted(() => {
 const onBusinessClick = () => {
   activeGroupIndex.value = null
   businessStore.isBusinessVisible = true
+  for (let i = 0; i < acc.length; i++) {
+    acc[i].nextElementSibling.style.maxHeight = 0
+    acc[i].classList.remove('active')
+  }
 }
 </script>
