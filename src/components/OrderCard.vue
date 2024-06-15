@@ -78,12 +78,13 @@ onMounted(() => {
   }
 })
 
-const onProductCounterUpdate = (amount) => {
-  if (orderStore.order[props.index].amount == 1 && amount==(-1)) {
-    orderStore.order.splice(props.index, 1)
-  } else {
-    productsStore.productsList[props.orderItemsPosition.groupIndex].subGroups[props.orderItemsPosition.subGroupIndex].products[props.orderItemsPosition.cardIndex].amount+=amount
-    orderStore.orderInfo.orderAmount+=amount
+const onProductCounterUpdate = (iterator) => {
+  const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
+  orderStore.order[indexInOrder].amount += iterator
+  orderStore.orderInfo.orderAmount += iterator
+  if (orderStore.order[indexInOrder].amount == 0) {
+    isProductInOrder.value = false
+    orderStore.order.splice(indexInOrder, 1)
   }
 }
 </script>
