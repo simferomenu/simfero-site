@@ -49,13 +49,18 @@ import { IconPlus, Counter } from '@/components'
 const props = defineProps({
   product: {
     type: Object
+  },
+  itemIndex: {
+    type: Number
+  },
+  orderItemsPosition: {
+    type: Object
   }
 })
 
 const emit = defineEmits(['chooseFromOrder', 'order-update'])
 
 const isProductInOrder = ref(props.product.selected)
-
 const isDescrHidden = ref(false)
 const productName = ref(null)
 const description =

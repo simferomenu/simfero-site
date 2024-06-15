@@ -307,10 +307,10 @@ productsStore.setProductsList(productsListExp.value)
 const isDishVisible = ref(false)
 const isOrderVisible = ref(false)
 
-// const toggleDish = (product) => {
-//   isDishVisible.value = !isDishVisible.value
-//   selectedProduct.value = product
-// }
+const toggleDish = (product) => {
+  isDishVisible.value = !isDishVisible.value
+  selectedProduct.value = product
+}
 
 const onOrderUpdate = () => {
   const rawOrderData = window.localStorage.getItem('order')
