@@ -27,7 +27,7 @@
       @openOrder="isOrderVisible = true"
     />
     <div
-      class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
+      class="relative flex flex-col shrink-1 w-full h-screen overflow-auto box-border main-bg pb-[40px] pl-[37px] pointer-events-auto"
       ref="scrollBody"
       v-if="!businessStore.isBusinessVisible"
     >
@@ -37,7 +37,7 @@
       >
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
-      <div ref="scrollElement" class="[&>*:not(:nth-child(1))]:pt-[40px]">
+      <div ref="scrollElement" class="[&>*]:pt-[40px]">
         <MenuSection
           v-for="(item, subGroupIndex) in productsStore.productsList[displayedGroupIndex].subGroups"
           ref="scrollSection"
@@ -366,7 +366,7 @@ const onGroupSelect = ({ selectedGroupIndex }) => {
   if (scrollElement.value) {
     scrollElement.value.scrollIntoView()
   }
-  scrollBody.value.scrollBy(0, -40)
+  // scrollBody.value.scrollBy(0, -40)
 }
 
 if (viewWidth < 1112) {
