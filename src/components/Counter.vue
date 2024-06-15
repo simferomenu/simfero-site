@@ -40,7 +40,7 @@
 <style scoped></style>
 
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue'
+import { watch, ref, defineProps, defineEmits } from 'vue'
 
 const props = defineProps({
   quantity: {
@@ -50,12 +50,16 @@ const props = defineProps({
 })
 const emit = defineEmits(['update'])
 
-const counterValue = ref(props.quantity)
+const counterValue = ref(props.quantity);
 
 const onQuantityChange = (event, iterator) => {
-  event.stopPropagation()
+  event.stopPropagation();
 
   counterValue.value += iterator
   emit('update', iterator)
 }
+
+watch(() => props.quantity, (value) => {
+  counterValue.value = value;
+})
 </script>
