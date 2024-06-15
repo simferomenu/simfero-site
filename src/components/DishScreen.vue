@@ -97,7 +97,14 @@ const props = defineProps({
 const productsStore = useProductsStore()
 const orderStore = useOrderStore()
 const cardInfo = ref()
-const isProductInOrder = ref(false)
+const isProductInOrder = computed(() => {
+  const index = orderStore.order.map((e) => e.id).indexOf(props.product.id)
+  if (index == -1) {
+    return false
+  } else {
+    return true
+  }
+})
 
 const description =
   props.product.description ||
