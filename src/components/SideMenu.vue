@@ -55,9 +55,11 @@
       class="relative w-full flex flex-col pt-[30px] [&>*:not(:last-child)]:mb-[30px] animated-up"
     >
       <div class="absolute left-0 top-0 w-[312px] translate-x-[-28px] h-[150%] bg-[#27282b]"></div>
-      <div class="relative flex items-center !pointer-events-auto">
+      <div class="relative flex items-center !pointer-events-auto" @click="onBusinessClick">
         <img class="w-[32px] h-[32px]" src="/icons/IconBriefcaseGold.svg" alt="" />
-        <span class="menu-link ml-[15px]">Бизнес-ланч</span>
+        <span class="menu-link ml-[15px]" :class="{ active: businessStore.isBusinessVisible }"
+          >Бизнес-ланч</span
+        >
       </div>
       <!-- <div class="relative flex items-center !pointer-events-auto">
         <img class="w-[32px] h-[32px]" src="/icons/IconExclamation.svg" alt="" />
@@ -70,7 +72,7 @@
           >Мой заказ</span
         >
         <Transition name="fade">
-          <SmallCounter v-if="orderAmount" :value = "orderAmount"/>
+          <SmallCounter v-if="orderAmount" :value="orderAmount" />
         </Transition>
       </div>
     </div>
@@ -98,12 +100,15 @@
 import { ref, watch, defineEmits, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { SmallCounter } from '@/components'
-import { useOrderStore } from '@/stores/order.store';
+import { useOrderStore } from '@/stores/order.store'
+import { useBusinessStore } from '@/stores/business.store'
+
+const businessStore = useBusinessStore()
 
 const props = defineProps({
   categories: {
     type: Array
-  },
+  }
 })
 
 const emit = defineEmits(['select', 'selectGroup', 'selectSubGroup'])
@@ -112,6 +117,7 @@ const activeGroupIndex = ref()
 const acc = document.getElementsByClassName('accordion')
 
 const onGroupSelect = (selectedGroupIndex) => {
+  businessStore.isBusinessVisible = false
   emit('selectGroup', { selectedGroupIndex })
   activeGroupIndex.value = selectedGroupIndex
   for (let i = 0; i < acc.length; i++) {
@@ -147,9 +153,7 @@ const orderStore = useOrderStore()
 
 const orderAmount = computed(() => orderStore.orderInfo.orderAmount)
 
-
 onMounted(() => {
-
   const rawOrderData = window.localStorage.getItem('order')
 
   try {
@@ -162,4 +166,9 @@ onMounted(() => {
   }
   setTimeout(selectFirstAcc, 100)
 })
+
+const onBusinessClick = () => {
+  activeGroupIndex.value = null
+  businessStore.isBusinessVisible = true
+}
 </script>
