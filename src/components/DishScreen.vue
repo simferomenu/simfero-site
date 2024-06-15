@@ -66,8 +66,12 @@
             >
           </div>
           <AddButton
-            @click="addToOrder()"
-            :isActive="isProductInOrder"
+            v-if="!isProductInOrder"
+            @select="addToOrder"
+            :quantity="props.product.amount"
+          />
+          <AddButtonActive
+            v-if="isProductInOrder"
             @update="onProductCounterUpdate"
             :quantity="props.product.amount"
           />
@@ -93,6 +97,7 @@ const props = defineProps({
 const productsStore = useProductsStore()
 const orderStore = useOrderStore()
 const cardInfo = ref()
+const isProductInOrder = ref(false)
 
 const description =
   props.product.description ||
@@ -109,34 +114,23 @@ const scrollbar = ref({
   el: '.dish-scrollbar'
 })
 
-const isProductInOrder = computed(() => {
-  if (props.product.amount > 0) {
-    return true
-  } else {
-    return false
-  }
-})
-
 const addToOrder = () => {
-  productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex]
-    .products[cardInfo.value.cardIndex].amount++
-  orderStore.order.push(
-    productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex]
-      .products[cardInfo.value.cardIndex]
-  )
+  productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex].amount=1
+  orderStore.order.push(productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex])
+  isProductInOrder.value = true
   orderStore.orderInfo.orderAmount++
 }
 
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
-  if (orderStore.order[props.index].amount == 1 && iterator == -1) {
-    orderStore.order.splice(props.index, 1)
+  if (orderStore.order[indexInOrder].amount==1 && iterator==-1) {
+    productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex].amount += iterator
+    orderStore.orderInfo.orderAmount += iterator
+    orderStore.order.splice(indexInOrder, 1)
+    isProductInOrder.value = false
   } else {
-    productsStore.productsList[cardInfo.value.groupIndex].subGroups[
-      cardInfo.value.subGroupIndex
-    ].products[cardInfo.value.cardIndex].amount += iterator
-    orderStore.order[indexInOrder].amount += iterator
-    orderStore.orderInfo.orderAmount
+    productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex].amount += iterator
+    orderStore.orderInfo.orderAmount += iterator
   }
 }
 

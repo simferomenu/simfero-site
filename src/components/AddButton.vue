@@ -1,7 +1,7 @@
 <template>
   <div
     class="relative w-[280px] h-[64px] flex justify-between items-center py-[20px] px-[15px] box-border rounded-tl-[33px] rounded-tr-[33px] rounded-br-[33px] border-solid border-[2px] border-transparent bg-gold"
-  >
+    @click="addToOrder">
     <span
       class="font-Segoe font-semibold text-[16px] leading-[237%] tracking-[0.17em] uppercase text-darkBlue"
       >Добавить</span
@@ -13,34 +13,11 @@
 <style scoped></style>
 
 <script setup>
-import { ref, defineEmits, defineProps, onMounted, computed } from 'vue'
-const props = defineProps({
-  isActive: {
-    type: Boolean,
-    default: false
-  },
-  quantity: {
-    type: Number,
-    default: 1
-  }
-})
+import { defineEmits } from 'vue'
 
-const emit = defineEmits(['update'])
+const emit = defineEmits(['select'])
 
-const isActive = ref(props.isActive)
-const counter = computed(() => {
-  return props.quantity
-})
-
-const activateDishButton = () => {
-  isActive.value = true
-  emit('selected')
-}
-
-const onQuantityChange = (event, iterator) => {
-  event.stopPropagation()
-
-  counter.value += iterator
-  emit('update', iterator)
+const addToOrder = () => {
+  emit('select')
 }
 </script>

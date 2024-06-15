@@ -11,7 +11,7 @@
         class="h-full w-auto"
         src="/icons/IconMinusGold.svg"
         alt=""
-        @click="onQuantityChange($event, -1)"
+        @click="onQuantityChange(-1)"
       />
       <div
         class="font-Segoe font-semibold text-[23px] leading-[165%] tracking-[0.12em] uppercase text-center text-gold mx-[20px]"
@@ -22,7 +22,7 @@
         class="h-full w-auto"
         src="/icons/IconPlusGold.svg"
         alt=""
-        @click="onQuantityChange($event, 1)"
+        @click="onQuantityChange(1)"
       />
     </div>
   </div>
@@ -31,7 +31,7 @@
 <style scoped></style>
 
 <script setup>
-import { ref, defineEmits, defineProps, onMounted, computed } from 'vue'
+import { defineEmits, defineProps, computed } from 'vue'
 const props = defineProps({
   isActive: {
     type: Boolean,
@@ -45,18 +45,12 @@ const props = defineProps({
 
 const emit = defineEmits(['update'])
 
-const isActive = ref(props.isActive)
 const counter = computed(() => {
   return props.quantity
 })
 
-const activateDishButton = () => {
-  isActive.value = true
-  emit('selected')
-}
 
-const onQuantityChange = (event, iterator) => {
-  event.stopPropagation()
+const onQuantityChange = (iterator) => {
 
   counter.value += iterator
   emit('update', iterator)
