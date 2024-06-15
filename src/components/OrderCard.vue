@@ -78,13 +78,13 @@ onMounted(() => {
   }
 })
 
-console.log(props.orderItemsPosition)
-
 const onProductCounterUpdate = (amount) => {
-  productsStore.productsList[props.orderItemsPosition.groupIndex].subGroups[props.orderItemsPosition.subGroupIndex].products[props.orderItemsPosition.cardIndex].amount+=amount
   orderStore.orderInfo.orderAmount+=amount
-  if (orderStore.order[props.index].amount == 0) {
+  if (orderStore.order[props.index].amount == 1 && amount==(-1)) {
     orderStore.order.splice(props.index, 1)
+  } else {
+    productsStore.productsList[props.orderItemsPosition.groupIndex].subGroups[props.orderItemsPosition.subGroupIndex].products[props.orderItemsPosition.cardIndex].amount+=amount
+    orderStore.orderInfo.orderAmount+=amount
   }
 }
 </script>

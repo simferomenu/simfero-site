@@ -55,6 +55,7 @@
           <AddButton
             @click=addToOrder()
             :isActive="isProductInOrder"
+            @update="onProductCounterUpdate"
             :quantity="props.product.amount"
           />
         </div>
@@ -107,6 +108,17 @@ const addToOrder = () => {
   productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex].amount++
   orderStore.order.push(productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex])
   orderStore.orderInfo.orderAmount++
+}
+
+const onProductCounterUpdate = (iterator) => {
+  const indexInOrder = orderStore.order.map(e=>e.id).indexOf(props.product.id)
+  if (orderStore.order[props.index].amount == 1 && iterator==(-1)) {
+    orderStore.order.splice(props.index, 1)
+  } else {
+    productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex].amount+=iterator
+    orderStore.order[indexInOrder].amount += iterator
+    orderStore.orderInfo.orderAmount
+  }
 }
 
 onMounted(() => {

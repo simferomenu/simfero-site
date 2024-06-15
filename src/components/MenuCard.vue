@@ -120,10 +120,11 @@ const emit = defineEmits(['choose', 'order-update', 'expand'])
 const onChoose = () => emit('choose', props.product)
 
 const isProductInOrder = computed(() => {
-  if (props.product.amount>0) {
-    return true
-  } else {
+  const index = orderStore.order.map(e=>e.id).indexOf(props.product.id)
+  if (index == -1) {
     return false
+  } else {
+    return true
   }
 })
 
@@ -232,19 +233,19 @@ const onAddToOrder = (event) => {
   // }
 }
 
-const onDeleteFromOrder = () => {
-  const rawOrderData = window.localStorage.getItem('order')
+// const onDeleteFromOrder = () => {
+//   const rawOrderData = window.localStorage.getItem('order')
 
-  try {
-    let order = JSON.parse(rawOrderData)
-    order.products = order.products.filter((p) => p.id !== props.product.id)
-    isProductInOrder.value = false
-    window.localStorage.setItem('order', JSON.stringify(order))
-    emit('order-update')
-  } catch (error) {
-    console.log('Ошибка удаления из заказа', error)
-  }
-}
+//   try {
+//     let order = JSON.parse(rawOrderData)
+//     order.products = order.products.filter((p) => p.id !== props.product.id)
+//     isProductInOrder.value = false
+//     window.localStorage.setItem('order', JSON.stringify(order))
+//     emit('order-update')
+//   } catch (error) {
+//     console.log('Ошибка удаления из заказа', error)
+//   }
+// }
 
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.order.map(e => e.id).indexOf(props.product.id);

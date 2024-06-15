@@ -21,7 +21,7 @@
         <div
           class="font-Segoe font-semibold text-[23px] leading-[165%] tracking-[0.12em] uppercase text-center text-gold mx-[20px]"
         >
-          {{ quantity }}
+          {{ counter }}
         </div>
         <img
           class="h-full w-auto"
@@ -37,7 +37,7 @@
 <style scoped></style>
 
 <script setup>
-import { ref, defineEmits, defineProps, onMounted } from 'vue'
+import { ref, defineEmits, defineProps, onMounted, computed } from 'vue'
 const props = defineProps({
   isActive: {
     type: Boolean,
@@ -52,30 +52,19 @@ const props = defineProps({
 const emit = defineEmits(['update'])
 
 const isActive = ref(props.isActive)
+const counter = computed(() => {
+  return props.quantity
+})
 
 const activateDishButton = () => {
   isActive.value = true
   emit('selected')
 }
 
-const counterValue = ref(props.quantity)
-
 const onQuantityChange = (event, iterator) => {
   event.stopPropagation()
 
-  console.log('tap')
-
-  counterValue.value += iterator
-
-  if (counterValue.value <= 0) {
-    counterValue.value = 1
-    emit('empty')
-  } else {
-    emit('update', counterValue)
-  }
+  counter.value += iterator
+  emit('update', iterator)  
 }
-
-onMounted(() => {
-  console.log(counterValue.value)
-})
 </script>
