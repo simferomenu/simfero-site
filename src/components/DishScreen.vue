@@ -80,7 +80,7 @@
 <script setup>
 import { onMounted, ref, defineProps, computed } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { SideMenu, MenuSmallCard, AddButton, IconCross } from '@/components'
+import { SideMenu, MenuSmallCard, AddButton, AddButtonActive, IconCross } from '@/components'
 import { useProductsStore } from '@/stores/products.store'
 import { useOrderStore } from '@/stores/order.store'
 

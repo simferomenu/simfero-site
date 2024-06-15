@@ -4,6 +4,7 @@ import MenuSection from '@/components/MenuSection.vue'
 import MenuCard from '@/components/MenuCard.vue'
 import MenuSmallCard from '@/components/MenuSmallCard.vue'
 import AddButton from '@/components/AddButton.vue'
+import AddButtonActive from '@/components/AddButtonActive.vue'
 import Counter from '@/components/Counter.vue'
 import SmallCounter from '@/components/SmallCounter.vue'
 import OrderCard from '@/components/OrderCard.vue'
@@ -25,6 +26,7 @@ export {
   IconPlus,
   IconCross,
   AddButton,
+  AddButtonActive,
   IconBack,
   Counter,
   SmallCounter,
