@@ -29,7 +29,7 @@
           ref="productName"
           class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000] clip-5 mb-[5px]"
         >
-          {{ product.name }}
+          {{ product.seoTitle || product.name }}
         </span>
         <span
           class="font-Segoe font-[350] text-[14px] leading-[136%] text-darkBlue clip-3"
@@ -158,7 +158,7 @@ onMounted(() => {
   }
   setTimeout(() => {
     if (cardElement.value) {
-      if (productName.value && productName.value.clientHeight > 48) {
+      if (productName.value && productName.value.clientHeight > 72) {
         isDescrHidden.value = true
       }
     }
