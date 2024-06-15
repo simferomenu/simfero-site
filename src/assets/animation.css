@@ -65,6 +65,17 @@
   }
 }
 
+@-webkit-keyframes fadeAnimationUp {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes expandAnimation {
   0% {
     width: 91px;
@@ -85,6 +96,17 @@
   }
 }
 
+@-webkit-keyframes fadeAnimationDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes fadeAnimation {
   0% {
     opacity: 0;
@@ -94,7 +116,25 @@
   }
 }
 
+@-webkit-keyframes fadeAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 @keyframes fadeOutAnimation {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes fadeOutAnimation {
   0% {
     opacity: 1;
   }
