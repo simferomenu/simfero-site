@@ -117,6 +117,8 @@ const props = defineProps({
 
 const emit = defineEmits(['choose', 'order-update', 'expand'])
 
+const onChoose = () => emit('choose', props.product)
+
 const isProductInOrder = computed(() => {
   if (props.product.amount>0) {
     return true
