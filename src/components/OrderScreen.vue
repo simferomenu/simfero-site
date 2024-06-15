@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineEmits } from 'vue';
+import { onMounted, ref, defineEmits, computed } from 'vue';
 import axios from 'axios';
 
 import { IconCross, IconBack, OrderCard } from '@/components'
@@ -65,7 +65,6 @@ const onChooseFromOrder = () => {
 }
 
 const orderItems = ref([])
-const totalPrice = ref(0)
 const orderItemsPosition = ref([])
 const orderStore = useOrderStore()
 const productsStore = useProductsStore()
@@ -99,14 +98,16 @@ const getOrderData = () => {
   // }
 }
 
-const calcTotalPrice = () => {
+const totalPrice = computed(() => {
+  const final = ref(0)
   for (let i=0; i<orderStore.order.length; i++) {
-    totalPrice.value+=orderStore.order[i].amount * orderStore.order[i].sizePrices[0].price.currentPrice
+    final.value+=orderStore.order[i].amount * orderStore.order[i].sizePrices[0].price.currentPrice
   }
-}
+  return final
+  
+})
 
 const onOrderUpdate = () => {
-  calcTotalPrice()
   emit('updateOrder')
 }
 
@@ -146,7 +147,6 @@ const onMakeOrder = async () => {
 
 onMounted(() => {
   getOrderData()
-  calcTotalPrice()
 })
 </script>
 
