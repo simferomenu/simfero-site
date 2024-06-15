@@ -25,7 +25,7 @@
         <span class="simple-text">
           {{ description }}
         </span>
-        <div class="relative flex w-full items-center justify-between h-[107px] mt-[15px]">
+        <!-- <div class="relative flex w-full items-center justify-between h-[107px] mt-[15px]">
           <div class="absolute top-0 right-0 h-[1px] bg-[#fff] w-[70vw]"></div>
           <div class="flex flex-col items-center">
             <span class="simple-text mb-[8px]">Жиры</span>
@@ -40,6 +40,19 @@
             <span class="bold-text">{{ product.carbohydratesAmount }}</span>
           </div>
           <div class="absolute bottom-0 right-0 h-[1px] bg-[#fff] w-[70vw]"></div>
+        </div> -->
+        <div
+          class="relative w-full flex justify-between pb-[20px] mt-[45px] border-solid border-b-[1px] border-b-gold"
+        >
+          <span
+            class="font-Segoe text-[#fff] font-semibold uppercase text-[16px] leading-[200%] tracking-[0.07em]"
+            >Время приготовления:</span
+          >
+          <span
+            class="font-Segoe text-[#fff] font-semibold uppercase text-[16px] leading-[200%] tracking-[0.07em]"
+          >
+            10 мин.</span
+          >
         </div>
         <div class="relative w-full flex items-center justify-between mt-[30px]">
           <div class="relative h-full flex flex-col justify-between">
@@ -53,7 +66,7 @@
             >
           </div>
           <AddButton
-            @click=addToOrder()
+            @click="addToOrder()"
             :isActive="isProductInOrder"
             @update="onProductCounterUpdate"
             :quantity="props.product.amount"
@@ -68,8 +81,8 @@
 import { onMounted, ref, defineProps, computed } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { SideMenu, MenuSmallCard, AddButton, IconCross } from '@/components'
-import { useProductsStore } from '@/stores/products.store';
-import { useOrderStore } from '@/stores/order.store';
+import { useProductsStore } from '@/stores/products.store'
+import { useOrderStore } from '@/stores/order.store'
 
 const props = defineProps({
   product: {
@@ -97,7 +110,7 @@ const scrollbar = ref({
 })
 
 const isProductInOrder = computed(() => {
-  if (props.product.amount>0) {
+  if (props.product.amount > 0) {
     return true
   } else {
     return false
@@ -105,17 +118,23 @@ const isProductInOrder = computed(() => {
 })
 
 const addToOrder = () => {
-  productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex].amount++
-  orderStore.order.push(productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex])
+  productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex]
+    .products[cardInfo.value.cardIndex].amount++
+  orderStore.order.push(
+    productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex]
+      .products[cardInfo.value.cardIndex]
+  )
   orderStore.orderInfo.orderAmount++
 }
 
 const onProductCounterUpdate = (iterator) => {
-  const indexInOrder = orderStore.order.map(e=>e.id).indexOf(props.product.id)
-  if (orderStore.order[props.index].amount == 1 && iterator==(-1)) {
+  const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
+  if (orderStore.order[props.index].amount == 1 && iterator == -1) {
     orderStore.order.splice(props.index, 1)
   } else {
-    productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex].amount+=iterator
+    productsStore.productsList[cardInfo.value.groupIndex].subGroups[
+      cardInfo.value.subGroupIndex
+    ].products[cardInfo.value.cardIndex].amount += iterator
     orderStore.order[indexInOrder].amount += iterator
     orderStore.orderInfo.orderAmount
   }
@@ -126,9 +145,9 @@ onMounted(() => {
     const groupIndex = productsStore.productsList.indexOf(group)
     for (const subGroup of group.subGroups) {
       const subGroupIndex = group.subGroups.indexOf(subGroup)
-      const index = subGroup.products.map(e=>e.id).indexOf(props.product.id)
-      if (index!=-1) {
-        cardInfo.value = {cardIndex: index, groupIndex: groupIndex, subGroupIndex:subGroupIndex}
+      const index = subGroup.products.map((e) => e.id).indexOf(props.product.id)
+      if (index != -1) {
+        cardInfo.value = { cardIndex: index, groupIndex: groupIndex, subGroupIndex: subGroupIndex }
       }
     }
   }
