@@ -257,7 +257,6 @@ const onAddToOrder = (event) => {
 
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
-  productsStore.productsList[props.groupIndex].subGroups[props.subGroupIndex].products[props.cardIndex].amount+=iterator
   orderStore.order[indexInOrder].amount += iterator
   orderStore.orderInfo.orderAmount += iterator
   if (orderStore.order[indexInOrder].amount == 0) {

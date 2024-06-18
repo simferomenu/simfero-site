@@ -90,6 +90,7 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { IconCross, IconBack, NumberCell } from '@/components'
 import { useProductsStore } from '@/stores/products.store';
+import { useOrderStore } from '@/stores/order.store';
 
 const router = useRouter()
 const toWaiter = () => {
@@ -170,6 +171,13 @@ productsList.value.sort((a, b) => a.order - b.order)
 // console.log(productsList)
 
 productsStore.setProductsList(productsList.value)
+
+const orderStore = useOrderStore()
+orderStore.order = []
+orderStore.orderInfo.orderAmount = 0
+orderStore.tables = []
+orderStore.products = []
+
 
 const selectedTables = ref([])
 const zones = ref([])
