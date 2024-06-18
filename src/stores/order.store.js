@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 
-export const useOrderStore = defineStore({
-  id: 'order',
+export const useOrderStore = defineStore('order', {
   state: () => ({
     order: [],
     orderInfo: {orderAmount: 0}
   }),
   getters: {},
-  actions: {}
+  actions: {},
+  persist: true
 })

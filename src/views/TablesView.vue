@@ -89,11 +89,87 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { IconCross, IconBack, NumberCell } from '@/components'
+import { useProductsStore } from '@/stores/products.store';
 
 const router = useRouter()
 const toWaiter = () => {
   router.push('/waiter')
 }
+
+const productsStore = useProductsStore()
+const menuData = ref(null)
+const productsList = ref([])
+const groupIndexRemove = ref([])
+const subGroupIndexRemove = ref([])
+
+const isUpperCase = (str) => {
+  return str === str.toUpperCase()
+}
+
+
+
+const storageMenuExp = window.localStorage.getItem('menu')
+menuData.value = storageMenuExp ? JSON.parse(storageMenuExp) : null
+menuData.value.products.forEach(function (product) {
+  product.isRendered = false
+  product.amount = 0
+})
+const filteredProducts = menuData.value.products
+  .filter((product) => product.type === 'Dish' || product.type === 'Good')
+  .filter((product) => !product.isDeleted)
+menuData.value.products = filteredProducts
+const groups = ref(menuData.value.groups)
+for (const group of groups.value) {
+  if (group.parentGroup == null && isUpperCase(group.name) == true) {
+    productsList.value.push(group)
+  }
+}
+
+for (let group of productsList.value) {
+  subGroupIndexRemove.value = []
+  const subGroups = menuData.value.groups.filter((subGroup) => subGroup.parentGroup === group.id)
+  if (subGroups.length != 0) {
+    group.subGroups = subGroups
+  } else {
+    group.subGroups = [
+      {
+        name: group.name,
+        products: menuData.value.products.filter((subGroup) => subGroup.parentGroup === group.id)
+      }
+    ]
+  }
+  // Fill sub with products
+  for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
+    const products = menuData.value.products.filter(
+      (product) => product.parentGroup === subGroup.id
+    )
+    const subSubGroups = menuData.value.groups.filter(
+      (subSubGroups) => subSubGroups.parentGroup === subGroup.id
+    )
+    if (subSubGroups.length !== 0) {
+      group.subGroups.push(...subSubGroups)
+    }
+    if (products.length !== 0) {
+      subGroup.products = products
+    }
+    if (subGroup.products == null) {
+      subGroupIndexRemove.value.push(subGroupIndex)
+    }
+  }
+  if (group.subGroups.length == 1 && group.subGroups[0].products.length == 0) {
+    groupIndexRemove.value.push(productsList.value.indexOf(group))
+  }
+  group.subGroups = group.subGroups.filter((_, index) => !subGroupIndexRemove.value.includes(index))
+  group.subGroups.sort((a, b) => a.order - b.order)
+}
+productsList.value = productsList.value.filter(
+  (_, index) => !groupIndexRemove.value.includes(index)
+)
+
+productsList.value.sort((a, b) => a.order - b.order)
+// console.log(productsList)
+
+productsStore.setProductsList(productsList.value)
 
 const selectedTables = ref([])
 const zones = ref([])

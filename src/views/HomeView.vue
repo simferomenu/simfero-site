@@ -286,10 +286,6 @@ const isLoading = ref(false)
 const selectedProduct = ref(null)
 const menuOrderCount = ref(null)
 const renderedCount = ref(null)
-const expMenuData = ref([])
-const groupIndexRemove = ref([])
-const productsListExp = ref([])
-const subGroupIndexRemove = ref([])
 const displayedGroupIndex = ref(0)
 const scrollElement = ref(null)
 const scrollSection = ref(null)
@@ -383,68 +379,68 @@ const isUpperCase = (str) => {
   return str === str.toUpperCase()
 }
 
-const storageMenuExp = window.localStorage.getItem('menu')
-expMenuData.value = storageMenuExp ? JSON.parse(storageMenuExp) : null
-expMenuData.value.products.forEach(function (product) {
-  product.isRendered = false
-  product.amount = 0
-})
-const filteredProducts = expMenuData.value.products
-  .filter((product) => product.type === 'Dish' || product.type === 'Good')
-  .filter((product) => !product.isDeleted)
-expMenuData.value.products = filteredProducts
-const groups = ref(expMenuData.value.groups)
-for (const group of groups.value) {
-  if (group.parentGroup == null && isUpperCase(group.name) == true) {
-    productsListExp.value.push(group)
-  }
-}
+// const storageMenuExp = window.localStorage.getItem('menu')
+// expMenuData.value = storageMenuExp ? JSON.parse(storageMenuExp) : null
+// expMenuData.value.products.forEach(function (product) {
+//   product.isRendered = false
+//   product.amount = 0
+// })
+// const filteredProducts = expMenuData.value.products
+//   .filter((product) => product.type === 'Dish' || product.type === 'Good')
+//   .filter((product) => !product.isDeleted)
+// expMenuData.value.products = filteredProducts
+// const groups = ref(expMenuData.value.groups)
+// for (const group of groups.value) {
+//   if (group.parentGroup == null && isUpperCase(group.name) == true) {
+//     productsListExp.value.push(group)
+//   }
+// }
 
-for (let group of productsListExp.value) {
-  subGroupIndexRemove.value = []
-  const subGroups = expMenuData.value.groups.filter((subGroup) => subGroup.parentGroup === group.id)
-  if (subGroups.length != 0) {
-    group.subGroups = subGroups
-  } else {
-    group.subGroups = [
-      {
-        name: group.name,
-        products: expMenuData.value.products.filter((subGroup) => subGroup.parentGroup === group.id)
-      }
-    ]
-  }
-  // Fill sub with products
-  for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
-    const products = expMenuData.value.products.filter(
-      (product) => product.parentGroup === subGroup.id
-    )
-    const subSubGroups = expMenuData.value.groups.filter(
-      (subSubGroups) => subSubGroups.parentGroup === subGroup.id
-    )
-    if (subSubGroups.length !== 0) {
-      group.subGroups.push(...subSubGroups)
-    }
-    if (products.length !== 0) {
-      subGroup.products = products
-    }
-    if (subGroup.products == null) {
-      subGroupIndexRemove.value.push(subGroupIndex)
-    }
-  }
-  if (group.subGroups.length == 1 && group.subGroups[0].products.length == 0) {
-    groupIndexRemove.value.push(productsListExp.value.indexOf(group))
-  }
-  group.subGroups = group.subGroups.filter((_, index) => !subGroupIndexRemove.value.includes(index))
-  group.subGroups.sort((a, b) => a.order - b.order)
-}
-productsListExp.value = productsListExp.value.filter(
-  (_, index) => !groupIndexRemove.value.includes(index)
-)
+// for (let group of productsListExp.value) {
+//   subGroupIndexRemove.value = []
+//   const subGroups = expMenuData.value.groups.filter((subGroup) => subGroup.parentGroup === group.id)
+//   if (subGroups.length != 0) {
+//     group.subGroups = subGroups
+//   } else {
+//     group.subGroups = [
+//       {
+//         name: group.name,
+//         products: expMenuData.value.products.filter((subGroup) => subGroup.parentGroup === group.id)
+//       }
+//     ]
+//   }
+//   // Fill sub with products
+//   for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
+//     const products = expMenuData.value.products.filter(
+//       (product) => product.parentGroup === subGroup.id
+//     )
+//     const subSubGroups = expMenuData.value.groups.filter(
+//       (subSubGroups) => subSubGroups.parentGroup === subGroup.id
+//     )
+//     if (subSubGroups.length !== 0) {
+//       group.subGroups.push(...subSubGroups)
+//     }
+//     if (products.length !== 0) {
+//       subGroup.products = products
+//     }
+//     if (subGroup.products == null) {
+//       subGroupIndexRemove.value.push(subGroupIndex)
+//     }
+//   }
+//   if (group.subGroups.length == 1 && group.subGroups[0].products.length == 0) {
+//     groupIndexRemove.value.push(productsListExp.value.indexOf(group))
+//   }
+//   group.subGroups = group.subGroups.filter((_, index) => !subGroupIndexRemove.value.includes(index))
+//   group.subGroups.sort((a, b) => a.order - b.order)
+// }
+// productsListExp.value = productsListExp.value.filter(
+//   (_, index) => !groupIndexRemove.value.includes(index)
+// )
 
-productsListExp.value.sort((a, b) => a.order - b.order)
-// console.log(productsListExp)
+// productsListExp.value.sort((a, b) => a.order - b.order)
+// // console.log(productsListExp)
 
-productsStore.setProductsList(productsListExp.value)
+// productsStore.setProductsList(productsListExp.value)
 
 // const onCategorySelect = ({ item }) => {
 //   selectedCategory.value = item
