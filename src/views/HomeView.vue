@@ -44,15 +44,17 @@
           :name="item.name"
           :key="item.name"
           :id="subGroupIndex"
+          :groupIndex="displayedGroupIndex"
+          :data-id="subGroupIndex"
           :data-sub-group-index="subGroupIndex"
         >
           <MenuCard
             v-for="(product, cardIndex) in item.products"
             :product="product"
             :key="product.id"
-            :data-id="cardIndex"
             :groupIndex="displayedGroupIndex"
             :subGroupIndex="subGroupIndex"
+            :data-id="cardIndex"
             :cardIndex="cardIndex"
             @choose="toggleDish"
             @order-update="onOrderUpdate"
@@ -340,6 +342,12 @@ const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
   //   productsStore.productsList[displayedGroupIndex].subGroups[1].products[i].isRendered=true
   // }
   // }
+
+  if (productsStore.productsList[displayedGroupIndex.value].subGroups[selectedSubGroupIndex].products[0].isRendered==false) {
+    for (const product of productsStore.productsList[displayedGroupIndex.value].subGroups[selectedSubGroupIndex].products) {
+      product.isRendered=true
+    }
+  }
 }
 
 const onGroupSelect = ({ selectedGroupIndex }) => {
@@ -361,6 +369,9 @@ const onGroupSelect = ({ selectedGroupIndex }) => {
 
   if (scrollElement.value) {
     scrollElement.value.scrollIntoView()
+  }
+  for (const product of productsStore.productsList[selectedGroupIndex].subGroups[0].products) {
+    product.isRendered=true
   }
   // scrollBody.value.scrollBy(0, -40)
 }

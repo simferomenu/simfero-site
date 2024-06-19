@@ -21,8 +21,6 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { MenuCard } from '@/components'
-import { useFetch } from '@vueuse/core'
 
 const router = useRouter()
 
@@ -30,7 +28,13 @@ const props = defineProps({
   name: {
     type: String,
     required: true
-  }
+  },
+  // id: {
+  //   type: Number
+  // },
+  // groupIndex: {
+  //   type: Number
+  // }
 })
 
 const toTuna = () => {
