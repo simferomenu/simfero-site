@@ -240,7 +240,7 @@
             >500 Руб.</span
           >
         </div>
-        <div class="flex flex-col h-full !pointer-events-auto">
+        <div class="flex flex-col h-fit !pointer-events-auto">
           <span
             @click="onMakeOrder"
             class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-darkBlue"
