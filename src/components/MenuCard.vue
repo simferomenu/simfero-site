@@ -3,6 +3,7 @@
     class="relative flex flex-col h-[350px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated"
     :class="{ 'active-menu-card border-animation': isProductInOrder }"
     ref="cardElement"
+    v-if="product.isRendered"
   >
     <div class="relative h-[145px] w-full shrink-0" @click="onChoose">
       <div
@@ -134,20 +135,29 @@ const productName = ref(null)
 const description =
   props.product.description ||
   'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'
-
+const groupIndex = ref(props.groupIndex)
+const subGroupIndex = ref(props.subGroupIndex)
+// const cardIndex = ref(props.cardIndex)
 const cardElement = ref(null)
 
 const handleVisibilityChange = (entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
       const cardId = entry.target.getAttribute('data-id')
+      if (cardId == productsStore.productsList[groupIndex.value].subGroups[subGroupIndex.value].products.length - 1) {
+        if(productsStore.productsList[groupIndex.value].subGroups[subGroupIndex.value + 1] != null) {
+          for (const product of productsStore.productsList[groupIndex.value].subGroups[subGroupIndex.value + 1].products) {
+            product.isRendered = true
+          }
+        }
+      }
     }
   })
 }
 
 let observer = null
-
 onMounted(() => {
+
   observer = new IntersectionObserver(handleVisibilityChange, {
     root: null,
     rootMargin: '0px',
@@ -157,18 +167,10 @@ onMounted(() => {
   if (cardElement.value) {
     observer.observe(cardElement.value)
   }
-  setTimeout(() => {
-    if (cardElement.value) {
-      if (productName.value && productName.value.clientHeight > 72) {
-        isDescrHidden.value = true
-      }
-    }
-  })
 })
 
 const orderStore = useOrderStore()
 const productsStore = useProductsStore()
-console.log(props.product.amount)
 
 onBeforeUnmount(() => {
   if (observer && cardElement.value) {
