@@ -309,7 +309,7 @@ const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
   scrollToSubGroup(selectedSubGroupIndex)
   setTimeout(() => {
     scrollToSubGroup(selectedSubGroupIndex)
-  }, 100)
+  }, 50)
   // const element = document.getElementById(selectedSubGroupIndex)
   // const yOffset = -40
   // const y = element.getBoundingClientRect().top + window.scrollY + yOffset
