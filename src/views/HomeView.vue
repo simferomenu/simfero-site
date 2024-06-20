@@ -1,6 +1,14 @@
 <template>
   <div class="relative flex w-screen h-screen pointer-events-none">
     <Transition name="fade">
+      <SearchScreen
+        :class="!isSearchVisible ? 'pointer-events-none' : 'pointer-events-auto'"
+        v-if="isSearchVisible"
+        @closeSearch="isSearchVisible = false"
+      />
+    </Transition>
+
+    <Transition name="fade">
       <DishScreen
         :class="!isDishVisible ? 'pointer-events-none' : 'pointer-events-auto'"
         v-if="isDishVisible"
@@ -31,6 +39,12 @@
       ref="scrollBody"
       v-if="!businessStore.isBusinessVisible"
     >
+      <div
+        class="fixed top-[15px] right-[15px] h-[40px] w-[40px] z-[2]"
+        @click="isSearchVisible = true"
+      >
+        <img class="w-full h-full" src="/icons/IconInputLogo.svg" alt="" />
+      </div>
       <div
         v-if="isLoading"
         class="fixed top-[35vh] w-[200px] h-[200px] z-[3] pointer-events-none right-[calc(50vw-200px)]"
@@ -274,7 +288,8 @@ import {
   MenuCard,
   DishScreen,
   OrderScreen,
-  BusinessLunchCard
+  BusinessLunchCard,
+  SearchScreen
 } from '@/components'
 
 const productsStore = useProductsStore()
@@ -343,9 +358,14 @@ const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
   // }
   // }
 
-  if (productsStore.productsList[displayedGroupIndex.value].subGroups[selectedSubGroupIndex].products[0].isRendered==false) {
-    for (const product of productsStore.productsList[displayedGroupIndex.value].subGroups[selectedSubGroupIndex].products) {
-      product.isRendered=true
+  if (
+    productsStore.productsList[displayedGroupIndex.value].subGroups[selectedSubGroupIndex]
+      .products[0].isRendered == false
+  ) {
+    for (const product of productsStore.productsList[displayedGroupIndex.value].subGroups[
+      selectedSubGroupIndex
+    ].products) {
+      product.isRendered = true
     }
   }
 }
@@ -371,7 +391,7 @@ const onGroupSelect = ({ selectedGroupIndex }) => {
     scrollElement.value.scrollIntoView()
   }
   for (const product of productsStore.productsList[selectedGroupIndex].subGroups[0].products) {
-    product.isRendered=true
+    product.isRendered = true
   }
   // scrollBody.value.scrollBy(0, -40)
 }
@@ -511,6 +531,7 @@ const isUpperCase = (str) => {
 
 const isDishVisible = ref(false)
 const isOrderVisible = ref(false)
+const isSearchVisible = ref(false)
 
 const toggleDish = (product) => {
   isDishVisible.value = !isDishVisible.value

@@ -113,6 +113,11 @@ body {
   background-size: cover;
 }
 
+.search-bg {
+  backdrop-filter: blur(27.399999618530273px);
+  background: rgba(0, 0, 0, 0.8);
+}
+
 .order-fade {
   background: rgb(22, 27, 33);
   background: linear-gradient(180deg, rgba(22, 27, 33, 0) 0%, rgba(22, 27, 33, 1) 60%);
@@ -177,4 +182,8 @@ body {
 
 .stop-scrolling {
   overflow: hidden;
+}
+
+.input-field {
+  @apply relative w-full h-[65px] box-border pl-[75px] pr-[20px] py-[20px] bg-transparent border-solid border-[1px] border-gold rounded-[33px] font-Segoe font-semibold text-[16px] tracking-[0.06em] uppercase text-[#fff] outline-none;
 }

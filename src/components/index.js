@@ -12,6 +12,7 @@ import BusinessLunchCard from '@/components/BusinessLunchCard.vue'
 import NumberCell from '@/components/NumberCell.vue'
 import DishScreen from '@/components/DishScreen.vue'
 import OrderScreen from '@/components/OrderScreen.vue'
+import SearchScreen from '@/components/SearchScreen.vue'
 
 import IconPlus from '@/components/icons/IconPlus.vue'
 import IconCross from '@/components/icons/IconCross.vue'
@@ -34,5 +35,6 @@ export {
   BusinessLunchCard,
   NumberCell,
   DishScreen,
-  OrderScreen
+  OrderScreen,
+  SearchScreen
 }
