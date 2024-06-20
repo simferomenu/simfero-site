@@ -169,7 +169,7 @@ onMounted(() => {
   }
   setTimeout(() => {
     if (cardElement.value) {
-      if (productName.value && productName.value.clientHeight > 72) {
+      if (productName.value && productName.value.clientHeight > 48) {
         isDescrHidden.value = true
       }
     }
