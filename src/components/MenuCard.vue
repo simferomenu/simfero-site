@@ -167,6 +167,13 @@ onMounted(() => {
   if (cardElement.value) {
     observer.observe(cardElement.value)
   }
+  setTimeout(() => {
+    if (cardElement.value) {
+      if (productName.value && productName.value.clientHeight > 72) {
+        isDescrHidden.value = true
+      }
+    }
+  })
 })
 
 const orderStore = useOrderStore()
