@@ -13,6 +13,7 @@ import NumberCell from '@/components/NumberCell.vue'
 import DishScreen from '@/components/DishScreen.vue'
 import OrderScreen from '@/components/OrderScreen.vue'
 import SearchScreen from '@/components/SearchScreen.vue'
+import FilteredProduct from '@/components/FilteredProduct.vue'
 
 import IconPlus from '@/components/icons/IconPlus.vue'
 import IconCross from '@/components/icons/IconCross.vue'
@@ -36,5 +37,6 @@ export {
   NumberCell,
   DishScreen,
   OrderScreen,
-  SearchScreen
+  SearchScreen,
+  FilteredProduct
 }
