@@ -118,6 +118,7 @@ menuData.value.products.forEach(function (product) {
 const filteredProducts = menuData.value.products
   .filter((product) => product.type === 'Dish' || product.type === 'Good')
   .filter((product) => !product.isDeleted)
+  .filter((product) => product.sizePrices[0].price.currentPrice!=0)
 menuData.value.products = filteredProducts
 const groups = ref(menuData.value.groups)
 for (const group of groups.value) {
