@@ -298,17 +298,18 @@ const cardsPerLine = ref(null)
 
 const viewWidth = window.innerWidth
 
-const scrollToSubGroup = (subGroupIndex) => {
-  const targetElement = scrollBody.value.querySelector(`[data-sub-group-index="${subGroupIndex}"]`)
-  if (targetElement) {
-    targetElement.scrollIntoView({ behavior: 'smooth' })
-  } else {
-    console.log(`"Элемент с индексом - " ${subGroupIndex} Не найден.`)
-  }
-}
-
 const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
+  for (let i=2; i<selectedSubGroupIndex+1; i++) {
+    if (productsStore.productsList[displayedGroupIndex.value].subGroups[i].products[0].isRendered!=true) {
+      for (const product of productsStore.productsList[displayedGroupIndex.value].subGroups[i].products) {
+        product.isRendered=true
+      }
+    }
+  }
   scrollToSubGroup(selectedSubGroupIndex)
+  setTimeout(() => {
+    scrollToSubGroup(selectedSubGroupIndex)
+  }, 100)
   // const element = document.getElementById(selectedSubGroupIndex)
   // const yOffset = -40
   // const y = element.getBoundingClientRect().top + window.scrollY + yOffset
@@ -376,6 +377,15 @@ const onGroupSelect = ({ selectedGroupIndex }) => {
   // scrollBody.value.scrollBy(0, -40)
 }
 
+const scrollToSubGroup = (subGroupIndex) => {
+  const targetElement = scrollBody.value.querySelector(`[data-sub-group-index="${subGroupIndex}"]`)
+  if (targetElement) {
+    targetElement.scrollIntoView({ behavior: 'smooth' })
+  } else {
+    console.log(`"Элемент с индексом - " ${subGroupIndex} Не найден.`)
+  }
+}
+
 if (viewWidth < 1112) {
   cardsPerLine.value = 2
 } else if (viewWidth >= 1112 && viewWidth < 1366) {
@@ -414,7 +424,6 @@ const isUpperCase = (str) => {
 //     group.subGroups = subGroups
 //   } else {
 //     group.subGroups = [
-//       {
 //         name: group.name,
 //         products: expMenuData.value.products.filter((subGroup) => subGroup.parentGroup === group.id)
 //       }
