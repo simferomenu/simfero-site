@@ -4,14 +4,23 @@
   >
     <div class="relative flex flex-col justify-between">
       <span class="font-Segoe font-semibold text-[16px] tracking-[0.06em] uppercase text-[#fff]"
-        >Тунец мацухиса</span
+        >{{product.name}}</span
       >
       <span class="font-Segoe font-[350] text-[14px] tracking-[0.05em] text-[#fff]"
-        >Японская кухня, 200 г.</span
+        >{{ product.weight }} г.</span
       >
     </div>
-    <span class="font-Segoe font-semibold text-[16px] tracking-[0.06em] uppercase text-gold"
-      >1 200 РУБ.</span
+    <span class="font-Segoe font-semibold text-[16px] tracking-[0.06em] uppercase text-gold shrink-0 ml-[20px]"
+      >{{ product.sizePrices[0].price.currentPrice }} РУБ.</span
     >
   </div>
 </template>
+
+<script setup>
+
+const props = defineProps({
+  product: {
+    type: Object
+  }
+})
+</script>

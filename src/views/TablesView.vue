@@ -109,13 +109,8 @@ const isUpperCase = (str) => {
   return str === str.toUpperCase()
 }
 
-
-
 const storageMenuExp = window.localStorage.getItem('menu')
 menuData.value = storageMenuExp ? JSON.parse(storageMenuExp) : null
-const businessLunchProducts = ref(menuData.value.products.filter((product) => product.additionalInfo!=null))
-businessStore.businessProducts=businessLunchProducts.value
-console.log(businessLunchProducts)
 menuData.value.products.forEach(function (product) {
   product.isRendered = false
   product.amount = 0
@@ -124,6 +119,8 @@ const filteredProducts = menuData.value.products
   .filter((product) => product.type === 'Dish' || product.type === 'Good')
   .filter((product) => !product.isDeleted)
   .filter((product) => product.sizePrices[0].price.currentPrice!=0)
+productsStore.productsListFull = filteredProducts
+console.log(filteredProducts)
 menuData.value.products = filteredProducts
 const groups = ref(menuData.value.groups)
 for (const group of groups.value) {
