@@ -91,6 +91,7 @@ import axios from 'axios'
 import { IconCross, IconBack, NumberCell } from '@/components'
 import { useProductsStore } from '@/stores/products.store';
 import { useOrderStore } from '@/stores/order.store';
+import { useBusinessStore } from '@/stores/business.store';
 
 const router = useRouter()
 const toWaiter = () => {
@@ -102,6 +103,7 @@ const menuData = ref(null)
 const productsList = ref([])
 const groupIndexRemove = ref([])
 const subGroupIndexRemove = ref([])
+const businessStore = useBusinessStore()
 
 const isUpperCase = (str) => {
   return str === str.toUpperCase()
@@ -111,6 +113,9 @@ const isUpperCase = (str) => {
 
 const storageMenuExp = window.localStorage.getItem('menu')
 menuData.value = storageMenuExp ? JSON.parse(storageMenuExp) : null
+const businessLunchProducts = ref(menuData.value.products.filter((product) => product.additionalInfo!=null))
+businessStore.businessProducts=businessLunchProducts.value
+console.log(businessLunchProducts)
 menuData.value.products.forEach(function (product) {
   product.isRendered = false
   product.amount = 0
