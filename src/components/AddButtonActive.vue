@@ -35,18 +35,22 @@
 <style scoped></style>
 
 <script setup>
+import { useProductsStore } from '@/stores/products.store';
 import { defineEmits, defineProps, ref } from 'vue'
 const props = defineProps({
   isActive: {
     type: Boolean,
     default: false
   },
-  quantity: {
-    type: Number,
+  cardInfo: {
+    type: Object
   }
 })
 
-const counter = ref(props.quantity)
+const productsStore = useProductsStore()
+
+const counter = ref(productsStore.productsList[props.cardInfo.groupIndex].subGroups[props.cardInfo.subGroupIndex].products[props.cardInfo.cardIndex].amount)
+
 const emit = defineEmits(['update'])
 
 const onQuantityChange = (iterator) => {

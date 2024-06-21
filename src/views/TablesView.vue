@@ -99,54 +99,62 @@ const toWaiter = () => {
 }
 
 const productsStore = useProductsStore()
-const menuData = ref(null)
+const menuProducts = ref(null)
 const productsList = ref([])
 const groupIndexRemove = ref([])
 const subGroupIndexRemove = ref([])
 const businessStore = useBusinessStore()
+const currentDay = (new Date().getDay())-1
+const businessProducts = ref(null)
+const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт' ]
 
 const isUpperCase = (str) => {
   return str === str.toUpperCase()
 }
 
-const storageMenuExp = window.localStorage.getItem('menu')
-menuData.value = storageMenuExp ? JSON.parse(storageMenuExp) : null
-menuData.value.products.forEach(function (product) {
+const storageMenu = window.localStorage.getItem('menu')
+menuProducts.value = storageMenu ? JSON.parse(storageMenu) : null
+menuProducts.value.products.forEach(function (product) {
   product.isRendered = false
   product.amount = 0
 })
-const filteredProducts = menuData.value.products
+const filteredMenuProducts = menuProducts.value.products
   .filter((product) => product.type === 'Dish' || product.type === 'Good')
   .filter((product) => !product.isDeleted)
   .filter((product) => product.sizePrices[0].price.currentPrice!=0)
-productsStore.productsListFull = filteredProducts
-menuData.value.products = filteredProducts
-const groups = ref(menuData.value.groups)
+  .filter((product) => product.additionalInfo==null)
+menuProducts.value.products = filteredMenuProducts
+const groups = ref(menuProducts.value.groups)
 for (const group of groups.value) {
   if (group.parentGroup == null && isUpperCase(group.name) == true) {
     productsList.value.push(group)
   }
 }
 
+// Business store setup
+businessProducts.value = storageMenu ? JSON.parse(storageMenu) : null
+const filteredBusinessProducts = businessProducts.value.products.filter((product) => product.additionalInfo != null).filter((product) => product.additionalInfo.includes(daysOfWeekArr[currentDay]))
+
+
 for (let group of productsList.value) {
   subGroupIndexRemove.value = []
-  const subGroups = menuData.value.groups.filter((subGroup) => subGroup.parentGroup === group.id)
+  const subGroups = menuProducts.value.groups.filter((subGroup) => subGroup.parentGroup === group.id)
   if (subGroups.length != 0) {
     group.subGroups = subGroups
   } else {
     group.subGroups = [
       {
         name: group.name,
-        products: menuData.value.products.filter((subGroup) => subGroup.parentGroup === group.id)
+        products: menuProducts.value.products.filter((subGroup) => subGroup.parentGroup === group.id)
       }
     ]
   }
   // Fill sub with products
   for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
-    const products = menuData.value.products.filter(
+    const products = menuProducts.value.products.filter(
       (product) => product.parentGroup === subGroup.id
     )
-    const subSubGroups = menuData.value.groups.filter(
+    const subSubGroups = menuProducts.value.groups.filter(
       (subSubGroups) => subSubGroups.parentGroup === subGroup.id
     )
     if (subSubGroups.length !== 0) {
@@ -170,7 +178,6 @@ productsList.value = productsList.value.filter(
 )
 
 productsList.value.sort((a, b) => a.order - b.order)
-// console.log(productsList)
 
 productsStore.setProductsList(productsList.value)
 

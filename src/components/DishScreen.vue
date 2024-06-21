@@ -73,7 +73,7 @@
           <AddButtonActive
             v-if="isProductInOrder"
             @update="onProductCounterUpdate"
-            :quantity="props.product.amount"
+            :cardInfo="cardInfo"
           />
         </div>
       </div>
@@ -164,6 +164,7 @@ onMounted(() => {
       }
     }
   }
+  console.log(cardInfo)
 })
 </script>
 
