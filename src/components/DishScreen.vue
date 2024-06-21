@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed top-0 left-0 flex flex-col justify-between w-screen h-screen dish-bg box-border py-[40px] overflow-hidden z-[4]"
+    class="fixed top-0 left-0 flex flex-col justify-between w-screen h-screen dish-bg box-border py-[40px] overflow-hidden z-[6]"
   >
     <IconCross @click="$emit('closeDish')" />
     <div
@@ -122,27 +122,36 @@ const scrollbar = ref({
 })
 
 const addToOrder = () => {
-  productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex].amount=1
-  orderStore.order.push(productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex])
+  productsStore.productsList[cardInfo.value.groupIndex].subGroups[
+    cardInfo.value.subGroupIndex
+  ].products[cardInfo.value.cardIndex].amount = 1
+  orderStore.order.push(
+    productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex]
+      .products[cardInfo.value.cardIndex]
+  )
   isProductInOrder.value = true
   orderStore.orderInfo.orderAmount++
 }
 
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
-  if (orderStore.order[indexInOrder].amount==1 && iterator==-1) {
-    productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex].amount += iterator
+  if (orderStore.order[indexInOrder].amount == 1 && iterator == -1) {
+    productsStore.productsList[cardInfo.value.groupIndex].subGroups[
+      cardInfo.value.subGroupIndex
+    ].products[cardInfo.value.cardIndex].amount += iterator
     orderStore.orderInfo.orderAmount += iterator
     orderStore.order.splice(indexInOrder, 1)
     isProductInOrder.value = false
   } else {
-    productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex].products[cardInfo.value.cardIndex].amount += iterator
+    productsStore.productsList[cardInfo.value.groupIndex].subGroups[
+      cardInfo.value.subGroupIndex
+    ].products[cardInfo.value.cardIndex].amount += iterator
     orderStore.orderInfo.orderAmount += iterator
   }
 }
 
 onMounted(() => {
-  if (props.product.amount!=0) {
+  if (props.product.amount != 0) {
     isProductInOrder.value = true
   }
   for (const group of productsStore.productsList) {
