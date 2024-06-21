@@ -18,7 +18,7 @@
         <FilteredProduct v-for="product in filteredProducts"
         :key="product.id"
         :product="product"
-        @chooseFromSearch="onChoose(product)"/>
+        @click="onChoose(product)"/>
       </div>
     </div>
   </div>
@@ -27,7 +27,7 @@
 <script setup>
 import { IconCross, FilteredProduct } from '@/components'
 import { useProductsStore } from '@/stores/products.store';
-import { ref, computed, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 const emit = defineEmits(['choose'])
 
@@ -38,15 +38,16 @@ const menuData = ref(null)
 const storageMenu = window.localStorage.getItem('menu')
 const filteredProducts=ref([])
 menuData.value = storageMenu ? JSON.parse(storageMenu) : null
-console.log(menuData.value.products)
 
 const onChoose = (product) => emit('choose', product)
 
 watch(() => searchTerm.value, () => {
   filteredProducts.value = []
-  console.log(filteredProducts)
   if (searchTerm.value.length!=0) {
-    filteredProducts.value = productsStore.productsListFull.filter((product) => product.name.includes(searchTerm.value))||null
+    const lowercaseSearchTerm = searchTerm.value.toLowerCase()
+    filteredProducts.value = productsStore.productsListFull.filter((product) => 
+      product.name.toLowerCase().includes(lowercaseSearchTerm)
+    ) || []
   }
 })
 </script>

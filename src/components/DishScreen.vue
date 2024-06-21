@@ -142,6 +142,9 @@ const onProductCounterUpdate = (iterator) => {
 }
 
 onMounted(() => {
+  if (props.product.amount!=0) {
+    isProductInOrder.value = true
+  }
   for (const group of productsStore.productsList) {
     const groupIndex = productsStore.productsList.indexOf(group)
     for (const subGroup of group.subGroups) {

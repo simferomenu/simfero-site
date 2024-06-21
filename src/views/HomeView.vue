@@ -5,7 +5,7 @@
         :class="!isSearchVisible ? 'pointer-events-none' : 'pointer-events-auto'"
         v-if="isSearchVisible"
         @closeSearch="isSearchVisible = false"
-        @chooseFromSearch="toggleDish"
+        @choose="toggleDish"
       />
     </Transition>
 

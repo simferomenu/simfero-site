@@ -120,7 +120,6 @@ const filteredProducts = menuData.value.products
   .filter((product) => !product.isDeleted)
   .filter((product) => product.sizePrices[0].price.currentPrice!=0)
 productsStore.productsListFull = filteredProducts
-console.log(filteredProducts)
 menuData.value.products = filteredProducts
 const groups = ref(menuData.value.groups)
 for (const group of groups.value) {

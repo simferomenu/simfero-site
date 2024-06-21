@@ -35,7 +35,7 @@
 <style scoped></style>
 
 <script setup>
-import { defineEmits, defineProps, computed } from 'vue'
+import { defineEmits, defineProps, ref } from 'vue'
 const props = defineProps({
   isActive: {
     type: Boolean,
@@ -43,15 +43,11 @@ const props = defineProps({
   },
   quantity: {
     type: Number,
-    default: 1
   }
 })
 
+const counter = ref(props.quantity)
 const emit = defineEmits(['update'])
-
-const counter = computed(() => {
-  return props.quantity
-})
 
 const onQuantityChange = (iterator) => {
   counter.value += iterator
