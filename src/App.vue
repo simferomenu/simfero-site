@@ -17,7 +17,21 @@ import { onMounted } from 'vue'
 onMounted(() => {
   axios.get('/menu').then((response) => {
     window.localStorage.setItem('menu', JSON.stringify(response.data))
-  })
+  });
+
+  setInterval(() => {
+    if (window.localStorage.selectedTables) {
+      try {
+        const table = JSON.parse(window.localStorage.getItem('selectedTables'));
+
+        axios.get(`/table/check/${table}`).then((response) => {
+          console.log('Order data: ', response.data);
+        });
+      } catch (error) {
+        console.log('Ошибка обнвдения данных заказа...', error);
+      }
+    }
+  }, 5000);
 })
 </script>
 
