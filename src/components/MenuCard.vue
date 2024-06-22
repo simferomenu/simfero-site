@@ -84,13 +84,12 @@
 <style scoped></style>
 
 <script setup>
-import { ref, watch, defineEmits, defineProps, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { IconPlus, Counter } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 import { useProductsStore } from '@/stores/products.store'
 
 const isImageLoaded = ref(false)
-const isCardReady = ref(false)
 
 const onImageLoad = () => {
   isImageLoaded.value = true

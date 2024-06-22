@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineEmits, computed } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import axios from 'axios';
 
 import { IconCross, IconBack, OrderCard } from '@/components'
