@@ -40,7 +40,7 @@
 <style scoped></style>
 
 <script setup>
-import { watch, ref, defineProps, defineEmits } from 'vue'
+import { watch, ref } from 'vue'
 
 const props = defineProps({
   quantity: {

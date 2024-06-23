@@ -97,7 +97,7 @@
 </style>
 
 <script setup>
-import { ref, watch, defineEmits, onMounted, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { SmallCounter } from '@/components'
 import { useOrderStore } from '@/stores/order.store'

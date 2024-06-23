@@ -13,7 +13,6 @@
 <style scoped></style>
 
 <script setup>
-import { defineEmits } from 'vue'
 
 const emit = defineEmits(['select'])
 

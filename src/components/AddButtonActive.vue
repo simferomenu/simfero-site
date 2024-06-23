@@ -36,7 +36,7 @@
 
 <script setup>
 import { useProductsStore } from '@/stores/products.store';
-import { defineEmits, defineProps, ref } from 'vue'
+import { ref } from 'vue'
 const props = defineProps({
   isActive: {
     type: Boolean,

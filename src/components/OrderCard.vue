@@ -42,7 +42,7 @@
 <style scoped></style>
 
 <script setup>
-import { ref, defineEmits, defineProps, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { IconPlus, Counter } from '@/components'
 import { useProductsStore } from '@/stores/products.store';
 import { useOrderStore } from '@/stores/order.store';
