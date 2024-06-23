@@ -208,17 +208,22 @@ onBeforeUnmount(() => {
 // )
 
 const onAddToOrder = (event) => {
-  event && event.stopPropagation()
+  event && event.stopPropagation();
+
   productsStore.productsList[props.groupIndex].subGroups[props.subGroupIndex].products[
     props.cardIndex
-  ].amount = 1
-  orderStore.orderInfo.orderAmount++
+  ].amount = 1;
+
+  orderStore.orderInfo.orderAmount++;
+
   orderStore.order.push(
     productsStore.productsList[props.groupIndex].subGroups[props.subGroupIndex].products[
       props.cardIndex
     ]
-  )
-  isProductInOrder.value = true
+  );
+
+  isProductInOrder.value = true;
+
   // const rawOrderData = window.localStorage.getItem('order')
   // const selectedTables = window.localStorage.getItem('selectedTables')
 
