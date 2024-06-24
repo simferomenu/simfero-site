@@ -49,9 +49,8 @@
           v-if="isProductInOrder"
           isBlack
           class="pointer-events-auto"
-          :quantity="product.amount"
+          :quantity="productAmount"
           @update="onProductCounterUpdate"
-          @empty="onDeleteFromOrder"
         />
         <IconPlus
           ref="iconPlus"
@@ -84,7 +83,7 @@
 <style scoped></style>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
 import { IconPlus, Counter } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 import { useProductsStore } from '@/stores/products.store'
@@ -268,13 +267,20 @@ const onAddToOrder = (event) => {
 //   }
 // }
 
+const productAmount = computed(() => {
+  const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
+  return indexInOrder >= 0 && orderStore.order[indexInOrder].amount;
+})
+
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
   orderStore.order[indexInOrder].amount += iterator
   orderStore.orderInfo.orderAmount += iterator
+
   if (orderStore.order[indexInOrder].amount == 0) {
     isProductInOrder.value = false
-    orderStore.order.splice(indexInOrder, 1)
+    orderStore.order.splice(indexInOrder, 1);
+    console.log(orderStore.order, orderStore.order.length);
   }
 }
 </script>

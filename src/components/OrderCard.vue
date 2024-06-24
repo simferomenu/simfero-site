@@ -44,7 +44,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { IconPlus, Counter } from '@/components'
-import { useProductsStore } from '@/stores/products.store';
 import { useOrderStore } from '@/stores/order.store';
 
 const props = defineProps({
@@ -62,7 +61,6 @@ const props = defineProps({
 const emit = defineEmits(['chooseFromOrder', 'order-update'])
 
 const isProductInOrder = ref(props.product.selected)
-const productsStore = useProductsStore()
 const orderStore = useOrderStore()
 const isDescrHidden = ref(false)
 const productName = ref(null)

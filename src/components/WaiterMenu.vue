@@ -19,7 +19,8 @@
     <div class="relative flex items-center shrink h-full">
       <div class="flex flex-col items-center justify-center h-full animated-up" @click="toTables">
         <div class="h-[250px] w-[250px] mb-[70px]">
-          <img class="w-full h-full" src="/icons/IconKnifeFork.svg" alt="" />
+          <img src="/images/spinner.gif" class="absolute top-0" v-if='isMenuLoading'/>
+          <img class="w-full h-full" src="/icons/IconKnifeFork.svg" alt="" v-else/>
         </div>
         <span class="font-Sitka text-[25px] font-normal tracking-[0.02em] uppercase text-center text-[#fff]">
           Новые гости
@@ -47,11 +48,14 @@
 </template>
 
 <script setup>
-import { IconCross } from '@/components';
 import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import { IconCross } from '@/components';
 
 const router = useRouter();
 const anyTable = JSON.parse(window.localStorage.getItem('selectedTables'));
+const isMenuLoading = ref(true);
 
 const toMain = () => {
   router.push('/');
@@ -60,6 +64,13 @@ const toMain = () => {
 const toTables = () => {
   router.push('/tables');
 }
+
+onMounted(() => {
+  axios.get('/menu').then((response) => {
+    window.localStorage.setItem('menu', JSON.stringify(response.data));
+    isMenuLoading.value = false;
+  });
+})
 </script>
 
 <style scoped></style>

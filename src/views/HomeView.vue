@@ -280,7 +280,6 @@
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import { useProductsStore } from '@/stores/products.store'
-import { useOrderStore } from '@/stores/order.store'
 import { useBusinessStore } from '@/stores/business.store'
 
 import {
@@ -656,7 +655,7 @@ onMounted(async () => {
         item.sub.push(sub)
       }
     })
-  })
+  });
 
   const showDish = () => {
     DishScreen.classlist.remove('hidden-screen')

@@ -45,7 +45,7 @@ watch(() => searchTerm.value, () => {
   filteredProducts.value = []
   if (searchTerm.value.length!=0) {
     const lowercaseSearchTerm = searchTerm.value.toLowerCase()
-    filteredProducts.value = productsStore.productsListFull.filter((product) => 
+    filteredProducts.value = productsStore.productsListFull.filter((product) =>
       product.name.toLowerCase().includes(lowercaseSearchTerm)
     ) || []
   }

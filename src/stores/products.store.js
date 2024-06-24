@@ -7,7 +7,7 @@ export const useProductsStore = defineStore('products', {
   }),
   actions: {
     setProductsList(products) {
-      this.productsList = products
+      this.productsList = products;
     }
   },
   persist: true
