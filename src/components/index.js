@@ -9,6 +9,7 @@ import Counter from '@/components/Counter.vue'
 import SmallCounter from '@/components/SmallCounter.vue'
 import OrderCard from '@/components/OrderCard.vue'
 import BusinessLunchCard from '@/components/BusinessLunchCard.vue'
+import BusinessLunchSection from './BusinessLunchSection.vue'
 import NumberCell from '@/components/NumberCell.vue'
 import DishScreen from '@/components/DishScreen.vue'
 import OrderScreen from '@/components/OrderScreen.vue'
@@ -34,6 +35,7 @@ export {
   SmallCounter,
   OrderCard,
   BusinessLunchCard,
+  BusinessLunchSection,
   NumberCell,
   DishScreen,
   OrderScreen,
