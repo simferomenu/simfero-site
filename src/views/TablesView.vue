@@ -92,6 +92,7 @@ import { IconCross, IconBack, NumberCell } from '@/components'
 import { useProductsStore } from '@/stores/products.store';
 import { useOrderStore } from '@/stores/order.store';
 import { useBusinessStore } from '@/stores/business.store';
+import { storeToRefs } from 'pinia';
 
 const router = useRouter()
 const toWaiter = () => {
@@ -124,7 +125,6 @@ const filteredMenuProducts = menuProducts.value.products
   .filter((product) => product.sizePrices[0].price.currentPrice!=0)
   .filter((product) => product.additionalInfo==null)
 
-productsStore.productsListFull = filteredMenuProducts;
 menuProducts.value.products = filteredMenuProducts
 
 const groups = ref(menuProducts.value.groups)
@@ -137,7 +137,6 @@ for (const group of groups.value) {
 // Business store setup
 businessProducts.value = storageMenu ? JSON.parse(storageMenu) : null
 const filteredBusinessProducts = businessProducts.value.products.filter((product) => product.additionalInfo != null).filter((product) => product.additionalInfo.includes(daysOfWeekArr[currentDay]))
-
 
 for (let group of productsList.value) {
   subGroupIndexRemove.value = []
@@ -181,15 +180,15 @@ productsList.value = productsList.value.filter(
 )
 
 productsList.value.sort((a, b) => a.order - b.order)
+productsStore.productsList = productsList.value
 
-productsStore.setProductsList(productsList.value)
+
 
 const orderStore = useOrderStore()
 orderStore.order = []
 orderStore.orderInfo.orderAmount = 0
 orderStore.tables = []
 orderStore.products = []
-
 
 const selectedTables = ref([])
 const zones = ref([])

@@ -311,6 +311,7 @@ const isBusinessVisible = ref(true)
 const scrollBody = ref(null)
 const cardsPerLine = ref(null)
 
+
 const viewWidth = window.innerWidth
 
 const onSubGroupSelect = ({ selectedSubGroupIndex }) => {

@@ -19,7 +19,7 @@
     <div class="relative flex items-center shrink h-full">
       <div class="flex flex-col items-center justify-center h-full animated-up" @click="toTables">
         <div class="h-[250px] w-[250px] mb-[70px]">
-          <img src="/images/spinner.gif" class="absolute top-0" v-if='isMenuLoading'/>
+          <img src="/icons/loading.gif" class="absolute top-0" v-if='isMenuLoading'/>
           <img class="w-full h-full" src="/icons/IconKnifeFork.svg" alt="" v-else/>
         </div>
         <span class="font-Sitka text-[25px] font-normal tracking-[0.02em] uppercase text-center text-[#fff]">
@@ -52,6 +52,10 @@ import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { IconCross } from '@/components';
+import { useProductsStore } from '@/stores/products.store';
+
+const productsStore = useProductsStore()
+
 
 const router = useRouter();
 const anyTable = JSON.parse(window.localStorage.getItem('selectedTables'));

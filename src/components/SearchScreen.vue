@@ -35,17 +35,28 @@ const searchTerm=ref(null)
 
 const productsStore = useProductsStore()
 const menuData = ref(null)
+const menuProducts = ref(null)
 const storageMenu = window.localStorage.getItem('menu')
 const filteredProducts=ref([])
 menuData.value = storageMenu ? JSON.parse(storageMenu) : null
 
 const onChoose = (product) => emit('choose', product)
 
+menuProducts.value = storageMenu ? JSON.parse(storageMenu) : null
+
+const filteredMenuProducts = menuProducts.value.products
+  .filter((product) => product.type === 'Dish' || product.type === 'Good')
+  .filter((product) => !product.isDeleted)
+  .filter((product) => product.sizePrices[0].price.currentPrice!=0)
+  .filter((product) => product.additionalInfo==null)
+
+const searchArray = filteredMenuProducts
+
 watch(() => searchTerm.value, () => {
   filteredProducts.value = []
   if (searchTerm.value.length!=0) {
     const lowercaseSearchTerm = searchTerm.value.toLowerCase()
-    filteredProducts.value = productsStore.productsListFull.filter((product) =>
+    filteredProducts.value = searchArray.filter((product) =>
       product.name.toLowerCase().includes(lowercaseSearchTerm)
     ) || []
   }
