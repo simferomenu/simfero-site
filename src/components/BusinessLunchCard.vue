@@ -13,7 +13,7 @@
             : 'top-0 left-0 w-[130px] h-[130px]'
         "
       >
-        <img class="inner-img animated" :src="imgSrc" ref="cardImage" alt="" />
+        <img class="inner-img animated" :src="'/images/ImageBasicDish.png'" ref="cardImage" alt="" />
       </div>
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
@@ -22,13 +22,13 @@
           ref="productName"
           class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000] clip-5 mb-[5px]"
         >
-          {{ name }}
+          {{ product.name }}
         </span>
         <span
           class="font-Segoe font-[350] text-[14px] leading-[136%] text-darkBlue clip-4"
           v-if="!isDescrHidden"
         >
-          {{ description }}
+          {{ product.description }}
         </span>
       </div>
     </div>
@@ -39,16 +39,11 @@
 import { ref, onMounted } from 'vue'
 
 const props = defineProps({
-  name: {
-    type: String
-  },
-  description: {
-    type: String
-  },
-  imgSrc: {
-    type: String
+  product: {
+    type: Object
   }
 })
+
 
 const cardElement = ref(null)
 const productName = ref(null)

@@ -20,16 +20,10 @@
         </div>
       </div>
     </div>
-    <BusinessLunchSection :name="'Выберите первое блюдо (+200 руб)'">
-      <BusinessLunchCard
-        :name="'Маки Ролл с угрем'"
-        :description="'Блюдо японской кухни, которое представляет собой небольшой рулет из риса, водорослей нори.'"
-        :img-src="'https://mig.pics/x/uploads/posts/2022-09/thumbs/1663763551_58-mykaleidoscope-ru-p-avtorskie-rolli-yeda-pinterest-67.jpg'"
-      />
-      <BusinessLunchCard
-        :name="'Маки Ролл с угрем'"
-        :description="'Блюдо японской кухни, которое представляет собой небольшой рулет из риса, водорослей нори.'"
-        :img-src="'https://mig.pics/x/uploads/posts/2022-09/thumbs/1663763551_58-mykaleidoscope-ru-p-avtorskie-rolli-yeda-pinterest-67.jpg'"
+    <BusinessLunchSection v-for="subGroup of businessStore.businessProducts.subGroups" 
+      :subGroup="subGroup">
+      <BusinessLunchCard v-for="product of subGroup.products"
+      :product="product"
       />
     </BusinessLunchSection>
     <!-- <BusinessLunchSection :name="'Выберите первое блюдо (+200 руб)'" /> -->
@@ -109,4 +103,7 @@
 
 <script setup>
 import { BusinessLunchCard, BusinessLunchSection, MenuSection } from '@/components'
+import { useBusinessStore } from '@/stores/business.store';
+
+const businessStore = useBusinessStore()
 </script>

@@ -3,7 +3,7 @@
     <span
       class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka"
     >
-      Выберите {{ name }}
+      Выберите {{ subGroup.name }}
     </span>
   </div>
   <div class="relative w-full flex flex-wrap">
@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineProps } from 'vue'
+import { onMounted, ref } from 'vue'
 import { BusinessLunchCard } from '@/components'
 import { useBusinessStore } from '@/stores/business.store'
 
@@ -25,8 +25,8 @@ const businessStore = useBusinessStore()
 console.log(businessStore.businessProducts)
 
 const props = defineProps({
-  name: {
-    type: String
+  subGroup: {
+    type: Object
   }
 })
 </script>
