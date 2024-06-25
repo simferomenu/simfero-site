@@ -17,13 +17,6 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { BusinessLunchCard } from '@/components'
-import { useBusinessStore } from '@/stores/business.store'
-
-const businessStore = useBusinessStore()
-console.log(businessStore.businessProducts)
-
 const props = defineProps({
   subGroup: {
     type: Object
