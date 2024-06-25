@@ -92,6 +92,10 @@ async function syncOrderData() {
                 orderAmount: totalAmount
               };
             }
+
+            if (response.data.orderId && orderStore.orderInfo.orderId != response.data.orderId) {
+              orderStore.orderInfo.orderId = response.data.orderId;
+            }
           } catch (error) {
             console.log('Ошибка парсинга данных синхронизации заказа...', error);
           }
