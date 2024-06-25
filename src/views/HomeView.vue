@@ -95,7 +95,7 @@
         </MenuSection> -->
       </div>
     </div>
-    <BusinessLunchSection v-if="businessStore.isBusinessVisible" />
+    <BusinessLunchScreen v-if="businessStore.isBusinessVisible" />
   </div>
 </template>
 
@@ -114,7 +114,7 @@ import {
   DishScreen,
   OrderScreen,
   BusinessLunchCard,
-  BusinessLunchSection,
+  BusinessLunchScreen,
   SearchScreen
 } from '@/components'
 
