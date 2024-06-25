@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 
-export const useBusinessStore = defineStore({
-  id: 'business',
+export const useBusinessStore = defineStore('business',{
   state: () => ({
     isBusinessVisible: false,
     businessProducts: []
   }),
   getters: {},
-  actions: {}
+  actions: {},
+  persist: true
 })
