@@ -2,7 +2,7 @@
   <div
     class="relative flex flex-col shrink-1 w-full h-screen overflow-x-hidden box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
   >
-    <MenuSection class="!mb-0" :name="'Бизнес Ланч'" />
+    <MenuSection class="!mb-0" :name="'Деловые обеды'" />
     <div class="relative pr-[37px] mb-[55px]">
       <div
         class="relative w-full flex flex-col border-solid border-y-[2px] border-y-gold box-border p-[16px]"
