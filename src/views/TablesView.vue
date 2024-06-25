@@ -105,6 +105,7 @@ const productsList = ref([])
 const groupIndexRemove = ref([])
 const subGroupIndexRemove = ref([])
 const businessStore = useBusinessStore()
+const businessLunchGroupIndex = ref(null)
 const currentDay = (new Date().getDay())-1
 const businessProducts = ref(null)
 const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт' ]
@@ -123,20 +124,15 @@ const filteredMenuProducts = menuProducts.value.products
   .filter((product) => product.type === 'Dish' || product.type === 'Good')
   .filter((product) => !product.isDeleted)
   .filter((product) => product.sizePrices[0].price.currentPrice!=0)
-  .filter((product) => product.additionalInfo==null)
 
 menuProducts.value.products = filteredMenuProducts
 
 const groups = ref(menuProducts.value.groups)
 for (const group of groups.value) {
-  if (group.parentGroup == null && isUpperCase(group.name) == true && group.id != 'd9b01578-bd7f-4934-bf6e-2806900c3e1f') {
+  if (group.parentGroup == null && isUpperCase(group.name) == true) {
     productsList.value.push(group)
   }
 }
-
-// Business store setup
-businessProducts.value = storageMenu ? JSON.parse(storageMenu) : null
-const filteredBusinessProducts = businessProducts.value.products.filter((product) => product.additionalInfo != null).filter((product) => product.additionalInfo.includes(daysOfWeekArr[currentDay]))
 
 for (let group of productsList.value) {
   subGroupIndexRemove.value = []
@@ -180,9 +176,14 @@ productsList.value = productsList.value.filter(
 )
 
 productsList.value.sort((a, b) => a.order - b.order)
+businessLunchGroupIndex.value = (productsList.value.map(e => e.id).indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f'))
+businessProducts.value = productsList.value[businessLunchGroupIndex.value]
+for (const subGroup of businessProducts.value.subGroups) {
+  subGroup.products = subGroup.products.filter((product) => product.additionalInfo != null).filter((product) => product.additionalInfo.includes(daysOfWeekArr[currentDay]))
+}
+businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
+productsList.value.splice(businessLunchGroupIndex.value, 1)
 productsStore.productsList = productsList.value
-
-
 
 const orderStore = useOrderStore()
 orderStore.order = []

@@ -173,4 +173,10 @@
 
 <script setup>
 import { BusinessLunchCard, MenuSection } from '@/components'
+import { useBusinessStore } from '@/stores/business.store';
+import { ref } from 'vue';
+
+const businessStore = useBusinessStore()
+console.log(businessStore.businessProducts)
+
 </script>
