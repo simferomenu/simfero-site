@@ -129,7 +129,7 @@ menuProducts.value.products = filteredMenuProducts
 
 const groups = ref(menuProducts.value.groups)
 for (const group of groups.value) {
-  if (group.parentGroup == null && isUpperCase(group.name) == true) {
+  if (group.parentGroup == null && isUpperCase(group.name) == true && group.id != 'd9b01578-bd7f-4934-bf6e-2806900c3e1f') {
     productsList.value.push(group)
   }
 }
