@@ -180,7 +180,9 @@ businessLunchGroupIndex.value = (productsList.value.map(e => e.id).indexOf('d9b0
 businessProducts.value = productsList.value[businessLunchGroupIndex.value]
 for (const subGroup of businessProducts.value.subGroups) {
   subGroup.products = subGroup.products.filter((product) => product.additionalInfo != null).filter((product) => product.additionalInfo.includes(daysOfWeekArr[currentDay]))
+  subGroup.name = subGroup.name.replace(" ДЕЛОВЫЕ ОБЕДЫ", "")
 }
+console.log(businessProducts)
 businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
 productsList.value.splice(businessLunchGroupIndex.value, 1)
 productsStore.productsList = productsList.value
