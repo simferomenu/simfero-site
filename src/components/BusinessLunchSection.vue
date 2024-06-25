@@ -20,7 +20,6 @@
 import { onMounted, ref, defineProps } from 'vue'
 import { BusinessLunchCard } from '@/components'
 import { useBusinessStore } from '@/stores/business.store'
-import { ref } from 'vue'
 
 const businessStore = useBusinessStore()
 console.log(businessStore.businessProducts)
