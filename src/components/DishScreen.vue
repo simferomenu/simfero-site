@@ -71,7 +71,7 @@
             :quantity="props.product.amount"
           />
           <AddButtonActive
-            v-if="isProductInOrder"
+            v-if="isProductInOrder && cardInfo"
             @update="onProductCounterUpdate"
             :cardInfo="cardInfo"
           />

@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue';
+import { watch, onMounted, ref, computed } from 'vue';
 import axios from 'axios';
 
 import { IconCross, IconBack, OrderCard } from '@/components'
@@ -71,9 +71,15 @@ const orderItemsPosition = ref([])
 const orderStore = useOrderStore()
 const productsStore = useProductsStore()
 
-const getOrderData = () => {
+watch(() => orderStore.order, (data) => {
+  if (!data.length) {
+    orderItems.value = [];
+  };
+})
 
-  orderItems.value = orderStore.order
+const getOrderData = () => {
+  orderItems.value = orderStore.order;
+
   for (const item of orderItems.value) {
     for (const group of productsStore.productsList) {
       const groupIndex = productsStore.productsList.indexOf(group)
