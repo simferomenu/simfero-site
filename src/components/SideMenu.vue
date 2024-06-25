@@ -58,7 +58,7 @@
       <div class="relative flex items-center !pointer-events-auto" @click="onBusinessClick">
         <img class="w-[32px] h-[32px]" src="/icons/IconBriefcaseGold.svg" alt="" />
         <span class="menu-link ml-[15px]" :class="{ active: businessStore.isBusinessVisible }"
-          >Бизнес-ланч</span
+          >Деловые обеды</span
         >
       </div>
       <!-- <div class="relative flex items-center !pointer-events-auto">
