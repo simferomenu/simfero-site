@@ -20,10 +20,12 @@
         </div>
       </div>
     </div>
-    <BusinessLunchSection v-for="subGroup of businessStore.businessProducts.subGroups" 
+    <BusinessLunchSection v-for="subGroup of businessStore.businessProducts.subGroups"
+      :key="subGroup.id" 
       :subGroup="subGroup">
       <BusinessLunchCard v-for="product of subGroup.products"
-      :product="product"
+        :key="product.id"
+        :product="product"
       />
     </BusinessLunchSection>
     <!-- <BusinessLunchSection :name="'Выберите первое блюдо (+200 руб)'" /> -->

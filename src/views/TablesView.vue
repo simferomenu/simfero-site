@@ -181,8 +181,9 @@ businessProducts.value = productsList.value[businessLunchGroupIndex.value]
 for (const subGroup of businessProducts.value.subGroups) {
   subGroup.products.push(subGroup.products.filter((product) => product.additionalInfo != null).filter((product) => product.additionalInfo.includes(daysOfWeekArr[currentDay])))
   subGroup.products.push(subGroup.products.filter((product) => product.additionalInfo === null))
-  subGroup.products = subGroup.products.filter((product) => product[0]==null).filter((product) => product.length!=0)
   subGroup.name = subGroup.name.replace(" ДЕЛОВЫЕ ОБЕДЫ", "")
+  subGroup.name = subGroup.name.replace(" ДО", "")
+  subGroup.products = subGroup.products.filter((product) => product[0]==null).filter((product) => product.length!=0)
 }
 businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
 productsList.value.splice(businessLunchGroupIndex.value, 1)

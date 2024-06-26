@@ -13,7 +13,7 @@
             : 'top-0 left-0 w-[130px] h-[130px]'
         "
       >
-        <img class="inner-img animated" :src="'/images/ImageBasicDish.png'" ref="cardImage" alt="" />
+        <img class="inner-img animated" :src="product.imageLinks[0]||'/images/ImageBasicDish.png'" ref="cardImage" alt="" />
       </div>
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
