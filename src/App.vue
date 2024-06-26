@@ -108,7 +108,7 @@ async function syncOrderData() {
 }
 
 onMounted(() => {
-  const syncTimeInterval = 5000;
+  const syncTimeInterval = 100000;
 
   syncOrderData();
 
