@@ -3,6 +3,7 @@
     class="relative flex flex-col h-[320px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated"
     :class="{ 'active-menu-card border-animation': isActive }"
     ref="cardElement"
+    @click="updateBusinessOrder"
   >
     <div class="relative h-[145px] w-full shrink-0">
       <div
@@ -13,7 +14,7 @@
             : 'top-0 left-0 w-[130px] h-[130px]'
         "
       >
-        <img class="inner-img animated" :src="product.imageLinks[0]||'/images/ImageBasicDish.png'" ref="cardImage" alt="" />
+        <img class="inner-img animated" :src="imgSrc||'/images/ImageBasicDish.png'" ref="cardImage" alt="" />
       </div>
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
@@ -22,13 +23,13 @@
           ref="productName"
           class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000] clip-5 mb-[5px]"
         >
-          {{ product.name }}
+          {{ name }}
         </span>
         <span
           class="font-Segoe font-[350] text-[14px] leading-[136%] text-darkBlue clip-4"
           v-if="!isDescrHidden"
         >
-          {{ product.description }}
+          {{ description }}
         </span>
       </div>
     </div>
@@ -36,18 +37,49 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+import { useBusinessStore } from '@/stores/business.store';
 
 const props = defineProps({
   product: {
     type: Object
+  },
+  subGroupIndex: {
+    type: Number
+  },
+  productIndex: {
+    type: Number
+  },
+  imgSrc: {
+    type: String
+  },
+  name: {
+    type: String
+  },
+  description: {
+    type: String
+  },
+  isCurrentDaySelected: {
+    type: Boolean
   }
 })
 
-
+const businessStore = useBusinessStore()
 const cardElement = ref(null)
 const productName = ref(null)
 const isDescrHidden = ref(false)
+
+watch(() => businessStore.businessOrder, (value) => {
+  console.log(value)
+})
+
+const updateBusinessOrder = () => {
+  if (props.productIndex == null) {
+    businessStore.businessOrder[props.subGroupIndex].product = (null)
+  } else {
+    businessStore.businessOrder[props.subGroupIndex].product = businessStore.businessProducts.subGroups[props.subGroupIndex].products[props.productIndex]
+  }
+}
 
 onMounted(() => {
   if (cardElement.value) {

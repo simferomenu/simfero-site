@@ -2,8 +2,12 @@
   <div
     class="relative flex flex-col shrink-1 w-full h-screen overflow-x-hidden box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
   >
-    <MenuSection class="!mb-0" :name="'Деловые обеды'" />
-    <div class="relative pr-[37px] mb-[55px]">
+  <span
+        class="font-normal text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit py-[40px] text-[36px] "
+      >
+        ДЕЛОВЫЕ ОБЕДЫ
+      </span>
+    <!-- <div class="relative pr-[37px] mb-[55px]">
       <div
         class="relative w-full flex flex-col border-solid border-y-[2px] border-y-gold box-border p-[16px]"
       >
@@ -19,13 +23,29 @@
           </div>
         </div>
       </div>
+    </div> -->
+    <div class="flex flex-row gap-[10px] pb-[40px]">
+      <button class="rounded-[21px] px-[20px] pt-[7px] pb-[10px] text-[14px] font-[350]" :class="index==selectedDay?'bg-black text-white':'menu-card-bg text-black'
+       " v-for="(day, index) in daysOfWeekArr.length" :key="index" @click="handleDaySelect(index)">{{ daysOfWeekArr[index] }}</button>
     </div>
-    <BusinessLunchSection v-for="subGroup of businessStore.businessProducts.subGroups"
-      :key="subGroup.id" 
-      :subGroup="subGroup">
-      <BusinessLunchCard v-for="product of subGroup.products"
+    <BusinessLunchSection v-for="(subGroup, subGroupIndex) of businessStore.businessProducts.subGroups"
+    :key="subGroup.id" 
+    :subGroup="subGroup">
+      <BusinessLunchCard v-for="(product, productIndex) of subGroup.daysOfWeek[selectedDay]"
         :key="product.id"
+        :isCurrentDaySelected="isCurrentDaySelected"
+        :subGroupIndex="subGroupIndex"
+        :productIndex="productIndex"
         :product="product"
+        :name="product.name"
+        :description="product.description"
+        :imgSrc="product.imageLinks[0]"
+      />
+      <BusinessLunchCard
+        :name="'Не выбирать'"
+        :subGroupIndex="subGroupIndex"
+        :description="'-200 руб. от стоимости заказа'"
+        :imgSrc="'/icons/IconCancel.svg'"
       />
     </BusinessLunchSection>
     <!-- <BusinessLunchSection :name="'Выберите первое блюдо (+200 руб)'" /> -->
@@ -48,7 +68,7 @@
         :img-src="'https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_656b1d8105476c49d82b00c8_656b1ec26b9cdf31c05f2063/scale_1200'"
       />
     </div> -->
-    <div class="relative w-full mb-[30px]">
+    <!-- <div class="relative w-full mb-[30px]">
       <span
         class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka"
         >Дополнительно</span
@@ -75,7 +95,7 @@
       >
         Полусладкие
       </div>
-    </div>
+    </div> -->
     <div
       class="relative w-full flex justify-between items-center border-solid border-t-[1px] border-t-darkBlue min-h-[60px] box-border pr-[37px] pt-[15px] mt-[15px] mb-[55px] z-[4] animated-up"
     >
@@ -84,7 +104,7 @@
           >Сумма заказа:</span
         >
         <span class="font-Segoe font-bold text-[26px] tracking-[0.03em] text-darkBlue ml-[30px]"
-          >500 Руб.</span
+          >{{ orderCost }}</span
         >
       </div>
       <div class="flex flex-col h-fit !pointer-events-auto">
@@ -105,7 +125,43 @@
 
 <script setup>
 import { BusinessLunchCard, BusinessLunchSection, MenuSection } from '@/components'
+import { ref, computed } from 'vue';
 import { useBusinessStore } from '@/stores/business.store';
 
+const selectedDay = ref((new Date().getDay())-1)
+const orderCost = ref(0)
+const currentDay = (new Date().getDay())-1
+const isCurrentDaySelected = ref(true)
+
 const businessStore = useBusinessStore()
+
+const handleDaySelect = (dayIndex) => {
+  selectedDay.value = dayIndex
+}
+
+const daysOfWeekArr = ref(['ПОНЕДЕЛЬНИК', 'ВТОРНИК', 'СРЕДА', 'ЧЕТВЕРГ', 'ПЯТНИЦА'])
+daysOfWeekArr.value[currentDay]="СЕГОДНЯ"
+
+// for (const subGroup of businessStore.businessProducts.subGroups) {
+//   for (const product of subGroup.daysOfWeek[selectedDay.value]) {
+    
+//   }
+// }
+
+businessStore.$subscribe(() => {
+  orderCost.value = 0
+  for (const orderItem of businessStore.businessOrder) {
+    if (orderItem.product!=null) {
+      console.log(orderCost.value+=orderItem.product.sizePrices[0].price.currentPrice)
+    }
+  }
+})
+
+isCurrentDaySelected.value = computed(() => {
+  if (selectedDay.value == currentDay) {
+    return true
+  } else {
+    return false
+  }
+})
 </script>

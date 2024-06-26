@@ -176,16 +176,21 @@ productsList.value = productsList.value.filter(
 )
 
 productsList.value.sort((a, b) => a.order - b.order)
-businessLunchGroupIndex.value = (productsList.value.map(e => e.id).indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f'))
-businessProducts.value = productsList.value[businessLunchGroupIndex.value]
-for (const subGroup of businessProducts.value.subGroups) {
-  subGroup.products.push(subGroup.products.filter((product) => product.additionalInfo != null).filter((product) => product.additionalInfo.includes(daysOfWeekArr[currentDay])))
-  subGroup.products.push(subGroup.products.filter((product) => product.additionalInfo === null))
-  subGroup.name = subGroup.name.replace(" ДЕЛОВЫЕ ОБЕДЫ", "")
-  subGroup.name = subGroup.name.replace(" ДО", "")
-  subGroup.products = subGroup.products.filter((product) => product[0]==null).filter((product) => product.length!=0)
+businessLunchGroupIndex.value = (productsList.value.map(e => e.id).indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f')) 
+for (const subGroup of businessStore.businessProducts.subGroups) {
+  subGroup.daysOfWeek = []
+  for (let i = 0; i<daysOfWeekArr.length; i++) {
+    subGroup.daysOfWeek.push(subGroup.products.filter((product) => product.additionalInfo != null).filter((product) => product.additionalInfo.includes(daysOfWeekArr[i])))
+    const filterNoDay = subGroup.products.filter((product) => product.additionalInfo==null).filter((product) => product.name != null)
+    if (filterNoDay.length!=0) {
+      subGroup.daysOfWeek[i].push(...filterNoDay)
+    }
+  }
 }
-businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
+businessStore.businessOrder = []
+for (const subGroup of businessStore.businessProducts.subGroups) {
+  businessStore.businessOrder.push({"id": subGroup.id, "product": null})
+}
 productsList.value.splice(businessLunchGroupIndex.value, 1)
 productsStore.productsList = productsList.value
 
