@@ -61,6 +61,9 @@ const props = defineProps({
   },
   isCurrentDaySelected: {
     type: Boolean
+  },
+  day: {
+    type: Number
   }
 })
 
@@ -80,7 +83,7 @@ const updateBusinessOrder = () => {
   if (props.productIndex == null) {
     businessStore.businessOrder[props.subGroupIndex].product = (null)
   } else {
-    businessStore.businessOrder[props.subGroupIndex].product = businessStore.businessProducts.subGroups[props.subGroupIndex].products[props.productIndex]
+    businessStore.businessOrder[props.subGroupIndex].product = businessStore.businessProducts.subGroups[props.subGroupIndex].daysOfWeek[props.day][props.productIndex]
   }
 }
 

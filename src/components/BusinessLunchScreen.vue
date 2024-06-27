@@ -39,6 +39,7 @@
         :product="product"
         :name="product.name"
         :description="product.description"
+        :day="currentDay"
         :imgSrc="product.imageLinks[0]"
       />
       <BusinessLunchCard
