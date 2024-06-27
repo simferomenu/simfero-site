@@ -120,7 +120,7 @@ const emit = defineEmits(['choose', 'order-update', 'expand'])
 const onChoose = () => emit('choose', props.product)
 
 const isProductInOrder = computed(() => {
-  const index = orderStore.order.map((e) => e.id).indexOf(props.product.id)
+  const index = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   if (index == -1) {
     return false
   } else {
@@ -214,7 +214,7 @@ const onAddToOrder = (event) => {
 
   orderStore.orderInfo.orderAmount++;
 
-  orderStore.order.push(
+  orderStore.preOrder.push(
     productsStore.productsList[props.groupIndex].subGroups[props.subGroupIndex].products[
       props.cardIndex
     ]
@@ -268,19 +268,19 @@ const onAddToOrder = (event) => {
 // }
 
 const productAmount = computed(() => {
-  const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
-  return indexInOrder >= 0 && orderStore.order[indexInOrder].amount;
+  const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
+  return indexInOrder >= 0 && orderStore.preOrder[indexInOrder].amount;
 })
 
 const onProductCounterUpdate = (iterator) => {
-  const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
-  orderStore.order[indexInOrder].amount += iterator
+  const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
+  orderStore.preOrder[indexInOrder].amount += iterator
   orderStore.orderInfo.orderAmount += iterator
 
-  if (orderStore.order[indexInOrder].amount == 0) {
+  if (orderStore.preOrder[indexInOrder].amount == 0) {
     isProductInOrder.value = false
-    orderStore.order.splice(indexInOrder, 1);
-    console.log(orderStore.order, orderStore.order.length);
+    orderStore.preOrder.splice(indexInOrder, 1);
+    console.log(orderStore.preOrder, orderStore.preOrder.length);
   }
 }
 </script>

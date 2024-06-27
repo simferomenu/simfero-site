@@ -30,11 +30,12 @@
         {{ product.sizePrices[0].price.currentPrice }} Руб.
       </span>
       <Counter
+        v-if='!product.isOrdered'
         class="pointer-events-auto"
         :quantity="product.amount"
         @update="onProductCounterUpdate"
       />
-      <IconPlus />
+      <IconPlus v-if='!product.isOrdered'/>
     </div>
   </div>
 </template>
@@ -77,12 +78,12 @@ onMounted(() => {
 })
 
 const onProductCounterUpdate = (iterator) => {
-  const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
-  orderStore.order[indexInOrder].amount += iterator
+  const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
+  orderStore.preOrder[indexInOrder].amount += iterator
   orderStore.orderInfo.orderAmount += iterator
-  if (orderStore.order[indexInOrder].amount == 0) {
+  if (orderStore.preOrder[indexInOrder].amount == 0) {
     isProductInOrder.value = false
-    orderStore.order.splice(indexInOrder, 1)
+    orderStore.preOrder.splice(indexInOrder, 1)
   }
 }
 </script>

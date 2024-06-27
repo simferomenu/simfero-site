@@ -34,14 +34,15 @@
           >{{ totalPrice }} Руб.</span
         >
       </div>
-      <div :class="['flex flex-col h-full !pointer-events-auto', {
-        'opacity-[0.3]': !orderStore.order.length
+      <div :class="['relative flex flex-col h-full !pointer-events-auto', {
+        'opacity-[0.3]': !orderStore.preOrder.length || isOrderInProgress || isOrderCreating
       }]">
+        <img v-if="isOrderCreating" src="/icons/loading.gif" class="absolute top-0 left-[-40px] w-[40px]"/>
         <span
           @click="onMakeOrder"
           class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
         >
-          Пригласить официанта
+          {{ !isOrderInProgress ? 'Пригласить официанта' : 'Скоро начнём готовить' }}
         </span>
         <div class="absolute bottom-[-10px] right-[-200px] w-[600px] flex shrink-1 items-center">
           <img class="block h-[15px] w-auto" src="/icons/IconRhombusGold.svg" alt="" />
@@ -53,7 +54,7 @@
 </template>
 
 <script setup>
-import { watch, onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import axios from 'axios';
 
 import { IconCross, IconBack, OrderCard } from '@/components'
@@ -62,23 +63,32 @@ import { useProductsStore } from '@/stores/products.store';
 
 const emit = defineEmits(['updateOrder'])
 
-const onChooseFromOrder = () => {
-  // emit('chooseFromOrder', props.product)
-}
+const onChooseFromOrder = () => {}
 
 const orderItems = ref([])
 const orderItemsPosition = ref([])
 const orderStore = useOrderStore()
 const productsStore = useProductsStore()
+const isOrderCreating = ref(false);
+const isOrderInProgress = ref(Boolean(orderStore.orderInfo.orderId));
 
-watch(() => orderStore.order, (data) => {
-  if (!data.length) {
-    orderItems.value = [];
+
+orderStore.$subscribe(async (_, { preOrder, orderInfo }) => {
+  if (!preOrder.length) {
+    getOrderData();
   };
-})
+
+  isOrderInProgress.value = Boolean(orderInfo.orderId);
+
+  if (orderInfo.orderId) {
+    isOrderCreating.value = false;
+  }
+});
 
 const getOrderData = () => {
-  orderItems.value = orderStore.order;
+  const orderedItems = orderStore.order.map((order) => ({ ...order, isOrdered: true }));
+
+  orderItems.value = [...orderedItems, ...orderStore.preOrder];
 
   for (const item of orderItems.value) {
     for (const group of productsStore.productsList) {
@@ -92,29 +102,15 @@ const getOrderData = () => {
       }
     }
   }
-
-
-
-  // const rawOrderData = window.localStorage.getItem('order')
-
-  // try {
-  //   if (rawOrderData) {
-  //     order.value = JSON.parse(rawOrderData)
-  //     orderItems.value = order.value.products
-  //     return order.value
-  //   }
-  // } catch (error) {
-  //   console.log('Ошибка получение состояния корзины', error)
-  // }
 }
 
 const totalPrice = computed(() => {
-  const final = ref(0)
-  for (let i=0; i<orderStore.order.length; i++) {
-    final.value+=orderStore.order[i].amount * orderStore.order[i].sizePrices[0].price.currentPrice
-  }
-  return final
+  let final = 0;
 
+  final += orderStore.order.reduce((acc, item) => (acc + (item.amount * item.sizePrices[0].price.currentPrice)), 0);
+  final += orderStore.preOrder.reduce((acc, item) => (acc + (item.amount * item.sizePrices[0].price.currentPrice)), 0);
+
+  return final
 })
 
 const onOrderUpdate = () => {
@@ -123,11 +119,17 @@ const onOrderUpdate = () => {
 
 const onMakeOrder = async () => {
   try {
+    if (!orderStore.preOrder.length || isOrderInProgress.value || isOrderCreating) {
+      return;
+    }
+
+    isOrderCreating.value = true;
+
     const tables = JSON.parse(window.localStorage.getItem('selectedTables'));
 
     const resp = await axios.post('/order', {
       table: tables[0],
-      items: orderStore.order.map((item) => ({
+      items: orderStore.preOrder.map((item) => ({
         productId: item.id,
         price: item.sizePrices[0].price.currentPrice,
         type: 'Product',
@@ -141,18 +143,6 @@ const onMakeOrder = async () => {
   } catch(error) {
     console.log('Ошибка получения заказа', error);
   }
-
-  /*
-  {
-    "table": "1c34b882-4261-4364-8339-d8459ad8bf16",
-    "items": [{
-        "productId": "045815e9-7577-46e5-aacd-4a5793d82791",
-        "price": 3250,
-        "type": "Product",
-        "amount": 1
-    }]
-  }
-*/
 }
 
 onMounted(() => {

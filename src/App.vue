@@ -22,20 +22,23 @@ const orderStore = useOrderStore();
 const productsStore = useProductsStore();
 
 /* Так как нет единого action, приходится слушать апдейт стейта тут */
-orderStore.$subscribe(async (_, { order }) => {
+orderStore.$subscribe(async (_, { preOrder }) => {
   try {
-    isUpdateLocked.value = true;
+    // isUpdateLocked.value = true;
 
     const tables = JSON.parse(window.localStorage.getItem('selectedTables'));
-    await axios.put('/pre-order', {
-      table: tables[0],
-      order: order.length ? order : [],
-    }).then((response) => {
-      console.log('Pre-update resp: ', response);
-      isUpdateLocked.value = false;
-    });
+
+    if (tables && preOrder.length) {
+      await axios.put('/pre-order', {
+        table: tables[0],
+        items: preOrder.length ? preOrder : null,
+      }).then((response) => {
+        console.log('Pre-update resp: ', response);
+        isUpdateLocked.value = false;
+      });
+    }
   } catch (error) {
-    console.log('Ошибка синхронизации заказа')
+    console.log('Ошибка синхронизации заказа', error)
   }
 });
 
@@ -50,41 +53,72 @@ async function syncOrderData() {
         if (isUpdateLocked.value) return;
 
         if (response.data) {
+          if (!response.data.preOrder) {
+            orderStore.preOrder = [];
+          }
+
           try {
-            const orderData = JSON.parse(response.data.order);
-            const totalAmount = orderData.items.reduce((acc, item) => acc + item.amount, 0);
+            const preOrderData = JSON.parse(response.data.preOrder || null);
+            const orderData = JSON.parse(response.data.order || null);
+            const totalAmount = preOrderData ? preOrderData.items.reduce((acc, item) => acc + item.amount, 0) : 0;
 
-            orderData.items.forEach((item) => {
-              let product;
+            if (response.data.order) {
+              orderData.items.forEach((item) => {
+                let product;
 
-              productsStore.productsList.forEach((category) => {
-                if (product) return;
-                category.subGroups.forEach((sub) => {
+                productsStore.productsList.forEach((category) => {
                   if (product) return;
-                  product = sub.products.find(({ id }) => item.id === id);
-                })
+                  category.subGroups.forEach((sub) => {
+                    if (product) return;
+                    product = sub.products.find(({ id }) => item.id === id);
+                  })
+                });
+
+                if (product) {
+                  const productFromStore = orderStore.order.find(({ id }) => item.id === id);
+
+                  if (productFromStore) {
+                    productFromStore.amount = item.amount;
+                  } else {
+                    orderStore.order.push({ ...product, amount: item.amount });
+                  }
+                }
+              });
+            }
+
+            if (response.data.preOrder) {
+              preOrderData.items.forEach((item) => {
+                let product;
+
+                productsStore.productsList.forEach((category) => {
+                  if (product) return;
+                  category.subGroups.forEach((sub) => {
+                    if (product) return;
+                    product = sub.products.find(({ id }) => item.id === id);
+                  })
+                });
+
+                if (product) {
+                  const productFromStore = orderStore.preOrder.find(({ id }) => item.id === id);
+
+                  if (productFromStore) {
+                    productFromStore.amount = item.amount;
+                  } else {
+                    orderStore.preOrder.push({ ...product, amount: item.amount });
+                  }
+                }
               });
 
-              if (product) {
-                const productFromStore = orderStore.order.find(({ id }) => item.id === id);
+              /* 'Если удалили блюдо из списка' */
+              if (preOrderData.items.length < orderStore.preOrder.length) {
+                console.log('Если удалили блюдо из списка');
 
-                if (productFromStore) {
-                  productFromStore.amount = item.amount;
-                } else {
-                  orderStore.order.push({ ...product, amount: item.amount });
-                }
+                const latestItems = new Set(preOrderData.items.map(({ id }) => id));
+                const currentItems = new Set(orderStore.preOrder.map(({ id }) => id));
+                const deletedValue = currentItems.difference(latestItems).keys().next().value;
+
+                orderStore.preOrder = orderStore.preOrder.filter(({ id }) => id !== deletedValue);
               }
-            });
-
-            /* 'Если удалили блюдо из списка' */
-            if (orderData.items.length < orderStore.order.length) {
-              console.log('Если удалили блюдо из списка');
-
-              const latestItems = new Set(orderData.items.map(({ id }) => id));
-              const currentItems = new Set(orderStore.order.map(({ id }) => id));
-              const deletedValue = currentItems.difference(latestItems).keys().next().value;
-
-              orderStore.order = orderStore.order.filter(({ id }) => id !== deletedValue);
             }
 
             if (orderStore.orderInfo.orderAmount !== totalAmount) {
@@ -102,7 +136,7 @@ async function syncOrderData() {
         }
       });
     } catch (error) {
-      console.log('Ошибка обновдения данных заказа...', error);
+      console.log('Ошибка обновления данных заказа...', error);
     }
   }
 }
