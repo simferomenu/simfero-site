@@ -69,10 +69,6 @@ const cardElement = ref(null)
 const productName = ref(null)
 const isDescrHidden = ref(false)
 
-watch(() => businessStore.businessOrder, (value) => {
-  console.log(value)
-})
-
 const updateBusinessOrder = () => {
   if (props.productIndex == null) {
     businessStore.businessOrder[props.subGroupIndex].product = (null)

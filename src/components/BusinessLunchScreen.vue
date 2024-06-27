@@ -44,7 +44,6 @@
       <BusinessLunchCard
         :name="'Не выбирать'"
         :subGroupIndex="subGroupIndex"
-        :description="'-200 руб. от стоимости заказа'"
         :imgSrc="'/icons/IconCancel.svg'"
       />
     </BusinessLunchSection>
@@ -127,11 +126,14 @@
 import { BusinessLunchCard, BusinessLunchSection, MenuSection } from '@/components'
 import { ref, computed } from 'vue';
 import { useBusinessStore } from '@/stores/business.store';
+import { useOrderStore } from '@/stores/order.store';
 
+const orderStore = useOrderStore()
 const selectedDay = ref((new Date().getDay())-1)
 const orderCost = ref(0)
 const currentDay = (new Date().getDay())-1
 const isCurrentDaySelected = ref(true)
+const checkItemOrderExist = ref([])
 
 const businessStore = useBusinessStore()
 
@@ -148,15 +150,6 @@ daysOfWeekArr.value[currentDay]="СЕГОДНЯ"
 //   }
 // }
 
-businessStore.$subscribe(() => {
-  orderCost.value = 0
-  for (const orderItem of businessStore.businessOrder) {
-    if (orderItem.product!=null) {
-      console.log(orderCost.value+=orderItem.product.sizePrices[0].price.currentPrice)
-    }
-  }
-})
-
 isCurrentDaySelected.value = computed(() => {
   if (selectedDay.value == currentDay) {
     return true
@@ -164,4 +157,25 @@ isCurrentDaySelected.value = computed(() => {
     return false
   }
 })
+
+businessStore.$subscribe(() => {
+  orderCost.value = 0
+  for (const orderItem of businessStore.businessOrder) {
+    if (orderItem.product!=null) {
+      orderCost.value+=orderItem.product.sizePrices[0].price.currentPrice
+    }
+  }
+})
+
+const onMakeOrder = () => {
+  for (const orderItem of businessStore.businessOrder) {
+    if (orderItem.product!=null && orderStore.order.filter((product) => product.id==orderItem.product.id).length==0) {
+      orderItem.product.amount=1
+      orderStore.orderInfo.orderAmount+=1
+      orderStore.order.push(orderItem.product)
+      orderItem.product=null
+    }
+  }
+}
+
 </script>
