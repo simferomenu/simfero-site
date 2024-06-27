@@ -1,7 +1,7 @@
 <template>
   <div
     class="relative flex flex-col h-[320px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated"
-    :class="{ 'active-menu-card border-animation': isActive }"
+    :class="{ 'active-menu-card border-animation': isProductInOrder}"
     ref="cardElement"
     @click="updateBusinessOrder"
   >
@@ -32,12 +32,28 @@
           {{ description }}
         </span>
       </div>
+      <Transition name="expand">
+          <Counter
+            v-if="isProductInOrder==true"
+            isBlack
+            class="pointer-events-auto"
+            :quantity="productAmount"
+            @update="onProductCounterUpdate"
+          />
+          <IconPlus
+            ref="iconPlus"
+            v-else-if="isProductInOrder==false"
+            :isBlack="true"
+            @click="onAddToOrder"
+          />
+        </Transition>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted } from 'vue'
+import { IconPlus, Counter } from '@/components'
 import { useBusinessStore } from '@/stores/business.store';
 
 const props = defineProps({
@@ -64,6 +80,9 @@ const props = defineProps({
   },
   day: {
     type: Number
+  },
+  isCardEmpty: {
+    type: Boolean
   }
 })
 
@@ -72,6 +91,11 @@ const businessStore = useBusinessStore()
 const cardElement = ref(null)
 const productName = ref(null)
 const isDescrHidden = ref(false)
+const isProductInOrder = ref(null)
+
+if (!props.isCardEmpty) {
+  isProductInOrder.value=false
+} 
 
 if (props.name.includes("ДО ")) {
   title.value = props.name.replace("ДО ", "")
@@ -84,6 +108,9 @@ const updateBusinessOrder = () => {
     businessStore.businessOrder[props.subGroupIndex].product = (null)
   } else {
     businessStore.businessOrder[props.subGroupIndex].product = businessStore.businessProducts.subGroups[props.subGroupIndex].daysOfWeek[props.day][props.productIndex]
+  }
+  if (businessStore.businessOrder[props.productIndex].id == props.product.id) {
+    isProductInOrder.value=true
   }
 }
 
