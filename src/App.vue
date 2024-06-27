@@ -108,11 +108,11 @@ async function syncOrderData() {
 }
 
 onMounted(() => {
-  const syncTimeInterval = 100000;
+  // const syncTimeInterval = 5000;
 
-  syncOrderData();
+  // syncOrderData();
 
-  setInterval(syncOrderData, syncTimeInterval);
+  // setInterval(syncOrderData, syncTimeInterval);
 })
 </script>
 

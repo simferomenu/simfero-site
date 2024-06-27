@@ -169,10 +169,12 @@ businessStore.$subscribe(() => {
 
 const onMakeOrder = () => {
   for (const orderItem of businessStore.businessOrder) {
-    if (orderItem.product!=null && orderStore.order.filter((product) => product.id==orderItem.product.id).length==0) {
+    if (orderItem.product!=null && orderStore.order.filter((product) => product.id==orderItem.product.id).length==0 && orderStore.order.filter((product) => product.parentGroup==orderItem.product.parentGroup).length==0) {
       orderItem.product.amount=1
       orderStore.orderInfo.orderAmount+=1
       orderStore.order.push(orderItem.product)
+      orderItem.product=null
+    } else {
       orderItem.product=null
     }
   }

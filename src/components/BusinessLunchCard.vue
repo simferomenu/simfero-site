@@ -23,7 +23,7 @@
           ref="productName"
           class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000] clip-5 mb-[5px]"
         >
-          {{ name }}
+          {{ title }}
         </span>
         <span
           class="font-Segoe font-[350] text-[14px] leading-[136%] text-darkBlue clip-4"
@@ -64,10 +64,17 @@ const props = defineProps({
   }
 })
 
+const title = ref(null)
 const businessStore = useBusinessStore()
 const cardElement = ref(null)
 const productName = ref(null)
 const isDescrHidden = ref(false)
+
+if (props.name.includes("ДО ")) {
+  title.value = props.name.replace("ДО ", "")
+} else {
+  title.value = props.name
+}
 
 const updateBusinessOrder = () => {
   if (props.productIndex == null) {
