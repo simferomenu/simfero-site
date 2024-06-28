@@ -43,12 +43,12 @@
         :imgSrc="product.imageLinks[0]"
         :isCardEmpty=false
       />
-      <BusinessLunchCard
+      <!-- <BusinessLunchCard
         :name="'Не выбирать'"
         :subGroupIndex="subGroupIndex"
         :imgSrc="'/icons/IconCancel.svg'"
         :isCardEmpty=true
-      />
+      /> -->
     </BusinessLunchSection>
     <!-- <BusinessLunchSection :name="'Выберите первое блюдо (+200 руб)'" /> -->
     <!-- <div class="relative w-full mb-[55px]">
