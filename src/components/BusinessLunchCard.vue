@@ -32,21 +32,23 @@
           {{ description }}
         </span>
       </div>
-      <Transition name="expand">
+      <div v-if="isCurrentDaySelected">
+        <Transition name="expand">
+          <IconPlus
+            ref="iconPlus"
+            v-if="!isProductInOrder"
+            :isBlack="true"
+            @click="onAddToOrder"
+          />
           <Counter
-            v-if="isProductInOrder==true"
+            v-else-if="isProductInOrder==true"
             isBlack
             class="pointer-events-auto"
             :quantity="productAmount"
             @update="onProductCounterUpdate"
           />
-          <IconPlus
-            ref="iconPlus"
-            v-else-if="isProductInOrder==false"
-            :isBlack="true"
-            @click="onAddToOrder"
-          />
         </Transition>
+      </div>
     </div>
   </div>
 </template>
@@ -93,9 +95,9 @@ const productName = ref(null)
 const isDescrHidden = ref(false)
 const isProductInOrder = ref(null)
 
-if (!props.isCardEmpty) {
+if (!props.isCardEmpty && props.isCurrentDaySelected) {
   isProductInOrder.value=false
-} 
+}
 
 if (props.name.includes("ДО ")) {
   title.value = props.name.replace("ДО ", "")

@@ -136,12 +136,16 @@ const selectedDay = ref((new Date().getDay())-1)
 const orderCost = ref(0)
 const currentDay = (new Date().getDay())-1
 const isCurrentDaySelected = ref(true)
-const checkItemOrderExist = ref([])
 
 const businessStore = useBusinessStore()
 
 const handleDaySelect = (dayIndex) => {
   selectedDay.value = dayIndex
+  if (selectedDay.value == currentDay) {
+    isCurrentDaySelected.value=true
+  } else {
+    isCurrentDaySelected.value=false
+  }
 }
 
 const daysOfWeekArr = ref(['ПОНЕДЕЛЬНИК', 'ВТОРНИК', 'СРЕДА', 'ЧЕТВЕРГ', 'ПЯТНИЦА'])
@@ -152,14 +156,6 @@ daysOfWeekArr.value[currentDay]="СЕГОДНЯ"
     
 //   }
 // }
-
-isCurrentDaySelected.value = computed(() => {
-  if (selectedDay.value == currentDay) {
-    return true
-  } else {
-    return false
-  }
-})
 
 businessStore.$subscribe(() => {
   orderCost.value = 0

@@ -188,9 +188,14 @@ for (const subGroup of businessStore.businessProducts.subGroups) {
   }
 }
 businessStore.businessOrder = []
-for (const subGroup of businessStore.businessProducts.subGroups) {
-  businessStore.businessOrder.push({"id": subGroup.id, "product": null})
-}
+
+businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
+  subGroup.products.forEach((product, productIndex) => {
+    product.subGroupIndex=subGroupIndex
+    product.productIndex=productIndex
+  })
+})
+
 productsList.value.splice(businessLunchGroupIndex.value, 1)
 productsStore.productsList = productsList.value
 
