@@ -97,7 +97,11 @@ const isDescrHidden = ref(false)
 const isProductInOrder = ref(null)
 
 if (!props.isCardEmpty && props.isCurrentDaySelected) {
-  isProductInOrder.value=false
+  if (props.product.amount>0) {
+    isProductInOrder.value=true
+  } else {
+    isProductInOrder.value=false
+  }
 }
 
 if (props.name.includes("ДО ")) {
@@ -116,7 +120,6 @@ const onAddToOrder = () => {
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
   orderStore.order[indexInOrder].amount += iterator
-  businessStore.businessProducts.subGroups[props.subGroupIndex].daysOfWeek[props.day][props.productIndex].amount+=iterator
   orderStore.orderInfo.orderAmount += iterator
   if (orderStore.order[indexInOrder].amount == 0 && businessStore.businessProducts.subGroups[props.subGroupIndex].daysOfWeek[props.day][props.productIndex].amount==0) {
     isProductInOrder.value = false
