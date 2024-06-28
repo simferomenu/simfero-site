@@ -3,7 +3,7 @@
     class="relative flex flex-col shrink-1 w-full h-screen overflow-x-hidden box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
   >
   <span
-        class="font-normal text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit py-[40px] text-[36px] "
+        class="font-normal text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit py-[40px]"
       >
         ДЕЛОВЫЕ ОБЕДЫ
       </span>
@@ -39,12 +39,15 @@
         :product="product"
         :name="product.name"
         :description="product.description"
+        :day="currentDay"
         :imgSrc="product.imageLinks[0]"
+        :isCardEmpty=false
       />
       <BusinessLunchCard
         :name="'Не выбирать'"
         :subGroupIndex="subGroupIndex"
         :imgSrc="'/icons/IconCancel.svg'"
+        :isCardEmpty=true
       />
     </BusinessLunchSection>
     <!-- <BusinessLunchSection :name="'Выберите первое блюдо (+200 руб)'" /> -->
@@ -133,12 +136,16 @@ const selectedDay = ref((new Date().getDay())-1)
 const orderCost = ref(0)
 const currentDay = (new Date().getDay())-1
 const isCurrentDaySelected = ref(true)
-const checkItemOrderExist = ref([])
 
 const businessStore = useBusinessStore()
 
 const handleDaySelect = (dayIndex) => {
   selectedDay.value = dayIndex
+  if (selectedDay.value == currentDay) {
+    isCurrentDaySelected.value=true
+  } else {
+    isCurrentDaySelected.value=false
+  }
 }
 
 const daysOfWeekArr = ref(['ПОНЕДЕЛЬНИК', 'ВТОРНИК', 'СРЕДА', 'ЧЕТВЕРГ', 'ПЯТНИЦА'])
@@ -149,14 +156,6 @@ daysOfWeekArr.value[currentDay]="СЕГОДНЯ"
     
 //   }
 // }
-
-isCurrentDaySelected.value = computed(() => {
-  if (selectedDay.value == currentDay) {
-    return true
-  } else {
-    return false
-  }
-})
 
 businessStore.$subscribe(() => {
   orderCost.value = 0
@@ -169,8 +168,16 @@ businessStore.$subscribe(() => {
 
 const onMakeOrder = () => {
   for (const orderItem of businessStore.businessOrder) {
-    if (orderItem.product!=null && orderStore.order.filter((product) => product.id==orderItem.product.id).length==0) {
-      orderItem.product.amount=1
+    // if (orderItem.product!=null && orderStore.order.filter((product) => product.id==orderItem.product.id).length==0 && orderStore.order.filter((product) => product.parentGroup==orderItem.product.parentGroup).length==0) {
+    //   orderItem.product.amount=1
+    //   orderStore.orderInfo.orderAmount+=1
+    //   orderStore.order.push(orderItem.product)
+    //   orderItem.product=null
+    // } else {
+    //   orderItem.product=null
+    // }
+    if (orderItem.product!=null) {
+      orderItem.product.amount+=1
       orderStore.orderInfo.orderAmount+=1
       orderStore.order.push(orderItem.product)
       orderItem.product=null

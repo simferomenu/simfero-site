@@ -176,26 +176,27 @@ productsList.value = productsList.value.filter(
 )
 
 productsList.value.sort((a, b) => a.order - b.order)
+businessLunchGroupIndex.value = (productsList.value.map(e => e.id).indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f'))
+for (const subGroup of businessStore.businessProducts.subGroups) {
+  subGroup.daysOfWeek = []
+  for (let i = 0; i<daysOfWeekArr.length; i++) {
+    subGroup.daysOfWeek.push(subGroup.products.filter((product) => product.additionalInfo != null).filter((product) => product.additionalInfo.includes(daysOfWeekArr[i])))
+    const filterNoDay = subGroup.products.filter((product) => product.additionalInfo==null).filter((product) => product.name != null)
+    if (filterNoDay.length!=0) {
+      subGroup.daysOfWeek[i].push(...filterNoDay)
+    }
+  }
+}
+businessStore.businessOrder = []
 
-//
-// businessLunchGroupIndex.value = (productsList.value.map(e => e.id).indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f'));
-// for (const subGroup of businessStore.businessProducts.subGroups) {
-//   subGroup.daysOfWeek = []
-//   for (let i = 0; i<daysOfWeekArr.length; i++) {
-//     subGroup.daysOfWeek.push(subGroup.products.filter((product) => product.additionalInfo != null).filter((product) => product.additionalInfo.includes(daysOfWeekArr[i])))
-//     const filterNoDay = subGroup.products.filter((product) => product.additionalInfo==null).filter((product) => product.name != null)
-//     if (filterNoDay.length!=0) {
-//       subGroup.daysOfWeek[i].push(...filterNoDay)
-//     }
-//   }
-// }
-// businessStore.businessOrder = []
-// for (const subGroup of businessStore.businessProducts.subGroups) {
-//   businessStore.businessOrder.push({"id": subGroup.id, "product": null})
-// }
-// productsList.value.splice(businessLunchGroupIndex.value, 1)
+businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
+  subGroup.products.forEach((product, productIndex) => {
+    product.subGroupIndex=subGroupIndex
+    product.productIndex=productIndex
+  })
+})
 
-
+productsList.value.splice(businessLunchGroupIndex.value, 1)
 
 productsStore.productsList = productsList.value
 

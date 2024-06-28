@@ -4,9 +4,9 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import App from './App.vue'
 import router from './router'
 
-// axios.defaults.baseURL = 'http://localhost:3000'
+axios.defaults.baseURL = 'http://localhost:3000'
 axios.maxContentLength = 3000;
-axios.defaults.baseURL = 'https://api.simfero.cirus-it.com'
+// axios.defaults.baseURL = 'https://api.simfero.cirus-it.com'
 
 import './assets/index.css'
 import axios from 'axios'
