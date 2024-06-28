@@ -4,7 +4,8 @@ export const useBusinessStore = defineStore('business',{
   state: () => ({
     isBusinessVisible: false,
     businessProducts: [],
-    businessOrder: []
+    businessOrder: [],
+    finalCost: 0
   }),
   getters: {},
   actions: {},

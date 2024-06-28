@@ -107,7 +107,6 @@ const subGroupIndexRemove = ref([])
 const businessStore = useBusinessStore()
 const businessLunchGroupIndex = ref(null)
 const currentDay = (new Date().getDay())-1
-const businessProducts = ref(null)
 const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт' ]
 
 const isUpperCase = (str) => {
@@ -177,6 +176,7 @@ productsList.value = productsList.value.filter(
 
 productsList.value.sort((a, b) => a.order - b.order)
 businessLunchGroupIndex.value = (productsList.value.map(e => e.id).indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f')) 
+businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
 for (const subGroup of businessStore.businessProducts.subGroups) {
   subGroup.daysOfWeek = []
   for (let i = 0; i<daysOfWeekArr.length; i++) {
@@ -188,6 +188,7 @@ for (const subGroup of businessStore.businessProducts.subGroups) {
   }
 }
 businessStore.businessOrder = []
+businessStore.finalCost = 0
 
 businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
   subGroup.products.forEach((product, productIndex) => {
