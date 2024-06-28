@@ -22,13 +22,12 @@ const orderStore = useOrderStore();
 const productsStore = useProductsStore();
 
 /* Так как нет единого action, приходится слушать апдейт стейта тут */
-orderStore.$subscribe(async (_, { preOrder }) => {
+orderStore.$subscribe(async (data, { preOrder }) => {
   try {
     // isUpdateLocked.value = true;
-
     const tables = JSON.parse(window.localStorage.getItem('selectedTables'));
 
-    if (tables && preOrder.length) {
+    if (tables && (data.events.oldValue === 1 || preOrder.length )) {
       await axios.put('/pre-order', {
         table: tables[0],
         items: preOrder.length ? preOrder : null,
@@ -142,7 +141,7 @@ async function syncOrderData() {
 }
 
 onMounted(() => {
-  const syncTimeInterval = 100000;
+  const syncTimeInterval = 3000;
 
   syncOrderData();
 

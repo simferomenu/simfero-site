@@ -144,12 +144,18 @@ const selectFirstAcc = () => {
   }
 }
 
+const orderStore = useOrderStore()
+
 const toWaiterView = () => {
-  window.localStorage.removeItem('selectedTables')
+  window.localStorage.removeItem('selectedTables');
+  orderStore.order = [];
+  orderStore.preOrder = [];
+  orderStore.orderInfo = {
+    orderId: null,
+    orderAmount: 0
+  }
   router.push('/waiter')
 }
-
-const orderStore = useOrderStore()
 
 const orderAmount = computed(() => orderStore.orderInfo.orderAmount)
 

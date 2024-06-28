@@ -23,7 +23,7 @@
       />
     </div>
     <div
-      class="fixed bottom-0 w-full flex justify-between items-center border-solid border-t-[1px] border-t-[#fff] min-h-[60px] box-border px-[80px] pt-[15px] mt-[15px] mb-[55px] z-[4] animated-up"
+      class="fixed bottom-0 w-full flex justify-between items-center border-solid border-t-[1px] border-t-[#fff] min-h-[60px] box-border px-[60px] pt-[15px] mt-[15px] mb-[55px] z-[4] animated-up"
     >
       <div class="absolute top-[-100px] left-0 order-fade w-full h-[275px] z-[-1]"></div>
       <div class="flex items-center">
@@ -34,16 +34,42 @@
           >{{ totalPrice }} Руб.</span
         >
       </div>
-      <div :class="['relative flex flex-col h-full !pointer-events-auto', {
-        'opacity-[0.3]': !orderStore.preOrder.length || isOrderInProgress || isOrderCreating
-      }]">
+
+      <!-- Кнопки -->
+      <div
+        v-if="isAdditionalItems"
+        :class="['relative flex flex-col h-full !pointer-events-auto', {}]"
+      >
+        <img v-if="isOrderUpdating" src="/icons/loading.gif" class="absolute top-0 left-[-40px] w-[40px]"/>
+
+        <span
+          @click="onUpdateOrder"
+          class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
+        >
+          Добавить в заказ
+        </span>
+
+        <div class="absolute bottom-[-10px] right-[-200px] w-[600px] flex shrink-1 items-center">
+          <img class="block h-[15px] w-auto" src="/icons/IconRhombusGold.svg" alt="" />
+          <div class="h-[1px] w-full bg-gold"></div>
+        </div>
+      </div>
+
+      <div
+        v-else
+        :class="['relative flex flex-col h-full !pointer-events-auto', {
+          'opacity-[0.3]': !orderStore.preOrder.length || isOrderInProgress || isOrderCreating
+        }]"
+      >
         <img v-if="isOrderCreating" src="/icons/loading.gif" class="absolute top-0 left-[-40px] w-[40px]"/>
+
         <span
           @click="onMakeOrder"
           class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
         >
           {{ !isOrderInProgress ? 'Пригласить официанта' : 'Скоро начнём готовить' }}
         </span>
+
         <div class="absolute bottom-[-10px] right-[-200px] w-[600px] flex shrink-1 items-center">
           <img class="block h-[15px] w-auto" src="/icons/IconRhombusGold.svg" alt="" />
           <div class="h-[1px] w-full bg-gold"></div>
@@ -70,13 +96,13 @@ const orderItemsPosition = ref([])
 const orderStore = useOrderStore()
 const productsStore = useProductsStore()
 const isOrderCreating = ref(false);
+const isOrderUpdating = ref(false);
 const isOrderInProgress = ref(Boolean(orderStore.orderInfo.orderId));
+const isAdditionalItems = ref(false);
 
 
-orderStore.$subscribe(async (_, { preOrder, orderInfo }) => {
-  if (!preOrder.length) {
-    getOrderData();
-  };
+orderStore.$subscribe(async (_, { orderInfo }) => {
+  getOrderData();
 
   isOrderInProgress.value = Boolean(orderInfo.orderId);
 
@@ -102,6 +128,10 @@ const getOrderData = () => {
       }
     }
   }
+
+  if (orderedItems.length && orderStore.preOrder.length) {
+    isAdditionalItems.value = true;
+  }
 }
 
 const totalPrice = computed(() => {
@@ -119,7 +149,7 @@ const onOrderUpdate = () => {
 
 const onMakeOrder = async () => {
   try {
-    if (!orderStore.preOrder.length || isOrderInProgress.value || isOrderCreating) {
+    if (!orderStore.preOrder.length || isOrderInProgress.value || isOrderCreating.value) {
       return;
     }
 
@@ -136,10 +166,28 @@ const onMakeOrder = async () => {
         amount: item.amount
       })),
     });
+  } catch(error) {
+    console.log('Ошибка получения заказа', error);
+  }
+}
 
-    if (resp.data) {
-      alert('Заказ успешно направлен официанту')
-    }
+const onUpdateOrder = async () => {
+  try {
+    isOrderUpdating.value = true;
+
+    const resp = await axios.put('/order', {
+      order: orderStore.orderInfo.orderId,
+      items: orderStore.preOrder.map((item) => ({
+        productId: item.id,
+        price: item.sizePrices[0].price.currentPrice,
+        type: 'Product',
+        amount: item.amount
+      })),
+    });
+
+    console.log('!!!', resp.data);
+
+    isOrderUpdating.value = false;
   } catch(error) {
     console.log('Ошибка получения заказа', error);
   }
