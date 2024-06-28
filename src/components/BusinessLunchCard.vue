@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { IconPlus, Counter } from '@/components'
 import { useBusinessStore } from '@/stores/business.store';
 
@@ -94,6 +94,7 @@ const cardElement = ref(null)
 const productName = ref(null)
 const isDescrHidden = ref(false)
 const isProductInOrder = ref(null)
+const productAmount = ref(0)
 
 if (!props.isCardEmpty && props.isCurrentDaySelected) {
   isProductInOrder.value=false
@@ -105,15 +106,10 @@ if (props.name.includes("ДО ")) {
   title.value = props.name
 }
 
-const updateBusinessOrder = () => {
-  if (props.productIndex == null) {
-    businessStore.businessOrder[props.subGroupIndex].product = (null)
-  } else {
-    businessStore.businessOrder[props.subGroupIndex].product = businessStore.businessProducts.subGroups[props.subGroupIndex].daysOfWeek[props.day][props.productIndex]
-  }
-  if (businessStore.businessOrder[props.productIndex].id == props.product.id) {
-    isProductInOrder.value=true
-  }
+const onAddToOrder = () => {
+  businessStore.businessOrder.push(props.product) 
+  businessStore.businessProducts.subGroups[props.product.subGroupIndex].products[props.product.productIndex].amount+=1
+  businessStore.finalCost+=props.product.sizePrices[0].price.currentPrice
 }
 
 onMounted(() => {

@@ -126,18 +126,19 @@
 </template>
 
 <script setup>
-import { BusinessLunchCard, BusinessLunchSection, MenuSection } from '@/components'
-import { ref, computed } from 'vue';
+import { BusinessLunchCard, BusinessLunchSection } from '@/components'
+import { ref } from 'vue';
 import { useBusinessStore } from '@/stores/business.store';
 import { useOrderStore } from '@/stores/order.store';
 
 const orderStore = useOrderStore()
 const selectedDay = ref((new Date().getDay())-1)
-const orderCost = ref(0)
 const currentDay = (new Date().getDay())-1
 const isCurrentDaySelected = ref(true)
 
 const businessStore = useBusinessStore()
+
+const orderCost = ref(0)
 
 const handleDaySelect = (dayIndex) => {
   selectedDay.value = dayIndex
@@ -158,12 +159,7 @@ daysOfWeekArr.value[currentDay]="СЕГОДНЯ"
 // }
 
 businessStore.$subscribe(() => {
-  orderCost.value = 0
-  for (const orderItem of businessStore.businessOrder) {
-    if (orderItem.product!=null) {
-      orderCost.value+=orderItem.product.sizePrices[0].price.currentPrice
-    }
-  }
+  orderCost.value = businessStore.finalCost
 })
 
 const onMakeOrder = () => {
