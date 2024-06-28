@@ -38,7 +38,9 @@
       <!-- Кнопки -->
       <div
         v-if="isAdditionalItems"
-        :class="['relative flex flex-col h-full !pointer-events-auto', {}]"
+        :class="['relative flex flex-col h-full !pointer-events-auto', {
+          'opacity-[0.3]': isOrderUpdating
+        }]"
       >
         <img v-if="isOrderUpdating" src="/icons/loading.gif" class="absolute top-0 left-[-40px] w-[40px]"/>
 
@@ -109,6 +111,10 @@ orderStore.$subscribe(async (_, { orderInfo }) => {
   if (orderInfo.orderId) {
     isOrderCreating.value = false;
   }
+
+  if (orderInfo.orderAmount === 0) {
+    isOrderUpdating.value = false;
+  }
 });
 
 const getOrderData = () => {
@@ -131,6 +137,8 @@ const getOrderData = () => {
 
   if (orderedItems.length && orderStore.preOrder.length) {
     isAdditionalItems.value = true;
+  } else {
+    isAdditionalItems.value = false;
   }
 }
 
@@ -157,7 +165,7 @@ const onMakeOrder = async () => {
 
     const tables = JSON.parse(window.localStorage.getItem('selectedTables'));
 
-    const resp = await axios.post('/order', {
+    await axios.post('/order', {
       table: tables[0],
       items: orderStore.preOrder.map((item) => ({
         productId: item.id,
@@ -175,7 +183,7 @@ const onUpdateOrder = async () => {
   try {
     isOrderUpdating.value = true;
 
-    const resp = await axios.put('/order', {
+    await axios.put('/order', {
       order: orderStore.orderInfo.orderId,
       items: orderStore.preOrder.map((item) => ({
         productId: item.id,
@@ -184,10 +192,6 @@ const onUpdateOrder = async () => {
         amount: item.amount
       })),
     });
-
-    console.log('!!!', resp.data);
-
-    isOrderUpdating.value = false;
   } catch(error) {
     console.log('Ошибка получения заказа', error);
   }

@@ -98,7 +98,7 @@ const productsStore = useProductsStore()
 const orderStore = useOrderStore()
 const cardInfo = ref()
 const isProductInOrder = computed(() => {
-  const index = orderStore.order.map((e) => e.id).indexOf(props.product.id)
+  const index = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   if (index == -1) {
     return false
   } else {
@@ -125,7 +125,7 @@ const addToOrder = () => {
   productsStore.productsList[cardInfo.value.groupIndex].subGroups[
     cardInfo.value.subGroupIndex
   ].products[cardInfo.value.cardIndex].amount = 1
-  orderStore.order.push(
+  orderStore.preOrder.push(
     productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex]
       .products[cardInfo.value.cardIndex]
   )
@@ -134,13 +134,13 @@ const addToOrder = () => {
 }
 
 const onProductCounterUpdate = (iterator) => {
-  const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
-  if (orderStore.order[indexInOrder].amount == 1 && iterator == -1) {
+  const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
+  if (orderStore.preOrder[indexInOrder].amount == 1 && iterator == -1) {
     productsStore.productsList[cardInfo.value.groupIndex].subGroups[
       cardInfo.value.subGroupIndex
     ].products[cardInfo.value.cardIndex].amount += iterator
     orderStore.orderInfo.orderAmount += iterator
-    orderStore.order.splice(indexInOrder, 1)
+    orderStore.preOrder.splice(indexInOrder, 1)
     isProductInOrder.value = false
   } else {
     productsStore.productsList[cardInfo.value.groupIndex].subGroups[
@@ -164,7 +164,6 @@ onMounted(() => {
       }
     }
   }
-  console.log(cardInfo)
 })
 </script>
 

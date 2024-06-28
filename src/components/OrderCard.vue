@@ -30,6 +30,9 @@
       <span class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-[#fff]">
         {{ product.sizePrices[0].price.currentPrice }} Руб.
       </span>
+      <div class="flex items-center font-[600] align-center justify-center box-border px-[8px] py-[12px] w-[35px] h-[35px] bg-gold rounded-[33px] absolute right-[-10px] bottom-0 z-[3] pointer-events-none pointer-events-auto">
+        {{product.amount}}
+      </div>
       <Counter
         v-if='!product.isOrdered'
         class="pointer-events-auto"

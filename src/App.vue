@@ -24,7 +24,6 @@ const productsStore = useProductsStore();
 /* Так как нет единого action, приходится слушать апдейт стейта тут */
 orderStore.$subscribe(async (data, { preOrder }) => {
   try {
-    // isUpdateLocked.value = true;
     const tables = JSON.parse(window.localStorage.getItem('selectedTables'));
 
     if (tables && (data.events.oldValue === 1 || preOrder.length )) {
@@ -33,7 +32,6 @@ orderStore.$subscribe(async (data, { preOrder }) => {
         items: preOrder.length ? preOrder : null,
       }).then((response) => {
         console.log('Pre-update resp: ', response);
-        isUpdateLocked.value = false;
       });
     }
   } catch (error) {
@@ -132,6 +130,8 @@ async function syncOrderData() {
           } catch (error) {
             console.log('Ошибка парсинга данных синхронизации заказа...', error);
           }
+        } else {
+          orderStore.$reset();
         }
       });
     } catch (error) {
