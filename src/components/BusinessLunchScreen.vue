@@ -25,8 +25,13 @@
       </div>
     </div> -->
     <div class="flex flex-row gap-[10px] pb-[40px]">
-      <button class="rounded-[21px] px-[20px] pt-[7px] pb-[10px] text-[14px] font-[350]" :class="index==selectedDay?'bg-black text-white':'menu-card-bg text-black'
-       " v-for="(day, index) in daysOfWeekArr.length" :key="index" @click="handleDaySelect(index)">{{ daysOfWeekArr[index] }}</button>
+      <button class="rounded-[21px] px-[20px] pt-[10px] pb-[10px] text-[14px] font-[350] menu-card-bg" 
+      :class="{
+        'bg-black text-white font-light': index === selectedDay,
+        'font-semibold ': index === currentDay
+      }" 
+      v-for="(day, index) in daysOfWeekArr.length" 
+      :key="index" @click="handleDaySelect(index)">{{ daysOfWeekArr[index] }}</button>
     </div>
     <BusinessLunchSection v-for="(subGroup, subGroupIndex) of businessStore.businessProducts.subGroups"
     :key="subGroup.id" 
@@ -150,7 +155,7 @@ const handleDaySelect = (dayIndex) => {
 }
 
 const daysOfWeekArr = ref(['ПОНЕДЕЛЬНИК', 'ВТОРНИК', 'СРЕДА', 'ЧЕТВЕРГ', 'ПЯТНИЦА'])
-daysOfWeekArr.value[currentDay]="СЕГОДНЯ"
+daysOfWeekArr.value[currentDay]="СЕГОДНЯ ◆"
 
 // for (const subGroup of businessStore.businessProducts.subGroups) {
 //   for (const product of subGroup.daysOfWeek[selectedDay.value]) {
