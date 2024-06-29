@@ -103,30 +103,6 @@
         Полусладкие
       </div>
     </div> -->
-    <div
-      class="relative w-full flex justify-between items-center border-solid border-t-[1px] border-t-darkBlue min-h-[60px] box-border pr-[37px] pt-[15px] mt-[15px] mb-[55px] z-[4] animated-up"
-    >
-      <div class="flex items-center">
-        <span class="font-Segoe font-[350] text-[26px] tracking-[0.03em] text-darkBlue"
-          >Сумма заказа:</span
-        >
-        <span class="font-Segoe font-bold text-[26px] tracking-[0.03em] text-darkBlue ml-[30px]"
-          >{{ orderCost }}</span
-        >
-      </div>
-      <div class="flex flex-col h-fit !pointer-events-auto">
-        <span
-          @click="onMakeOrder"
-          class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-darkBlue"
-        >
-          Добавить в корзину
-        </span>
-        <div class="absolute bottom-[-10px] right-[-270px] w-[600px] flex shrink-1 items-center">
-          <img class="block h-[15px] w-auto" src="/icons/IconRhombusBlack.svg" alt="" />
-          <div class="h-[1px] w-full bg-darkBlue"></div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
