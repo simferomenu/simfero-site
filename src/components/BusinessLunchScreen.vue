@@ -3,7 +3,7 @@
     class="relative flex flex-col shrink-1 w-full h-screen overflow-x-hidden box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
   >
   <span
-        class="font-normal text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit py-[40px]"
+        class="font-normal text-[#000] uppercase text-[36px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit pb-[40px] pt-[20px]"
       >
         ДЕЛОВЫЕ ОБЕДЫ
       </span>
