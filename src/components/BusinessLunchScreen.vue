@@ -27,8 +27,8 @@
     <div class="flex flex-row gap-[10px] pb-[40px]">
       <button class="rounded-[21px] px-[20px] pt-[10px] pb-[10px] text-[14px] font-[350] menu-card-bg" 
       :class="{
-        'bg-black text-white font-light': index === selectedDay,
-        'font-semibold ': index === currentDay
+        'bg-black text-white font-semilight': index === selectedDay,
+        'font-semibold ': index === currentDay && index === selectedDay
       }" 
       v-for="(day, index) in daysOfWeekArr.length" 
       :key="index" @click="handleDaySelect(index)">{{ daysOfWeekArr[index] }}</button>
