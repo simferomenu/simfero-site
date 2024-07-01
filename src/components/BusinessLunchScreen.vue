@@ -122,6 +122,8 @@ const isCurrentDaySelected = ref(true)
 
 const businessStore = useBusinessStore()
 
+businessStore.isCurrentDaySelected=true
+
 const orderCost = ref(0)
 
 const onChoose = (product) => emit('choose', product)
@@ -130,8 +132,10 @@ const handleDaySelect = (dayIndex) => {
   selectedDay.value = dayIndex
   if (selectedDay.value == currentDay) {
     isCurrentDaySelected.value=true
+    businessStore.isCurrentDaySelected = true
   } else {
-    isCurrentDaySelected.value=false
+    isCurrentDaySelected.value=false 
+    businessStore.isCurrentDaySelected = false
   }
 }
 

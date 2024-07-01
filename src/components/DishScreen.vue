@@ -66,12 +66,12 @@
             >
           </div>
           <AddButton
-            v-if="!isProductInOrder"
+            v-if="!isProductInOrder && isCurrentDaySelected"
             @select="addToOrder"
             :quantity="props.product.amount"
           />
           <AddButtonActive
-            v-if="isProductInOrder && cardInfo"
+            v-if="isProductInOrder && cardInfo && isCurrentDaySelected"
             @update="onProductCounterUpdate"
             :cardInfo="cardInfo"
           />
@@ -97,6 +97,7 @@ const props = defineProps({
 
 const productsStore = useProductsStore()
 const businessStore = useBusinessStore()
+const isCurrentDaySelected = ref(businessStore.isCurrentDaySelected)
 const orderStore = useOrderStore()
 const cardInfo = ref()
 const isBusinessProduct = ref(null)
