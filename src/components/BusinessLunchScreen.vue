@@ -3,7 +3,7 @@
     class="relative flex flex-col shrink-1 w-full h-screen overflow-x-hidden box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
   >
   <span
-        class="font-normal text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit py-[40px]"
+        class="font-normal text-[#000] uppercase text-[36px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit pb-[40px] pt-[20px]"
       >
         ДЕЛОВЫЕ ОБЕДЫ
       </span>
@@ -25,8 +25,13 @@
       </div>
     </div> -->
     <div class="flex flex-row gap-[10px] pb-[40px]">
-      <button class="rounded-[21px] px-[20px] pt-[7px] pb-[10px] text-[14px] font-[350]" :class="index==selectedDay?'bg-black text-white':'menu-card-bg text-black'
-       " v-for="(day, index) in daysOfWeekArr.length" :key="index" @click="handleDaySelect(index)">{{ daysOfWeekArr[index] }}</button>
+      <button class="rounded-[21px] px-[20px] pt-[10px] pb-[10px] text-[14px] font-[350] menu-card-bg" 
+      :class="{
+        'bg-black text-white font-semilight': index === selectedDay,
+        'font-semibold ': index === currentDay && index === selectedDay
+      }" 
+      v-for="(day, index) in daysOfWeekArr.length" 
+      :key="index" @click="handleDaySelect(index)">{{ daysOfWeekArr[index] }}</button>
     </div>
     <BusinessLunchSection v-for="(subGroup, subGroupIndex) of businessStore.businessProducts.subGroups"
     :key="subGroup.id" 
@@ -43,12 +48,12 @@
         :imgSrc="product.imageLinks[0]"
         :isCardEmpty=false
       />
-      <BusinessLunchCard
+      <!-- <BusinessLunchCard
         :name="'Не выбирать'"
         :subGroupIndex="subGroupIndex"
         :imgSrc="'/icons/IconCancel.svg'"
         :isCardEmpty=true
-      />
+      /> -->
     </BusinessLunchSection>
     <!-- <BusinessLunchSection :name="'Выберите первое блюдо (+200 руб)'" /> -->
     <!-- <div class="relative w-full mb-[55px]">
@@ -98,30 +103,6 @@
         Полусладкие
       </div>
     </div> -->
-    <div
-      class="relative w-full flex justify-between items-center border-solid border-t-[1px] border-t-darkBlue min-h-[60px] box-border pr-[37px] pt-[15px] mt-[15px] mb-[55px] z-[4] animated-up"
-    >
-      <div class="flex items-center">
-        <span class="font-Segoe font-[350] text-[26px] tracking-[0.03em] text-darkBlue"
-          >Сумма заказа:</span
-        >
-        <span class="font-Segoe font-bold text-[26px] tracking-[0.03em] text-darkBlue ml-[30px]"
-          >{{ orderCost }}</span
-        >
-      </div>
-      <div class="flex flex-col h-fit !pointer-events-auto">
-        <span
-          @click="onMakeOrder"
-          class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-darkBlue"
-        >
-          Добавить в корзину
-        </span>
-        <div class="absolute bottom-[-10px] right-[-270px] w-[600px] flex shrink-1 items-center">
-          <img class="block h-[15px] w-auto" src="/icons/IconRhombusBlack.svg" alt="" />
-          <div class="h-[1px] w-full bg-darkBlue"></div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -150,7 +131,7 @@ const handleDaySelect = (dayIndex) => {
 }
 
 const daysOfWeekArr = ref(['ПОНЕДЕЛЬНИК', 'ВТОРНИК', 'СРЕДА', 'ЧЕТВЕРГ', 'ПЯТНИЦА'])
-daysOfWeekArr.value[currentDay]="СЕГОДНЯ"
+daysOfWeekArr.value[currentDay]="СЕГОДНЯ ◆"
 
 // for (const subGroup of businessStore.businessProducts.subGroups) {
 //   for (const product of subGroup.daysOfWeek[selectedDay.value]) {

@@ -3,7 +3,7 @@
     <span
       class="font-semibold text-[#000] uppercase text-[25px] leading-[117%] tracking-[0.11em] font-Sitka"
     >
-      Выберите {{ subGroup.name }}
+      Выберите {{ title }}
     </span>
   </div>
   <div class="relative w-full flex flex-wrap">
@@ -17,9 +17,14 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+
 const props = defineProps({
   subGroup: {
     type: Object
   }
 })
+
+const title = ref(null)
+title.value = props.subGroup.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', "").replaceAll('ДО', "")
 </script>

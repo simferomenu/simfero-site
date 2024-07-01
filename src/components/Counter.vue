@@ -25,7 +25,7 @@
           : 'font-Segoe font-semibold text-[18px] tracking-[0.15em] uppercase text-[#000] text-center mx-[15px] pointer-events-none'
       "
     >
-      {{ counterValue }}
+      {{ quantity }}
     </div>
     <div
       class="flex justify-center items-center h-full w-auto !pointer-events-auto animated"
@@ -40,7 +40,6 @@
 <style scoped></style>
 
 <script setup>
-import { watch, ref } from 'vue'
 
 const props = defineProps({
   quantity: {
@@ -50,16 +49,10 @@ const props = defineProps({
 })
 const emit = defineEmits(['update'])
 
-const counterValue = ref(props.quantity);
 
 const onQuantityChange = (event, iterator) => {
   event.stopPropagation();
 
-  counterValue.value += iterator
   emit('update', iterator)
 }
-
-watch(() => props.quantity, (value) => {
-  counterValue.value = value;
-})
 </script>

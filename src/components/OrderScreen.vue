@@ -164,15 +164,31 @@ const onMakeOrder = async () => {
     isOrderCreating.value = true;
 
     const tables = JSON.parse(window.localStorage.getItem('selectedTables'));
+    const menu = JSON.parse(window.localStorage.getItem('menu'));
+
+    const orderItems = orderStore.preOrder.map((item) => ({
+      productId: item.id,
+      price: item.sizePrices[0].price.currentPrice,
+      type: 'Product',
+      amount: item.amount
+    }));
+
+    orderStore.preOrder.forEach((item) => {
+      item.modifiers.forEach((mod) => {
+        const product = menu.products.find(({ id }) => id == mod.id);
+
+        orderItems.push({
+          productId: product.id,
+          price: product.sizePrices[0].price.currentPrice,
+          type: 'Modifier',
+          amount: 1
+        })
+      });
+    });
 
     await axios.post('/order', {
       table: tables[0],
-      items: orderStore.preOrder.map((item) => ({
-        productId: item.id,
-        price: item.sizePrices[0].price.currentPrice,
-        type: 'Product',
-        amount: item.amount
-      })),
+      items: orderItems,
     });
   } catch(error) {
     console.log('Ошибка получения заказа', error);

@@ -3,7 +3,6 @@
     class="relative flex flex-col h-[320px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated"
     :class="{ 'active-menu-card border-animation': isProductInOrder}"
     ref="cardElement"
-    @click="updateBusinessOrder"
   >
     <div class="relative h-[145px] w-full shrink-0">
       <div
@@ -44,7 +43,7 @@
             v-else-if="isProductInOrder==true"
             isBlack
             class="pointer-events-auto"
-            :quantity="productAmount"
+            :quantity = "props.product.amount"
             @update="onProductCounterUpdate"
           />
         </Transition>
@@ -54,9 +53,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 import { IconPlus, Counter } from '@/components'
 import { useBusinessStore } from '@/stores/business.store';
+import { useOrderStore } from '@/stores/order.store';
 
 const props = defineProps({
   product: {
@@ -90,14 +90,18 @@ const props = defineProps({
 
 const title = ref(null)
 const businessStore = useBusinessStore()
+const orderStore = useOrderStore()
 const cardElement = ref(null)
 const productName = ref(null)
 const isDescrHidden = ref(false)
 const isProductInOrder = ref(null)
-const productAmount = ref(0)
 
 if (!props.isCardEmpty && props.isCurrentDaySelected) {
-  isProductInOrder.value=false
+  if (props.product.amount>0) {
+    isProductInOrder.value=true
+  } else {
+    isProductInOrder.value=false
+  }
 }
 
 if (props.name.includes("ДО ")) {
@@ -107,9 +111,20 @@ if (props.name.includes("ДО ")) {
 }
 
 const onAddToOrder = () => {
-  businessStore.businessOrder.push(props.product) 
-  businessStore.businessProducts.subGroups[props.product.subGroupIndex].products[props.product.productIndex].amount+=1
-  businessStore.finalCost+=props.product.sizePrices[0].price.currentPrice
+  orderStore.order.push(props.product) 
+  businessStore.businessProducts.subGroups[props.subGroupIndex].daysOfWeek[props.day][props.productIndex].amount=1
+  orderStore.orderInfo.orderAmount += 1
+  isProductInOrder.value = true
+}
+
+const onProductCounterUpdate = (iterator) => {
+  const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
+  orderStore.order[indexInOrder].amount += iterator
+  orderStore.orderInfo.orderAmount += iterator
+  if (orderStore.order[indexInOrder].amount == 0 && businessStore.businessProducts.subGroups[props.subGroupIndex].daysOfWeek[props.day][props.productIndex].amount==0) {
+    isProductInOrder.value = false
+    orderStore.order.splice(indexInOrder, 1);
+  }
 }
 
 onMounted(() => {

@@ -201,6 +201,10 @@ businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
 
 productsList.value.splice(businessLunchGroupIndex.value, 1)
 
+for (const group of productsList.value) {
+  group.subGroups = group.subGroups.filter((subGroup) => !subGroup.name.includes('ДОПЫ'))
+}
+
 productsStore.productsList = productsList.value
 
 const orderStore = useOrderStore()
