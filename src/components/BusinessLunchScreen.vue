@@ -33,16 +33,12 @@
       v-for="(day, index) in daysOfWeekArr.length" 
       :key="index" @click="handleDaySelect(index)">{{ daysOfWeekArr[index] }}</button>
     </div>
-    <BusinessLunchSection v-for="(subGroup, subGroupIndex) of businessStore.businessProducts.subGroups"
+    <BusinessLunchSection v-for="(subGroup) of businessStore.businessProducts.subGroups"
     :key="subGroup.id" 
     :subGroup="subGroup">
-      <BusinessLunchCard v-for="(product, productIndex) of subGroup.daysOfWeek[selectedDay]"
+      <BusinessLunchCard v-for="(product) of subGroup.daysOfWeek[selectedDay]"
         :key="product.id"
-        :isCurrentDaySelected="isCurrentDaySelected"
-        :subGroupIndex="subGroupIndex"
-        :productIndex="productIndex"
         :product="product"
-        :name="product.name"
         :description="product.description"
         :day="currentDay"
         :imgSrc="product.imageLinks[0]"
