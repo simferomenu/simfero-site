@@ -4,7 +4,8 @@
     :class="{ 'active-menu-card border-animation': isProductInOrder}"
     ref="cardElement"
   >
-    <div class="relative h-[145px] w-full shrink-0">
+    <div class="relative h-[145px] w-full shrink-0"
+    @click="onSelect">
       <div
         class="absolute overflow-hidden rounded-[100px] animated flex justify-center items-center"
         :class="
