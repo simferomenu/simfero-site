@@ -102,8 +102,8 @@
 <style scoped></style>
 
 <script setup>
-import axios from 'axios'
-import { ref, onMounted } from 'vue'
+// import axios from 'axios'
+import { ref } from 'vue'
 import { useProductsStore } from '@/stores/products.store'
 import { useBusinessStore } from '@/stores/business.store'
 
@@ -113,7 +113,6 @@ import {
   MenuCard,
   DishScreen,
   OrderScreen,
-  BusinessLunchCard,
   BusinessLunchScreen,
   SearchScreen
 } from '@/components'
@@ -121,23 +120,18 @@ import {
 const productsStore = useProductsStore()
 const businessStore = useBusinessStore()
 
-const menuData = ref(null)
-const menu = ref([])
-const categories = ref([])
+// const menuData = ref(null)
+// const menu = ref([])
+// const categories = ref([])
 const selectedCategory = ref(null)
 const isLoading = ref(false)
 const selectedProduct = ref(null)
 const menuOrderCount = ref(null)
-const renderedCount = ref(null)
 const displayedGroupIndex = ref(0)
 const scrollElement = ref(null)
 const scrollSection = ref(null)
-const isBusinessVisible = ref(true)
 // const selectedSubGroupIndex = ref(null)
 const scrollBody = ref(null)
-const cardsPerLine = ref(null)
-
-const viewWidth = window.innerWidth
 
 const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
   for (let i = 2; i < selectedSubGroupIndex + 1; i++) {
@@ -234,20 +228,6 @@ const scrollToSubGroup = (subGroupIndex) => {
   } else {
     console.log(`"Элемент с индексом - " ${subGroupIndex} Не найден.`)
   }
-}
-
-if (viewWidth < 1112) {
-  cardsPerLine.value = 2
-} else if (viewWidth >= 1112 && viewWidth < 1366) {
-  cardsPerLine.value = 3
-} else {
-  cardsPerLine.value = 4
-}
-
-renderedCount.value = cardsPerLine.value * 4
-
-const isUpperCase = (str) => {
-  return str === str.toUpperCase()
 }
 
 // const storageMenuExp = window.localStorage.getItem('menu')
@@ -392,103 +372,103 @@ const onOrderUpdate = () => {
   }
 }
 
-onMounted(async () => {
-  const storageMenu = window.localStorage.getItem('menu')
-  menuData.value = storageMenu ? JSON.parse(storageMenu) : null
+// onMounted(async () => {
+//   const storageMenu = window.localStorage.getItem('menu')
+//   menuData.value = storageMenu ? JSON.parse(storageMenu) : null
 
-  if (!menuData.value) {
-    isLoading.value = true
-    menuData.value = (await axios.get('/menu')).data
-    isLoading.value = false
-  }
+//   if (!menuData.value) {
+//     isLoading.value = true
+//     menuData.value = (await axios.get('/menu')).data
+//     isLoading.value = false
+//   }
 
-  const productCategories = menuData.value.productCategories
-  categories.value = productCategories.filter(({ isDeleted }) => !isDeleted)
+//   const productCategories = menuData.value.productCategories
+//   categories.value = productCategories.filter(({ isDeleted }) => !isDeleted)
 
-  menuData.value.products.forEach((p) => {
-    const parentGroup = menuData.value.groups.find((group) => group.id === p.parentGroup)
+//   menuData.value.products.forEach((p) => {
+//     const parentGroup = menuData.value.groups.find((group) => group.id === p.parentGroup)
 
-    if (parentGroup) {
-      const searchedGroup = menu.value.find((g) => g.id === p.parentGroup)
-      const isGroupExist = Boolean(searchedGroup)
+//     if (parentGroup) {
+//       const searchedGroup = menu.value.find((g) => g.id === p.parentGroup)
+//       const isGroupExist = Boolean(searchedGroup)
 
-      if (!isGroupExist) {
-        menu.value.push({
-          ...parentGroup,
-          products: [p]
-        })
-      } else {
-        searchedGroup.products.push(p)
-      }
-    }
-  })
+//       if (!isGroupExist) {
+//         menu.value.push({
+//           ...parentGroup,
+//           products: [p]
+//         })
+//       } else {
+//         searchedGroup.products.push(p)
+//       }
+//     }
+//   })
 
-  let filteredGroups = menuData.value.groups.filter((p) => !p.isDeleted)
-  // .filter((p) => !p.isIncludedInMenu);
+//   let filteredGroups = menuData.value.groups.filter((p) => !p.isDeleted)
+//   // .filter((p) => !p.isIncludedInMenu);
 
-  menuData.value.products = menuData.value.products
-    .filter((p) => !p.isDeleted)
-    .filter((p) => p.type === 'Dish')
-  // .filter((p) => !p.doNotPrintInCheque)
+//   menuData.value.products = menuData.value.products
+//     .filter((p) => !p.isDeleted)
+//     .filter((p) => p.type === 'Dish')
+//   // .filter((p) => !p.doNotPrintInCheque)
 
-  let currentProductIndex = 0
-  let currentParentGroup = null
-  let groupsList = []
-  const menuGroups = []
+//   let currentProductIndex = 0
+//   let currentParentGroup = null
+//   let groupsList = []
+//   const menuGroups = []
 
-  while (true) {
-    if (currentProductIndex >= menuData.value.products.length) break
+//   while (true) {
+//     if (currentProductIndex >= menuData.value.products.length) break
 
-    const product = menuData.value.products[currentProductIndex]
+//     const product = menuData.value.products[currentProductIndex]
 
-    if (!currentParentGroup) {
-      currentParentGroup = filteredGroups.find((group) => group.id === product.parentGroup)
+//     if (!currentParentGroup) {
+//       currentParentGroup = filteredGroups.find((group) => group.id === product.parentGroup)
 
-      if (!currentParentGroup) {
-        ++currentProductIndex
-        // console.log('Продукт: ', product.name)
-      } else {
-        // console.log('currentParentGroup: ', currentParentGroup.name)
-        groupsList.push(currentParentGroup)
-      }
-    } else if (currentParentGroup.parentGroup) {
-      currentParentGroup = filteredGroups.find(
-        (group) => group.id === currentParentGroup.parentGroup
-      )
-      groupsList.push(currentParentGroup)
-    } else {
-      const groupExisted = menuGroups.find((g) => g.id === currentParentGroup.id)
-      if (!groupExisted) {
-        menuGroups.push({
-          ...currentParentGroup,
-          products: [{ ...product, chain: [...groupsList.map(({ name }) => name).reverse()] }]
-        })
-      } else {
-        groupExisted.products.push({
-          ...product,
-          chain: [...groupsList.map(({ name }) => name).reverse()]
-        })
-      }
+//       if (!currentParentGroup) {
+//         ++currentProductIndex
+//         // console.log('Продукт: ', product.name)
+//       } else {
+//         // console.log('currentParentGroup: ', currentParentGroup.name)
+//         groupsList.push(currentParentGroup)
+//       }
+//     } else if (currentParentGroup.parentGroup) {
+//       currentParentGroup = filteredGroups.find(
+//         (group) => group.id === currentParentGroup.parentGroup
+//       )
+//       groupsList.push(currentParentGroup)
+//     } else {
+//       const groupExisted = menuGroups.find((g) => g.id === currentParentGroup.id)
+//       if (!groupExisted) {
+//         menuGroups.push({
+//           ...currentParentGroup,
+//           products: [{ ...product, chain: [...groupsList.map(({ name }) => name).reverse()] }]
+//         })
+//       } else {
+//         groupExisted.products.push({
+//           ...product,
+//           chain: [...groupsList.map(({ name }) => name).reverse()]
+//         })
+//       }
 
-      groupsList = []
-      ++currentProductIndex
-      currentParentGroup = null
-    }
-  }
+//       groupsList = []
+//       ++currentProductIndex
+//       currentParentGroup = null
+//     }
+//   }
 
-  menu.value = menuGroups
+//   menu.value = menuGroups
 
-  menu.value.forEach((item) => {
-    item.sub = []
-    filteredGroups.map((sub) => {
-      if (sub.parentGroup === item.id) {
-        item.sub.push(sub)
-      }
-    })
-  })
+//   menu.value.forEach((item) => {
+//     item.sub = []
+//     filteredGroups.map((sub) => {
+//       if (sub.parentGroup === item.id) {
+//         item.sub.push(sub)
+//       }
+//     })
+//   })
 
-  const showDish = () => {
-    DishScreen.classlist.remove('hidden-screen')
-  }
-})
+//   const showDish = () => {
+//     DishScreen.classlist.remove('hidden-screen')
+//   }
+// })
 </script>

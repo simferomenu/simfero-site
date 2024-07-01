@@ -3,7 +3,6 @@
     class="relative flex flex-col h-[320px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated"
     :class="{ 'active-menu-card border-animation': isProductInOrder}"
     ref="cardElement"
-    @click="onSelect"
   >
     <div class="relative h-[145px] w-full shrink-0">
       <div
@@ -18,7 +17,8 @@
       </div>
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
-      <div class="relative flex flex-col">
+      <div class="relative flex flex-col"
+      @click="onSelect">
         <span
           ref="productName"
           class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000] clip-5 mb-[5px]"

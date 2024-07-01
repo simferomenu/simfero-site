@@ -83,8 +83,8 @@
 
 <script setup>
 import { onMounted, ref, defineProps, computed } from 'vue'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { SideMenu, MenuSmallCard, AddButton, AddButtonActive, IconCross } from '@/components'
+// import { Swiper, SwiperSlide } from 'swiper/vue'
+import { AddButton, AddButtonActive, IconCross } from '@/components'
 import { useProductsStore } from '@/stores/products.store'
 import { useOrderStore } from '@/stores/order.store'
 import { useBusinessStore } from '@/stores/business.store'
@@ -114,16 +114,16 @@ const description =
   props.product.description ||
   'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'
 
-const navigation = ref({
-  enabled: true,
-  nextEl: '.dish-button-next',
-  prevEl: '.dish-button-prev'
-})
+// const navigation = ref({
+//   enabled: true,
+//   nextEl: '.dish-button-next',
+//   prevEl: '.dish-button-prev'
+// })
 
-const scrollbar = ref({
-  enabled: true,
-  el: '.dish-scrollbar'
-})
+// const scrollbar = ref({
+//   enabled: true,
+//   el: '.dish-scrollbar'
+// })
 
 const addToOrder = () => {
   if (isBusinessProduct.value) {

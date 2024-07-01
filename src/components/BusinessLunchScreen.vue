@@ -111,11 +111,11 @@
 import { BusinessLunchCard, BusinessLunchSection } from '@/components'
 import { ref } from 'vue';
 import { useBusinessStore } from '@/stores/business.store';
-import { useOrderStore } from '@/stores/order.store';
+// import { useOrderStore } from '@/stores/order.store';
 
 const emit = defineEmits(['choose'])
 
-const orderStore = useOrderStore()
+// const orderStore = useOrderStore()
 const selectedDay = ref((new Date().getDay())-1)
 const currentDay = (new Date().getDay())-1
 const isCurrentDaySelected = ref(true)
@@ -152,23 +152,23 @@ businessStore.$subscribe(() => {
   orderCost.value = businessStore.finalCost
 })
 
-const onMakeOrder = () => {
-  for (const orderItem of businessStore.businessOrder) {
-    // if (orderItem.product!=null && orderStore.order.filter((product) => product.id==orderItem.product.id).length==0 && orderStore.order.filter((product) => product.parentGroup==orderItem.product.parentGroup).length==0) {
-    //   orderItem.product.amount=1
-    //   orderStore.orderInfo.orderAmount+=1
-    //   orderStore.order.push(orderItem.product)
-    //   orderItem.product=null
-    // } else {
-    //   orderItem.product=null
-    // }
-    if (orderItem.product!=null) {
-      orderItem.product.amount+=1
-      orderStore.orderInfo.orderAmount+=1
-      orderStore.order.push(orderItem.product)
-      orderItem.product=null
-    }
-  }
-}
+// const onMakeOrder = () => {
+//   for (const orderItem of businessStore.businessOrder) {
+//     // if (orderItem.product!=null && orderStore.order.filter((product) => product.id==orderItem.product.id).length==0 && orderStore.order.filter((product) => product.parentGroup==orderItem.product.parentGroup).length==0) {
+//     //   orderItem.product.amount=1
+//     //   orderStore.orderInfo.orderAmount+=1
+//     //   orderStore.order.push(orderItem.product)
+//     //   orderItem.product=null
+//     // } else {
+//     //   orderItem.product=null
+//     // }
+//     if (orderItem.product!=null) {
+//       orderItem.product.amount+=1
+//       orderStore.orderInfo.orderAmount+=1
+//       orderStore.order.push(orderItem.product)
+//       orderItem.product=null
+//     }
+//   }
+// }
 
 </script>
