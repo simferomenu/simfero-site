@@ -47,6 +47,7 @@
         :day="currentDay"
         :imgSrc="product.imageLinks[0]"
         :isCardEmpty=false
+        @select="onChoose(product)"
       />
       <!-- <BusinessLunchCard
         :name="'Не выбирать'"
@@ -112,6 +113,8 @@ import { ref } from 'vue';
 import { useBusinessStore } from '@/stores/business.store';
 import { useOrderStore } from '@/stores/order.store';
 
+const emit = defineEmits(['choose'])
+
 const orderStore = useOrderStore()
 const selectedDay = ref((new Date().getDay())-1)
 const currentDay = (new Date().getDay())-1
@@ -120,6 +123,8 @@ const isCurrentDaySelected = ref(true)
 const businessStore = useBusinessStore()
 
 const orderCost = ref(0)
+
+const onChoose = (product) => emit('choose', product)
 
 const handleDaySelect = (dayIndex) => {
   selectedDay.value = dayIndex

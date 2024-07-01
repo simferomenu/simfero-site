@@ -87,6 +87,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import { SideMenu, MenuSmallCard, AddButton, AddButtonActive, IconCross } from '@/components'
 import { useProductsStore } from '@/stores/products.store'
 import { useOrderStore } from '@/stores/order.store'
+import { useBusinessStore } from '@/stores/business.store'
 
 const props = defineProps({
   product: {
@@ -95,8 +96,10 @@ const props = defineProps({
 })
 
 const productsStore = useProductsStore()
+const businessStore = useBusinessStore()
 const orderStore = useOrderStore()
 const cardInfo = ref()
+const isBusinessProduct = ref(null)
 const isProductInOrder = computed(() => {
   const index = orderStore.order.map((e) => e.id).indexOf(props.product.id)
   if (index == -1) {
@@ -122,13 +125,20 @@ const scrollbar = ref({
 })
 
 const addToOrder = () => {
-  productsStore.productsList[cardInfo.value.groupIndex].subGroups[
+  if (isBusinessProduct.value) {
+    businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.product.dayIndex][props.product.productIndex].amount=1
+    orderStore.order.push(
+      businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.product.dayIndex][props.product.productIndex]
+    )
+  } else {
+    productsStore.productsList[cardInfo.value.groupIndex].subGroups[
     cardInfo.value.subGroupIndex
-  ].products[cardInfo.value.cardIndex].amount = 1
-  orderStore.order.push(
-    productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex]
-      .products[cardInfo.value.cardIndex]
-  )
+    ].products[cardInfo.value.cardIndex].amount = 1
+    orderStore.order.push(
+      productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex]
+        .products[cardInfo.value.cardIndex]
+    )
+  }
   isProductInOrder.value = true
   orderStore.orderInfo.orderAmount++
 }
@@ -136,35 +146,48 @@ const addToOrder = () => {
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
   if (orderStore.order[indexInOrder].amount == 1 && iterator == -1) {
-    productsStore.productsList[cardInfo.value.groupIndex].subGroups[
+    if (isBusinessProduct.value) {
+      businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.product.dayIndex][props.product.productIndex].amount+=iterator
+    } else {
+      productsStore.productsList[cardInfo.value.groupIndex].subGroups[
       cardInfo.value.subGroupIndex
     ].products[cardInfo.value.cardIndex].amount += iterator
+    }
     orderStore.orderInfo.orderAmount += iterator
     orderStore.order.splice(indexInOrder, 1)
     isProductInOrder.value = false
   } else {
-    productsStore.productsList[cardInfo.value.groupIndex].subGroups[
+    if (isBusinessProduct.value){
+      businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.product.dayIndex][props.product.productIndex].amount+=iterator
+    } else {
+      productsStore.productsList[cardInfo.value.groupIndex].subGroups[
       cardInfo.value.subGroupIndex
     ].products[cardInfo.value.cardIndex].amount += iterator
+    }
     orderStore.orderInfo.orderAmount += iterator
   }
 }
 
 onMounted(() => {
+  if (props.product.subGroupIndex!=null) {
+    isBusinessProduct.value=true
+    cardInfo.value = { cardIndex: props.product.productIndex, subGroupIndex: props.product.subGroupIndex, dayIndex: props.product.dayIndex }
+  }
   if (props.product.amount != 0) {
     isProductInOrder.value = true
   }
-  for (const group of productsStore.productsList) {
-    const groupIndex = productsStore.productsList.indexOf(group)
-    for (const subGroup of group.subGroups) {
-      const subGroupIndex = group.subGroups.indexOf(subGroup)
-      const index = subGroup.products.map((e) => e.id).indexOf(props.product.id)
-      if (index != -1) {
-        cardInfo.value = { cardIndex: index, groupIndex: groupIndex, subGroupIndex: subGroupIndex }
+  if (!isBusinessProduct.value) {
+    for (const group of productsStore.productsList) {
+      const groupIndex = productsStore.productsList.indexOf(group)
+      for (const subGroup of group.subGroups) {
+        const subGroupIndex = group.subGroups.indexOf(subGroup)
+        const index = subGroup.products.map((e) => e.id).indexOf(props.product.id)
+        if (index != -1) {
+          cardInfo.value = { cardIndex: index, groupIndex: groupIndex, subGroupIndex: subGroupIndex }
+        }
       }
     }
   }
-  console.log(cardInfo)
 })
 </script>
 

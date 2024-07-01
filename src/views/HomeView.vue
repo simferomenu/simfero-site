@@ -8,7 +8,6 @@
         @choose="toggleDish"
       />
     </Transition>
-
     <Transition name="fade">
       <DishScreen
         :class="!isDishVisible ? 'pointer-events-none' : 'pointer-events-auto'"
@@ -95,7 +94,8 @@
         </MenuSection> -->
       </div>
     </div>
-    <BusinessLunchScreen v-if="businessStore.isBusinessVisible" />
+    <BusinessLunchScreen v-if="businessStore.isBusinessVisible" 
+    @choose="toggleDish"/>
   </div>
 </template>
 

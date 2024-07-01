@@ -193,7 +193,16 @@ businessStore.finalCost = 0
 businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
   subGroup.products.forEach((product, productIndex) => {
     product.subGroupIndex=subGroupIndex
-    product.productIndex=productIndex
+    product.productIndex = productIndex
+  })
+})
+
+businessStore.businessProducts.subGroups.forEach((subGroup) => {
+  subGroup.daysOfWeek.forEach((day, dayIndex) => {
+    day.forEach((product, productIndex) => {
+      product.dayIndex = dayIndex
+      product.productIndex = productIndex
+    })
   })
 })
 

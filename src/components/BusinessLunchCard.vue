@@ -3,6 +3,7 @@
     class="relative flex flex-col h-[320px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated"
     :class="{ 'active-menu-card border-animation': isProductInOrder}"
     ref="cardElement"
+    @click="onSelect"
   >
     <div class="relative h-[145px] w-full shrink-0">
       <div
@@ -53,7 +54,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { IconPlus, Counter } from '@/components'
 import { useBusinessStore } from '@/stores/business.store';
 import { useOrderStore } from '@/stores/order.store';
@@ -88,27 +89,38 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['select'])
+
+const productInfo = ref(props.product)
+productInfo.value.dayIndex = props.day
+
+const onSelect = () => emit('select', productInfo.value)
+
 const title = ref(null)
 const businessStore = useBusinessStore()
 const orderStore = useOrderStore()
 const cardElement = ref(null)
 const productName = ref(null)
 const isDescrHidden = ref(false)
-const isProductInOrder = ref(null)
-
-if (!props.isCardEmpty && props.isCurrentDaySelected) {
-  if (props.product.amount>0) {
-    isProductInOrder.value=true
-  } else {
-    isProductInOrder.value=false
-  }
-}
 
 if (props.name.includes("ДО ")) {
   title.value = props.name.replace("ДО ", "")
 } else {
   title.value = props.name
 }
+
+const isProductInOrder = computed(() => {
+  if (!props.isCardEmpty && props.isCurrentDaySelected) {
+    const index = orderStore.order.map((e) => e.id).indexOf(props.product.id)
+    if (index == -1) {
+      return false
+    } else {
+      return true
+    }
+  } else {
+    return null
+  }
+})
 
 const onAddToOrder = () => {
   orderStore.order.push(props.product) 
