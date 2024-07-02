@@ -39,10 +39,16 @@ orderStore.$subscribe(async (data, { preOrder }) => {
   }
 });
 
+let originMenu = null;
+
 async function syncOrderData() {
   if (window.localStorage.selectedTables) {
     try {
       const table = JSON.parse(window.localStorage.getItem('selectedTables'));
+
+      if (!originMenu) {
+        originMenu = JSON.parse(window.localStorage.getItem('menu'));
+      }
 
       if (isUpdateLocked.value) return;
 
@@ -61,23 +67,15 @@ async function syncOrderData() {
 
             if (response.data.order) {
               orderData.items.forEach((item) => {
-                let product;
-
-                productsStore.productsList.forEach((category) => {
-                  if (product) return;
-                  category.subGroups.forEach((sub) => {
-                    if (product) return;
-                    product = sub.products.find(({ id }) => item.id === id);
-                  })
-                });
+                const product = originMenu.products.find(({ id }) => item.id === id);
 
                 if (product) {
-                  const productFromStore = orderStore.preOrder.find(({ id }) => item.id === id);
+                  const productFromStore = orderStore.order.find(({ id }) => item.id === id);
 
                   if (productFromStore) {
                     productFromStore.amount = item.amount;
                   } else {
-                    orderStore.preOrder.push({ ...product, amount: item.amount });
+                    orderStore.order.push({ ...product, amount: item.amount });
                   }
                 }
               });
@@ -85,15 +83,7 @@ async function syncOrderData() {
 
             if (response.data.preOrder) {
               preOrderData.items.forEach((item) => {
-                let product;
-
-                productsStore.productsList.forEach((category) => {
-                  if (product) return;
-                  category.subGroups.forEach((sub) => {
-                    if (product) return;
-                    product = sub.products.find(({ id }) => item.id === id);
-                  })
-                });
+                const product = originMenu.products.find(({ id }) => item.id === id);
 
                 if (product) {
                   const productFromStore = orderStore.preOrder.find(({ id }) => item.id === id);
