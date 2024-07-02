@@ -33,7 +33,7 @@
           {{ description }}
         </span>
       </div>
-      <div v-if="isCurrentDaySelected">
+      <div v-if="businessStore.isCurrentDaySelected">
         <Transition name="expand">
           <IconPlus
             ref="iconPlus"
@@ -64,12 +64,6 @@ const props = defineProps({
   product: {
     type: Object
   },
-  subGroupIndex: {
-    type: Number
-  },
-  productIndex: {
-    type: Number
-  },
   imgSrc: {
     type: String
   },
@@ -78,9 +72,6 @@ const props = defineProps({
   },
   description: {
     type: String
-  },
-  isCurrentDaySelected: {
-    type: Boolean
   },
   day: {
     type: Number
@@ -104,14 +95,14 @@ const cardElement = ref(null)
 const productName = ref(null)
 const isDescrHidden = ref(false)
 
-if (props.name.includes("ДО ")) {
-  title.value = props.name.replace("ДО ", "")
+if (props.product.name.includes("ДО ")) {
+  title.value = props.product.name.replace("ДО ", "")
 } else {
-  title.value = props.name
+  title.value = props.product.name
 }
 
 const isProductInOrder = computed(() => {
-  if (!props.isCardEmpty && props.isCurrentDaySelected) {
+  if (!props.isCardEmpty && businessStore.isCurrentDaySelected) {
     const index = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
     if (index == -1) {
       return false
@@ -125,7 +116,7 @@ const isProductInOrder = computed(() => {
 
 const onAddToOrder = () => {
   orderStore.preOrder.push(props.product)
-  businessStore.businessProducts.subGroups[props.subGroupIndex].daysOfWeek[props.day][props.productIndex].amount=1
+  businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.day][props.product.productIndex].amount=1
   orderStore.orderInfo.orderAmount += 1
   isProductInOrder.value = true
 }
@@ -134,7 +125,7 @@ const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   orderStore.order[indexInOrder].amount += iterator
   orderStore.orderInfo.orderAmount += iterator
-  if (orderStore.order[indexInOrder].amount == 0 && businessStore.businessProducts.subGroups[props.subGroupIndex].daysOfWeek[props.day][props.productIndex].amount==0) {
+  if (orderStore.order[indexInOrder].amount == 0 && businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.day][props.product.productIndex].amount==0) {
     isProductInOrder.value = false
     orderStore.preOrder.splice(indexInOrder, 1);
   }
