@@ -97,12 +97,12 @@ if (props.product.name.includes('ДО ')) {
   title.value = props.product.name
 }
 const productAmount = computed(() => {
-  const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
-  return indexInOrder >= 0 && orderStore.order[indexInOrder].amount
+  const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
+  return indexInOrder >= 0 && orderStore.preOrder[indexInOrder].amount
 })
 const isProductInOrder = computed(() => {
   if (!props.isCardEmpty && businessStore.isCurrentDaySelected) {
-    const index = orderStore.order.map((e) => e.id).indexOf(props.product.id)
+    const index = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
     if (index == -1) {
       return false
     } else {
@@ -113,7 +113,7 @@ const isProductInOrder = computed(() => {
   }
 })
 const onAddToOrder = () => {
-  orderStore.order.push(props.product)
+  orderStore.preOrder.push(props.product)
   businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.day][
     props.product.productIndex
   ].amount = 1
@@ -121,7 +121,7 @@ const onAddToOrder = () => {
   isProductInOrder.value = true
 }
 const onProductCounterUpdate = (iterator) => {
-  const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
+  const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   orderStore.order[indexInOrder].amount += iterator
   orderStore.orderInfo.orderAmount += iterator
   if (
@@ -131,7 +131,7 @@ const onProductCounterUpdate = (iterator) => {
     ].amount == 0
   ) {
     isProductInOrder.value = false
-    orderStore.order.splice(indexInOrder, 1)
+    orderStore.preOrder.splice(indexInOrder, 1)
   }
 }
 onMounted(() => {
