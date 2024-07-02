@@ -46,7 +46,7 @@
         >
           <span
             class="font-Segoe text-[#fff] font-semibold uppercase text-[16px] leading-[200%] tracking-[0.07em]"
-          >Время приготовления:</span
+            >Время приготовления:</span
           >
           <span
             class="font-Segoe text-[#fff] font-semibold uppercase text-[16px] leading-[200%] tracking-[0.07em]"
@@ -58,22 +58,19 @@
           <div class="relative h-full flex flex-col justify-between">
             <span
               class="font-Segoe font-semibold text-[24px] leading-[110%] tracking-[0.03em] upppercase text-[#fff]"
-            >{{ product.sizePrices[0].price.currentPrice }} Руб.</span
+              >{{ product.sizePrices[0].price.currentPrice }} Руб.</span
             >
             <span
               class="font-Segoe font-semibold text-[21px] leading-[110%] tracking-[0.03em] upppercase text-darkGold mt-[18px]"
-            >{{ product.weight }} Г.</span
+              >{{ product.weight }} Г.</span
             >
           </div>
-          <AddButton
-            v-if="!isProductInOrder && isButtonVisible"
-            @select="addToOrder"
-            :quantity="props.product.amount"
-          />
+          <AddButton v-if="!isProductInOrder && isButtonVisible" @select="addToOrder" />
           <AddButtonActive
             v-if="isProductInOrder && cardInfo && isButtonVisible"
             @update="onProductCounterUpdate"
             :cardInfo="cardInfo"
+            :quantity="props.product.amount"
           />
         </div>
       </div>
@@ -102,7 +99,7 @@ const orderStore = useOrderStore()
 const cardInfo = ref()
 const isBusinessProduct = ref(null)
 const isProductInOrder = computed(() => {
-  const index = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
+  const index = orderStore.order.map((e) => e.id).indexOf(props.product.id)
   if (index == -1) {
     return false
   } else {
@@ -110,7 +107,7 @@ const isProductInOrder = computed(() => {
   }
 })
 
-if (props.product.subGroupIndex==null) {
+if (props.product.subGroupIndex == null) {
   isButtonVisible.value = true
 } else if (businessStore.isCurrentDaySelected) {
   isButtonVisible.value = true
@@ -133,15 +130,19 @@ const description =
 
 const addToOrder = () => {
   if (isBusinessProduct.value) {
-    businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.product.dayIndex][props.product.productIndex].amount=1
-    orderStore.preOrder.push(
-      businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.product.dayIndex][props.product.productIndex]
+    businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[
+      props.product.dayIndex
+    ][props.product.productIndex].amount = 1
+    orderStore.order.push(
+      businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[
+        props.product.dayIndex
+      ][props.product.productIndex]
     )
   } else {
     productsStore.productsList[cardInfo.value.groupIndex].subGroups[
       cardInfo.value.subGroupIndex
-      ].products[cardInfo.value.cardIndex].amount = 1
-    orderStore.preOrder.push(
+    ].products[cardInfo.value.cardIndex].amount = 1
+    orderStore.order.push(
       productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex]
         .products[cardInfo.value.cardIndex]
     )
@@ -151,41 +152,42 @@ const addToOrder = () => {
 }
 
 const onProductCounterUpdate = (iterator) => {
-  const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id);
-
-  console.log('UPDATE: ', indexInOrder)
-
-  if (orderStore.preOrder[indexInOrder].amount == 1 && iterator == -1) {
+  const indexInOrder = orderStore.order.map((e) => e.id).indexOf(props.product.id)
+  if (orderStore.order[indexInOrder].amount == 1 && iterator == -1) {
     if (isBusinessProduct.value) {
-      console.log('1111: ', indexInOrder)
-      businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.product.dayIndex][props.product.productIndex].amount+=iterator
+      businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[
+        props.product.dayIndex
+      ][props.product.productIndex].amount += iterator
     } else {
-      console.log('2222: ', indexInOrder)
-      console.log(cardInfo.value.groupIndex, productsStore.productsList[cardInfo.value.groupIndex]);
       productsStore.productsList[cardInfo.value.groupIndex].subGroups[
         cardInfo.value.subGroupIndex
-        ].products[cardInfo.value.cardIndex].amount += iterator
+      ].products[cardInfo.value.cardIndex].amount += iterator
     }
-    console.log('3333: ', indexInOrder)
     orderStore.orderInfo.orderAmount += iterator
-    orderStore.preOrder.splice(indexInOrder, 1)
+    orderStore.order.splice(indexInOrder, 1)
     isProductInOrder.value = false
   } else {
-    if (isBusinessProduct.value){
-      businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.product.dayIndex][props.product.productIndex].amount+=iterator
+    if (isBusinessProduct.value) {
+      businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[
+        props.product.dayIndex
+      ][props.product.productIndex].amount += iterator
     } else {
       productsStore.productsList[cardInfo.value.groupIndex].subGroups[
         cardInfo.value.subGroupIndex
-        ].products[cardInfo.value.cardIndex].amount += iterator
+      ].products[cardInfo.value.cardIndex].amount += iterator
     }
     orderStore.orderInfo.orderAmount += iterator
   }
 }
 
 onMounted(() => {
-  if (props.product.subGroupIndex!=null) {
-    isBusinessProduct.value=true
-    cardInfo.value = { cardIndex: props.product.productIndex, subGroupIndex: props.product.subGroupIndex, dayIndex: props.product.dayIndex }
+  if (props.product.subGroupIndex != null) {
+    isBusinessProduct.value = true
+    cardInfo.value = {
+      cardIndex: props.product.productIndex,
+      subGroupIndex: props.product.subGroupIndex,
+      dayIndex: props.product.dayIndex
+    }
   }
   if (props.product.amount != 0) {
     isProductInOrder.value = true
@@ -197,7 +199,11 @@ onMounted(() => {
         const subGroupIndex = group.subGroups.indexOf(subGroup)
         const index = subGroup.products.map((e) => e.id).indexOf(props.product.id)
         if (index != -1) {
-          cardInfo.value = { cardIndex: index, groupIndex: groupIndex, subGroupIndex: subGroupIndex }
+          cardInfo.value = {
+            cardIndex: index,
+            groupIndex: groupIndex,
+            subGroupIndex: subGroupIndex
+          }
         }
       }
     }

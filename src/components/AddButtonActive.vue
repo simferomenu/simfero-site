@@ -18,7 +18,7 @@
       <div
         class="font-Segoe font-semibold text-[23px] leading-[165%] tracking-[0.12em] uppercase text-center text-gold mx-[20px]"
       >
-        {{ counter }}
+        {{ quantity }}
       </div>
       <div class="relative box-border px-[5px]">
         <img
@@ -35,33 +35,18 @@
 <style scoped></style>
 
 <script setup>
-import { useProductsStore } from '@/stores/products.store';
-import { ref } from 'vue'
-import { useBusinessStore } from '@/stores/business.store';
 const props = defineProps({
-  isActive: {
-    type: Boolean,
-    default: false
-  },
   cardInfo: {
     type: Object
+  },
+  quantity: {
+    type: Number
   }
 })
-
-const productsStore = useProductsStore()
-const businessStore = useBusinessStore()
-const counter = ref(null)
-
-if (props.cardInfo.groupIndex!=null) {
-  counter.value = (productsStore.productsList[props.cardInfo.groupIndex].subGroups[props.cardInfo.subGroupIndex].products[props.cardInfo.cardIndex].amount)
-} else {
-  counter.value = (businessStore.businessProducts.subGroups[props.cardInfo.subGroupIndex].daysOfWeek[props.cardInfo.dayIndex][props.cardInfo.cardIndex].amount)
-}
 
 const emit = defineEmits(['update'])
 
 const onQuantityChange = (iterator) => {
-  counter.value += iterator
   emit('update', iterator)
 }
 </script>
