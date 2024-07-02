@@ -1,0 +1,175 @@
+/* TRANSITION TAG ANIMATIONS */
+
+.expand-enter-active {
+  animation: expandAnimation 0.2s ease-out;
+}
+.expand-leave-active {
+  animation: expandAnimation 0.2s ease-out reverse;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* CLASSES ANIMATIONS */
+.animated-up {
+  animation: fadeAnimationUp 1s ease forwards;
+}
+
+.animated-down {
+  animation: fadeAnimationDown 1s ease forwards;
+}
+
+.animated {
+  animation: fadeAnimation 0.5s ease forwards;
+}
+
+.animated-long {
+  animation: fadeAnimation 1s ease forwards;
+}
+
+.animated-out {
+  animation: fadeOutAnimation 0.5s ease forwards;
+}
+
+.animated-counter {
+  animation: counterAnimation 0.5s ease forwards;
+}
+
+.animated-out-counter {
+  animation: counterOutAnimation 0.5s ease forwards;
+}
+
+.border-animation:before {
+  animation: fadeAnimation 0.5s ease forwards;
+}
+
+.border-out-animation:before {
+  animation: fadeOutAnimation 0.5s ease forwards;
+}
+
+@keyframes fadeAnimationUp {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@-webkit-keyframes fadeAnimationUp {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes expandAnimation {
+  0% {
+    width: 91px;
+  }
+  100% {
+    width: 104px;
+  }
+}
+
+@keyframes fadeAnimationDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@-webkit-keyframes fadeAnimationDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOutAnimation {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes fadeOutAnimation {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes counterAnimation {
+  0% {
+    transform: translateY(-60px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes counterOutAnimation {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(60px);
+    opacity: 0;
+  }
+}
+
+@keyframes raisingBorderAnimation {
+  0% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

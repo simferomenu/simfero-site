@@ -1,0 +1,189 @@
+html {
+  position: fixed;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: manipulation;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+.menu-link {
+  @apply relative font-Sitka font-normal text-[#fff] text-[17px] leading-[162%] tracking-[0.15em] uppercase default-transition !pointer-events-auto;
+}
+
+.menu-link::before {
+  content: '';
+  position: absolute;
+  height: 1px;
+  width: 67px;
+  max-width: 100%;
+  background-color: #d2af96;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.filling-div {
+  flex-grow: 1;
+  margin-right: auto;
+  pointer-events: none !important;
+}
+
+.simple-text {
+  @apply font-Segoe font-[350] text-[18px] leading-[162%] tracking-[0.04em] text-[#fff];
+}
+
+.bold-text {
+  @apply font-Segoe font-black text-[21px] leading-[139%] tracking-[0.03em] text-[#fff];
+}
+
+.menu-link.active {
+  @apply text-gold;
+}
+
+.menu-link.active:before {
+  @apply opacity-100;
+}
+
+.default-transition {
+  @apply transition-all duration-300;
+}
+
+.inner-img {
+  @apply absolute w-full h-full object-cover;
+}
+
+.active-cell {
+  @apply w-[100px] h-[44px] flex justify-center items-center font-bold text-[16px] tracking-[0.17em] uppercase text-center !text-[#000] mr-[20px] mb-[30px] !bg-gold !border-none;
+}
+
+.active-menu-card::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  padding: 4px;
+  background: -webkit-linear-gradient(
+    270deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(159, 121, 91, 1) 100%
+  );
+  border-radius: 25px;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.menu-card-bg {
+  backdrop-filter: blur(15.800000190734863px);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.order-card-bg {
+  backdrop-filter: blur(15.800000190734863px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.main-bg {
+  background-image: url('/images/ImageMainBg.jpg');
+  background-position: center;
+  background-size: cover;
+}
+
+.dish-bg {
+  background-image: url('/images/ImageDishBg.jpg');
+  background-position: center;
+  background-size: cover;
+}
+
+.order-bg {
+  background-image: url('/images/ImageOrderBg.jpg');
+  background-position: center;
+  background-size: cover;
+}
+
+.search-bg {
+  backdrop-filter: blur(27.399999618530273px);
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.order-fade {
+  background: rgb(22, 27, 33);
+  background: linear-gradient(180deg, rgba(22, 27, 33, 0) 0%, rgba(22, 27, 33, 1) 60%);
+}
+
+.waiter-bg {
+  background-image: url('/images/ImageWaiterBg.jpg');
+  background-position: center;
+  background-size: cover;
+}
+
+.small-card-bg1 {
+  backdrop-filter: blur(15.800000190734863px);
+  background: rgba(96, 96, 96, 0.73);
+}
+
+.small-card-bg2 {
+  backdrop-filter: blur(15.800000190734863px);
+  background: rgba(210, 175, 150, 0.31);
+}
+
+.waiter-fade {
+  backdrop-filter: blur(37.599998474121094px);
+  background: linear-gradient(180deg, rgba(14, 19, 23, 0.78) 0%, rgba(14, 19, 23, 0.78) 95.4%);
+}
+
+.dish-scrollbar {
+  @apply bg-gold w-[100px] h-[2px];
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  @apply !bg-darkBlue w-[3px] rounded-[10px];
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply !bg-gold w-[3px] rounded-[10px];
+}
+
+.dish-button-next,
+.dish-button-prev {
+  background: url('/icons/IconChevronLeft.svg') no-repeat;
+  width: 15px;
+  height: 22px;
+}
+
+.clip-3,
+.clip-4,
+.clip-5 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.clip-3 {
+  -webkit-line-clamp: 3 !important;
+}
+
+.clip-5 {
+  -webkit-line-clamp: 5 !important;
+}
+
+.stop-scrolling {
+  overflow: hidden;
+}
+
+.input-field {
+  @apply relative w-full h-[65px] box-border pl-[75px] pr-[20px] py-[20px] bg-transparent border-solid border-[1px] border-gold rounded-[33px] font-Segoe font-semibold text-[16px] tracking-[0.06em] uppercase text-[#fff] outline-none;
+}
