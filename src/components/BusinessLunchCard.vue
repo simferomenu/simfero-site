@@ -122,10 +122,10 @@ const onAddToOrder = () => {
 }
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
-  orderStore.order[indexInOrder].amount += iterator
+  orderStore.preOrder[indexInOrder].amount += iterator
   orderStore.orderInfo.orderAmount += iterator
   if (
-    orderStore.order[indexInOrder].amount == 0 &&
+    orderStore.preOrder[indexInOrder].amount == 0 &&
     businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.day][
       props.product.productIndex
     ].amount == 0
