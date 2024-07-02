@@ -92,7 +92,6 @@ import { IconCross, IconBack, NumberCell } from '@/components'
 import { useProductsStore } from '@/stores/products.store';
 import { useOrderStore } from '@/stores/order.store';
 import { useBusinessStore } from '@/stores/business.store';
-import { storeToRefs } from 'pinia';
 
 const router = useRouter()
 const toWaiter = () => {
@@ -106,7 +105,6 @@ const groupIndexRemove = ref([])
 const subGroupIndexRemove = ref([])
 const businessStore = useBusinessStore()
 const businessLunchGroupIndex = ref(null)
-const currentDay = (new Date().getDay())-1
 const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт' ]
 
 const isUpperCase = (str) => {
@@ -195,7 +193,16 @@ businessStore.finalCost = 0
 businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
   subGroup.products.forEach((product, productIndex) => {
     product.subGroupIndex=subGroupIndex
-    product.productIndex=productIndex
+    product.productIndex = productIndex
+  })
+})
+
+businessStore.businessProducts.subGroups.forEach((subGroup) => {
+  subGroup.daysOfWeek.forEach((day, dayIndex) => {
+    day.forEach((product, productIndex) => {
+      product.dayIndex = dayIndex
+      product.productIndex = productIndex
+    })
   })
 })
 

@@ -72,12 +72,12 @@ async function syncOrderData() {
                 });
 
                 if (product) {
-                  const productFromStore = orderStore.order.find(({ id }) => item.id === id);
+                  const productFromStore = orderStore.preOrder.find(({ id }) => item.id === id);
 
                   if (productFromStore) {
                     productFromStore.amount = item.amount;
                   } else {
-                    orderStore.order.push({ ...product, amount: item.amount });
+                    orderStore.preOrder.push({ ...product, amount: item.amount });
                   }
                 }
               });

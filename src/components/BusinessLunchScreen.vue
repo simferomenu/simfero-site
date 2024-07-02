@@ -25,16 +25,16 @@
       </div>
     </div> -->
     <div class="flex flex-row gap-[10px] pb-[40px]">
-      <button class="rounded-[21px] px-[20px] pt-[10px] pb-[10px] text-[14px] font-[350] menu-card-bg" 
+      <button class="rounded-[21px] px-[20px] pt-[10px] pb-[10px] text-[14px] font-[350] menu-card-bg"
       :class="{
         'bg-black text-white font-semilight': index === selectedDay,
-        'font-semibold ': index === currentDay && index === selectedDay
-      }" 
-      v-for="(day, index) in daysOfWeekArr.length" 
+        'font-semibold ': index === currentDay
+      }"
+      v-for="(day, index) in daysOfWeekArr.length"
       :key="index" @click="handleDaySelect(index)">{{ daysOfWeekArr[index] }}</button>
     </div>
     <BusinessLunchSection v-for="(subGroup, subGroupIndex) of businessStore.businessProducts.subGroups"
-    :key="subGroup.id" 
+    :key="subGroup.id"
     :subGroup="subGroup">
       <BusinessLunchCard v-for="(product, productIndex) of subGroup.daysOfWeek[selectedDay]"
         :key="product.id"
@@ -47,6 +47,7 @@
         :day="currentDay"
         :imgSrc="product.imageLinks[0]"
         :isCardEmpty=false
+        @select="onChoose(product)"
       />
       <!-- <BusinessLunchCard
         :name="'Не выбирать'"
@@ -110,23 +111,31 @@
 import { BusinessLunchCard, BusinessLunchSection } from '@/components'
 import { ref } from 'vue';
 import { useBusinessStore } from '@/stores/business.store';
-import { useOrderStore } from '@/stores/order.store';
+// import { useOrderStore } from '@/stores/order.store';
 
-const orderStore = useOrderStore()
+const emit = defineEmits(['choose'])
+
+// const orderStore = useOrderStore()
 const selectedDay = ref((new Date().getDay())-1)
 const currentDay = (new Date().getDay())-1
 const isCurrentDaySelected = ref(true)
 
 const businessStore = useBusinessStore()
 
+businessStore.isCurrentDaySelected=true
+
 const orderCost = ref(0)
+
+const onChoose = (product) => emit('choose', product)
 
 const handleDaySelect = (dayIndex) => {
   selectedDay.value = dayIndex
   if (selectedDay.value == currentDay) {
     isCurrentDaySelected.value=true
+    businessStore.isCurrentDaySelected = true
   } else {
     isCurrentDaySelected.value=false
+    businessStore.isCurrentDaySelected = false
   }
 }
 
@@ -135,7 +144,7 @@ daysOfWeekArr.value[currentDay]="СЕГОДНЯ ◆"
 
 // for (const subGroup of businessStore.businessProducts.subGroups) {
 //   for (const product of subGroup.daysOfWeek[selectedDay.value]) {
-    
+
 //   }
 // }
 
@@ -143,23 +152,23 @@ businessStore.$subscribe(() => {
   orderCost.value = businessStore.finalCost
 })
 
-const onMakeOrder = () => {
-  for (const orderItem of businessStore.businessOrder) {
-    // if (orderItem.product!=null && orderStore.order.filter((product) => product.id==orderItem.product.id).length==0 && orderStore.order.filter((product) => product.parentGroup==orderItem.product.parentGroup).length==0) {
-    //   orderItem.product.amount=1
-    //   orderStore.orderInfo.orderAmount+=1
-    //   orderStore.order.push(orderItem.product)
-    //   orderItem.product=null
-    // } else {
-    //   orderItem.product=null
-    // }
-    if (orderItem.product!=null) {
-      orderItem.product.amount+=1
-      orderStore.orderInfo.orderAmount+=1
-      orderStore.order.push(orderItem.product)
-      orderItem.product=null
-    }
-  }
-}
+// const onMakeOrder = () => {
+//   for (const orderItem of businessStore.businessOrder) {
+//     // if (orderItem.product!=null && orderStore.preOrder.filter((product) => product.id==orderItem.product.id).length==0 && orderStore.preOrder.filter((product) => product.parentGroup==orderItem.product.parentGroup).length==0) {
+//     //   orderItem.product.amount=1
+//     //   orderStore.orderInfo.orderAmount+=1
+//     //   orderStore.preOrder.push(orderItem.product)
+//     //   orderItem.product=null
+//     // } else {
+//     //   orderItem.product=null
+//     // }
+//     if (orderItem.product!=null) {
+//       orderItem.product.amount+=1
+//       orderStore.orderInfo.orderAmount+=1
+//       orderStore.preOrder.push(orderItem.product)
+//       orderItem.product=null
+//     }
+//   }
+// }
 
 </script>

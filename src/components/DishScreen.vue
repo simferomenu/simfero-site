@@ -46,7 +46,7 @@
         >
           <span
             class="font-Segoe text-[#fff] font-semibold uppercase text-[16px] leading-[200%] tracking-[0.07em]"
-            >Время приготовления:</span
+          >Время приготовления:</span
           >
           <span
             class="font-Segoe text-[#fff] font-semibold uppercase text-[16px] leading-[200%] tracking-[0.07em]"
@@ -58,11 +58,11 @@
           <div class="relative h-full flex flex-col justify-between">
             <span
               class="font-Segoe font-semibold text-[24px] leading-[110%] tracking-[0.03em] upppercase text-[#fff]"
-              >{{ product.sizePrices[0].price.currentPrice }} Руб.</span
+            >{{ product.sizePrices[0].price.currentPrice }} Руб.</span
             >
             <span
               class="font-Segoe font-semibold text-[21px] leading-[110%] tracking-[0.03em] upppercase text-darkGold mt-[18px]"
-              >{{ product.weight }} Г.</span
+            >{{ product.weight }} Г.</span
             >
           </div>
           <AddButton
@@ -83,10 +83,11 @@
 
 <script setup>
 import { onMounted, ref, defineProps, computed } from 'vue'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { SideMenu, MenuSmallCard, AddButton, AddButtonActive, IconCross } from '@/components'
+// import { Swiper, SwiperSlide } from 'swiper/vue'
+import { AddButton, AddButtonActive, IconCross } from '@/components'
 import { useProductsStore } from '@/stores/products.store'
 import { useOrderStore } from '@/stores/order.store'
+import { useBusinessStore } from '@/stores/business.store'
 
 const props = defineProps({
   product: {
@@ -95,8 +96,11 @@ const props = defineProps({
 })
 
 const productsStore = useProductsStore()
+const businessStore = useBusinessStore()
+const isCurrentDaySelected = ref(businessStore.isCurrentDaySelected)
 const orderStore = useOrderStore()
 const cardInfo = ref()
+const isBusinessProduct = ref(null)
 const isProductInOrder = computed(() => {
   const index = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   if (index == -1) {
@@ -110,57 +114,85 @@ const description =
   props.product.description ||
   'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'
 
-const navigation = ref({
-  enabled: true,
-  nextEl: '.dish-button-next',
-  prevEl: '.dish-button-prev'
-})
+// const navigation = ref({
+//   enabled: true,
+//   nextEl: '.dish-button-next',
+//   prevEl: '.dish-button-prev'
+// })
 
-const scrollbar = ref({
-  enabled: true,
-  el: '.dish-scrollbar'
-})
+// const scrollbar = ref({
+//   enabled: true,
+//   el: '.dish-scrollbar'
+// })
 
 const addToOrder = () => {
-  productsStore.productsList[cardInfo.value.groupIndex].subGroups[
-    cardInfo.value.subGroupIndex
-  ].products[cardInfo.value.cardIndex].amount = 1
-  orderStore.preOrder.push(
-    productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex]
-      .products[cardInfo.value.cardIndex]
-  )
+  if (isBusinessProduct.value) {
+    businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.product.dayIndex][props.product.productIndex].amount=1
+    orderStore.preOrder.push(
+      businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.product.dayIndex][props.product.productIndex]
+    )
+  } else {
+    productsStore.productsList[cardInfo.value.groupIndex].subGroups[
+      cardInfo.value.subGroupIndex
+      ].products[cardInfo.value.cardIndex].amount = 1
+    orderStore.preOrder.push(
+      productsStore.productsList[cardInfo.value.groupIndex].subGroups[cardInfo.value.subGroupIndex]
+        .products[cardInfo.value.cardIndex]
+    )
+  }
   isProductInOrder.value = true
   orderStore.orderInfo.orderAmount++
 }
 
 const onProductCounterUpdate = (iterator) => {
-  const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
+  const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id);
+
+  console.log('UPDATE: ', indexInOrder)
+
   if (orderStore.preOrder[indexInOrder].amount == 1 && iterator == -1) {
-    productsStore.productsList[cardInfo.value.groupIndex].subGroups[
-      cardInfo.value.subGroupIndex
-    ].products[cardInfo.value.cardIndex].amount += iterator
+    if (isBusinessProduct.value) {
+      console.log('1111: ', indexInOrder)
+      businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.product.dayIndex][props.product.productIndex].amount+=iterator
+    } else {
+      console.log('2222: ', indexInOrder)
+      console.log(cardInfo.value.groupIndex, productsStore.productsList[cardInfo.value.groupIndex]);
+      productsStore.productsList[cardInfo.value.groupIndex].subGroups[
+        cardInfo.value.subGroupIndex
+        ].products[cardInfo.value.cardIndex].amount += iterator
+    }
+    console.log('3333: ', indexInOrder)
     orderStore.orderInfo.orderAmount += iterator
     orderStore.preOrder.splice(indexInOrder, 1)
     isProductInOrder.value = false
   } else {
-    productsStore.productsList[cardInfo.value.groupIndex].subGroups[
-      cardInfo.value.subGroupIndex
-    ].products[cardInfo.value.cardIndex].amount += iterator
+    if (isBusinessProduct.value){
+      businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.product.dayIndex][props.product.productIndex].amount+=iterator
+    } else {
+      productsStore.productsList[cardInfo.value.groupIndex].subGroups[
+        cardInfo.value.subGroupIndex
+        ].products[cardInfo.value.cardIndex].amount += iterator
+    }
     orderStore.orderInfo.orderAmount += iterator
   }
 }
 
 onMounted(() => {
+  if (props.product.subGroupIndex!=null) {
+    isBusinessProduct.value=true
+    cardInfo.value = { cardIndex: props.product.productIndex, subGroupIndex: props.product.subGroupIndex, dayIndex: props.product.dayIndex }
+  }
   if (props.product.amount != 0) {
     isProductInOrder.value = true
   }
-  for (const group of productsStore.productsList) {
-    const groupIndex = productsStore.productsList.indexOf(group)
-    for (const subGroup of group.subGroups) {
-      const subGroupIndex = group.subGroups.indexOf(subGroup)
-      const index = subGroup.products.map((e) => e.id).indexOf(props.product.id)
-      if (index != -1) {
-        cardInfo.value = { cardIndex: index, groupIndex: groupIndex, subGroupIndex: subGroupIndex }
+  if (!isBusinessProduct.value) {
+    for (const group of productsStore.productsList) {
+      const groupIndex = productsStore.productsList.indexOf(group)
+      for (const subGroup of group.subGroups) {
+        const subGroupIndex = group.subGroups.indexOf(subGroup)
+        const index = subGroup.products.map((e) => e.id).indexOf(props.product.id)
+        if (index != -1) {
+          cardInfo.value = { cardIndex: index, groupIndex: groupIndex, subGroupIndex: subGroupIndex }
+        }
       }
     }
   }

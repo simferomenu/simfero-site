@@ -37,6 +37,7 @@
 <script setup>
 import { useProductsStore } from '@/stores/products.store';
 import { ref } from 'vue'
+import { useBusinessStore } from '@/stores/business.store';
 const props = defineProps({
   isActive: {
     type: Boolean,
@@ -48,8 +49,14 @@ const props = defineProps({
 })
 
 const productsStore = useProductsStore()
+const businessStore = useBusinessStore()
+const counter = ref(null)
 
-const counter = ref(productsStore.productsList[props.cardInfo.groupIndex].subGroups[props.cardInfo.subGroupIndex].products[props.cardInfo.cardIndex].amount)
+if (props.cardInfo.groupIndex!=null) {
+  counter.value = (productsStore.productsList[props.cardInfo.groupIndex].subGroups[props.cardInfo.subGroupIndex].products[props.cardInfo.cardIndex].amount)
+} else {
+  counter.value = (businessStore.businessProducts.subGroups[props.cardInfo.subGroupIndex].daysOfWeek[props.cardInfo.dayIndex][props.cardInfo.cardIndex].amount)
+}
 
 const emit = defineEmits(['update'])
 
