@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineProps, computed } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 // import { Swiper, SwiperSlide } from 'swiper/vue'
 import { AddButton, AddButtonActive, IconCross } from '@/components'
 import { useProductsStore } from '@/stores/products.store'
