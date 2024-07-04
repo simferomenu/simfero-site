@@ -77,17 +77,20 @@
           Удалить заказ
         </span>
       </div>
-      <div class="relative flex flex-col h-full w-[310px]">
+      <div
+        class="flex flex-col w-fit shrink-0 border-solid border-b-[1px] border-b-darkGold px-[10%] mb-[-10px] translate-x-[60px] default-transition"
+      >
         <span
-          class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold cursor-pointer !pointer-events-auto"
+          class="absolute font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase left-[10px] text-gold cursor-pointer !pointer-events-auto bottom-[7.5px]"
           @click="onTablesSelected"
         >
           Выбрать
         </span>
-        <div class="absolute bottom-[-20px] right-[-285px] w-[600px] flex shrink-1 items-center">
-          <img class="block h-[15px] w-auto" src="/icons/IconRhombusGold.svg" alt="" />
-          <div class="h-[1px] w-full bg-gold"></div>
-        </div>
+        <img
+          class="absolute h-[15px] w-auto left-[-12px] bottom-[-7.5px]"
+          src="/icons/IconRhombusGold.svg"
+          alt=""
+        />
       </div>
     </div>
   </div>
