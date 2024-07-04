@@ -117,6 +117,11 @@ console.log(menuProducts)
 menuProducts.value.products.forEach((product) => {
   product.isRendered = false
   product.amount = 0
+  if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
+    product.weightMeasure = 'л.'
+  } else {
+    product.weightMeasure = 'г.'
+  }
 })
 const filteredMenuProducts = menuProducts.value.products
   .filter((product) => product.type === 'Dish' || product.type === 'Good')

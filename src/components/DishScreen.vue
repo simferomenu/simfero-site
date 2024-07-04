@@ -62,7 +62,7 @@
             >
             <span
               class="font-Segoe font-semibold text-[21px] leading-[110%] tracking-[0.03em] upppercase text-darkGold mt-[18px]"
-              >{{ product.weight }} Г.</span
+              >{{ product.weight }} {{ product.weightMeasure }}</span
             >
           </div>
           <AddButton v-if="!isProductInOrder && isButtonVisible" @select="addToOrder" />
