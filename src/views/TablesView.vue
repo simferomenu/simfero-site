@@ -68,6 +68,15 @@
         <!--          >-->
         <!--        </div>-->
       </div>
+      <div>
+        <span
+          v-if="selectedTables.length != 0"
+          class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold cursor-pointer !pointer-events-auto"
+          @click="onOrderDelete"
+        >
+          Удалить заказ
+        </span>
+      </div>
       <div class="relative flex flex-col h-full w-[310px]">
         <span
           class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold cursor-pointer !pointer-events-auto"
@@ -106,21 +115,44 @@ const subGroupIndexRemove = ref([])
 const businessStore = useBusinessStore()
 const businessLunchGroupIndex = ref(null)
 const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт']
+const drinksSubGroupsId = ref([])
 
 const isUpperCase = (str) => {
   return str === str.toUpperCase()
 }
 
+const onOrderDelete = () => {
+  alert('Заказ удален')
+}
+
 const storageMenu = window.localStorage.getItem('menu')
 menuProducts.value = storageMenu ? JSON.parse(storageMenu) : null
-console.log(menuProducts)
+menuProducts.value.groups.forEach((group) => {
+  if (
+    group.parentGroup == 'f53b9025-673c-41ef-a1b3-02fddee5fbbc' ||
+    group.parentGroup == '1e815609-ed6a-466d-9914-bc9ca89a3761' ||
+    group.parentGroup == '606700d7-17e3-46b5-b753-900f279f9522'
+  ) {
+    drinksSubGroupsId.value.push(group.id)
+  }
+})
+
+productsStore.drinksSubGroupsId = drinksSubGroupsId.value
+
 menuProducts.value.products.forEach((product) => {
   product.isRendered = false
   product.amount = 0
-  if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
-    product.weightMeasure = 'л.'
+  if (drinksSubGroupsId.value.includes(product.parentGroup)) {
+    if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
+      product.weightMeasure = 'л.'
+    } else {
+      product.weightMeasure = 'г.'
+    }
   } else {
-    product.weightMeasure = 'г.'
+    if (product.weight != null && product.weight < 1) {
+      product.weight = product.weight * 1000
+      product.weightMeasure = 'г.'
+    }
   }
 })
 const filteredMenuProducts = menuProducts.value.products

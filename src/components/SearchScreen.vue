@@ -33,6 +33,7 @@
 
 <script setup>
 import { IconCross, FilteredProduct } from '@/components'
+import { useProductsStore } from '@/stores/products.store'
 import { ref, watch } from 'vue'
 
 const emit = defineEmits(['choose'])
@@ -40,6 +41,7 @@ const emit = defineEmits(['choose'])
 const searchTerm = ref(null)
 
 const menuData = ref(null)
+const productsStore = useProductsStore()
 const menuProducts = ref(null)
 const storageMenu = window.localStorage.getItem('menu')
 const filteredProducts = ref([])
@@ -57,10 +59,17 @@ filteredMenuProducts.value = menuProducts.value.products
   .filter((product) => product.additionalInfo == null)
 
 filteredMenuProducts.value.forEach((product) => {
-  if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
-    product.weightMeasure = 'л.'
+  if (productsStore.drinksSubGroupsId.includes(product.parentGroup)) {
+    if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
+      product.weightMeasure = 'л.'
+    } else {
+      product.weightMeasure = 'г.'
+    }
   } else {
-    product.weightMeasure = 'г.'
+    if (product.weight != null && product.weight < 1) {
+      product.weight = product.weight * 1000
+      product.weightMeasure = 'г.'
+    }
   }
 })
 
