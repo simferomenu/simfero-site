@@ -77,7 +77,7 @@
         </div>
       </div> -->
       <div
-        class="flex w-fit shrink-0 border-solid border-b-[1px] border-b-darkGold px-[60px] pb-[5px] translate-x-[60px] default-transition"
+        class="flex w-fit shrink-0 border-solid border-b-[1px] border-b-darkGold px-[60px] pb-[15px] translate-x-[60px] default-transition"
       >
         <img
           class="absolute h-[15px] w-auto left-[-12px] bottom-[-7.5px]"
