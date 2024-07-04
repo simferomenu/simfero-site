@@ -89,9 +89,9 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { IconCross, IconBack, NumberCell } from '@/components'
-import { useProductsStore } from '@/stores/products.store';
-import { useOrderStore } from '@/stores/order.store';
-import { useBusinessStore } from '@/stores/business.store';
+import { useProductsStore } from '@/stores/products.store'
+import { useOrderStore } from '@/stores/order.store'
+import { useBusinessStore } from '@/stores/business.store'
 
 const router = useRouter()
 const toWaiter = () => {
@@ -105,7 +105,7 @@ const groupIndexRemove = ref([])
 const subGroupIndexRemove = ref([])
 const businessStore = useBusinessStore()
 const businessLunchGroupIndex = ref(null)
-const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт' ]
+const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт']
 
 const isUpperCase = (str) => {
   return str === str.toUpperCase()
@@ -113,14 +113,15 @@ const isUpperCase = (str) => {
 
 const storageMenu = window.localStorage.getItem('menu')
 menuProducts.value = storageMenu ? JSON.parse(storageMenu) : null
-menuProducts.value.products.forEach(function (product) {
+console.log(menuProducts)
+menuProducts.value.products.forEach((product) => {
   product.isRendered = false
   product.amount = 0
 })
 const filteredMenuProducts = menuProducts.value.products
   .filter((product) => product.type === 'Dish' || product.type === 'Good')
   .filter((product) => !product.isDeleted)
-  .filter((product) => product.sizePrices[0].price.currentPrice!=0)
+  .filter((product) => product.sizePrices[0].price.currentPrice != 0)
 
 menuProducts.value.products = filteredMenuProducts
 
@@ -133,14 +134,18 @@ for (const group of groups.value) {
 
 for (let group of productsList.value) {
   subGroupIndexRemove.value = []
-  const subGroups = menuProducts.value.groups.filter((subGroup) => subGroup.parentGroup === group.id)
+  const subGroups = menuProducts.value.groups.filter(
+    (subGroup) => subGroup.parentGroup === group.id
+  )
   if (subGroups.length != 0) {
     group.subGroups = subGroups
   } else {
     group.subGroups = [
       {
         name: group.name,
-        products: menuProducts.value.products.filter((subGroup) => subGroup.parentGroup === group.id)
+        products: menuProducts.value.products.filter(
+          (subGroup) => subGroup.parentGroup === group.id
+        )
       }
     ]
   }
@@ -174,15 +179,23 @@ productsList.value = productsList.value.filter(
 
 productsList.value.sort((a, b) => a.order - b.order)
 
-businessLunchGroupIndex.value = (productsList.value.map(e => e.id).indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f'))
+businessLunchGroupIndex.value = productsList.value
+  .map((e) => e.id)
+  .indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f')
 businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
 
 for (const subGroup of businessStore.businessProducts.subGroups) {
   subGroup.daysOfWeek = []
-  for (let i = 0; i<daysOfWeekArr.length; i++) {
-    subGroup.daysOfWeek.push(subGroup.products.filter((product) => product.additionalInfo != null).filter((product) => product.additionalInfo.includes(daysOfWeekArr[i])))
-    const filterNoDay = subGroup.products.filter((product) => product.additionalInfo==null).filter((product) => product.name != null)
-    if (filterNoDay.length!=0) {
+  for (let i = 0; i < daysOfWeekArr.length; i++) {
+    subGroup.daysOfWeek.push(
+      subGroup.products
+        .filter((product) => product.additionalInfo != null)
+        .filter((product) => product.additionalInfo.includes(daysOfWeekArr[i]))
+    )
+    const filterNoDay = subGroup.products
+      .filter((product) => product.additionalInfo == null)
+      .filter((product) => product.name != null)
+    if (filterNoDay.length != 0) {
       subGroup.daysOfWeek[i].push(...filterNoDay)
     }
   }
@@ -192,7 +205,7 @@ businessStore.finalCost = 0
 
 businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
   subGroup.products.forEach((product, productIndex) => {
-    product.subGroupIndex=subGroupIndex
+    product.subGroupIndex = subGroupIndex
     product.productIndex = productIndex
   })
 })
