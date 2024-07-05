@@ -123,7 +123,7 @@ const pressTimer = ref(null)
 const startTimer = () => {
   pressTimer.value = setTimeout(() => {
     toWaiterView()
-  }, 6000)
+  }, 4000)
 }
 
 const clearTimer = () => {
