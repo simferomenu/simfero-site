@@ -69,7 +69,7 @@
       >
         <img class="w-[32px] h-[32px]" src="/icons/IconBriefcaseGold.svg" alt="" />
         <span class="menu-link ml-[15px]" :class="{ active: businessStore.isBusinessVisible }"
-          >Деловые обеды</span
+          >Деловые обеды (12:00-16:00)</span
         >
       </div>
       <!-- <div class="relative flex items-center !pointer-events-auto">
