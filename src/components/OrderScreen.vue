@@ -17,7 +17,7 @@
         :product="item"
         :key="item.id"
         :index="itemIndex"
-        :orderItemsPosition=orderItemsPosition[itemIndex]
+        :orderItemsPosition="orderItemsPosition[itemIndex]"
         @chooseFromOrder="onChooseFromOrder"
         @order-update="onOrderUpdate"
       />
@@ -34,9 +34,8 @@
           >{{ totalPrice }} Руб.</span
         >
       </div>
-
       <!-- Кнопки -->
-      <div
+      <!-- <div
         v-if="isAdditionalItems"
         :class="['relative flex flex-col h-full !pointer-events-auto', {
           'opacity-[0.3]': isOrderUpdating
@@ -76,18 +75,53 @@
           <img class="block h-[15px] w-auto" src="/icons/IconRhombusGold.svg" alt="" />
           <div class="h-[1px] w-full bg-gold"></div>
         </div>
+      </div> -->
+      <div
+        class="flex w-fit shrink-0 border-solid border-b-[1px] border-b-darkGold px-[60px] pb-[15px] translate-x-[60px] default-transition"
+      >
+        <img
+          class="absolute h-[15px] w-auto left-[-12px] bottom-[-7.5px]"
+          src="/icons/IconRhombusGold.svg"
+          alt=""
+        />
+        <div
+          class="flex flex-row justify-center items-center"
+          :class="{ 'opacity-[0.3]': isOrderCreating || isOrderUpdating }"
+        >
+          <div>
+            <img
+              v-if="isOrderCreating || isOrderUpdating"
+              src="/icons/loading.gif"
+              class="w-[40px] mr-[10px]"
+            />
+          </div>
+          <span
+            v-if="isAdditionalItems"
+            @click="onUpdateOrder"
+            class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
+          >
+            Добавить в заказ
+          </span>
+          <span
+            v-else
+            @click="onMakeOrder"
+            class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold leading-[100%]"
+          >
+            {{ !isOrderInProgress ? 'Пригласить официанта' : 'Скоро начнём готовить' }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue';
-import axios from 'axios';
+import { onMounted, ref, computed } from 'vue'
+import axios from 'axios'
 
 import { IconCross, IconBack, OrderCard } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
-import { useProductsStore } from '@/stores/products.store';
+import { useProductsStore } from '@/stores/products.store'
 
 const emit = defineEmits(['updateOrder'])
 
@@ -97,56 +131,65 @@ const orderItems = ref([])
 const orderItemsPosition = ref([])
 const orderStore = useOrderStore()
 const productsStore = useProductsStore()
-const isOrderCreating = ref(false);
-const isOrderUpdating = ref(false);
-const isOrderInProgress = ref(Boolean(orderStore.orderInfo.orderId));
-const isAdditionalItems = ref(false);
-
+const isOrderCreating = ref(false)
+const isOrderUpdating = ref(false)
+const isOrderInProgress = ref(Boolean(orderStore.orderInfo.orderId))
+const isAdditionalItems = ref(false)
 
 orderStore.$subscribe(async (_, { orderInfo }) => {
-  getOrderData();
+  getOrderData()
 
-  isOrderInProgress.value = Boolean(orderInfo.orderId);
+  isOrderInProgress.value = Boolean(orderInfo.orderId)
 
   if (orderInfo.orderId) {
-    isOrderCreating.value = false;
+    isOrderCreating.value = false
   }
 
   if (orderInfo.orderAmount === 0) {
-    isOrderUpdating.value = false;
+    isOrderUpdating.value = false
   }
-});
+})
 
 const getOrderData = () => {
-  const orderedItems = orderStore.order.map((order) => ({ ...order, isOrdered: true }));
+  const orderedItems = orderStore.order.map((order) => ({ ...order, isOrdered: true }))
 
-  orderItems.value = [...orderedItems, ...orderStore.preOrder];
+  orderItems.value = [...orderedItems, ...orderStore.preOrder]
 
   for (const item of orderItems.value) {
     for (const group of productsStore.productsList) {
       const groupIndex = productsStore.productsList.indexOf(group)
       for (const subGroup of group.subGroups) {
         const subGroupIndex = group.subGroups.indexOf(subGroup)
-        const index = subGroup.products.map(e=>e.id).indexOf(item.id)
-        if (index!=-1) {
-          orderItemsPosition.value.push({cardIndex: index, groupIndex: groupIndex, subGroupIndex:subGroupIndex})
+        const index = subGroup.products.map((e) => e.id).indexOf(item.id)
+        if (index != -1) {
+          orderItemsPosition.value.push({
+            cardIndex: index,
+            groupIndex: groupIndex,
+            subGroupIndex: subGroupIndex
+          })
         }
       }
     }
   }
 
   if (orderedItems.length && orderStore.preOrder.length) {
-    isAdditionalItems.value = true;
+    isAdditionalItems.value = true
   } else {
-    isAdditionalItems.value = false;
+    isAdditionalItems.value = false
   }
 }
 
 const totalPrice = computed(() => {
-  let final = 0;
+  let final = 0
 
-  final += orderStore.order.reduce((acc, item) => (acc + (item.amount * item.sizePrices[0].price.currentPrice)), 0);
-  final += orderStore.preOrder.reduce((acc, item) => (acc + (item.amount * item.sizePrices[0].price.currentPrice)), 0);
+  final += orderStore.order.reduce(
+    (acc, item) => acc + item.amount * item.sizePrices[0].price.currentPrice,
+    0
+  )
+  final += orderStore.preOrder.reduce(
+    (acc, item) => acc + item.amount * item.sizePrices[0].price.currentPrice,
+    0
+  )
 
   return final
 })
@@ -158,24 +201,24 @@ const onOrderUpdate = () => {
 const onMakeOrder = async () => {
   try {
     if (!orderStore.preOrder.length || isOrderInProgress.value || isOrderCreating.value) {
-      return;
+      return
     }
 
-    isOrderCreating.value = true;
+    isOrderCreating.value = true
 
-    const tables = JSON.parse(window.localStorage.getItem('selectedTables'));
-    const menu = JSON.parse(window.localStorage.getItem('menu'));
+    const tables = JSON.parse(window.localStorage.getItem('selectedTables'))
+    const menu = JSON.parse(window.localStorage.getItem('menu'))
 
     const orderItems = orderStore.preOrder.map((item) => ({
       productId: item.id,
       price: item.sizePrices[0].price.currentPrice,
       type: 'Product',
       amount: item.amount
-    }));
+    }))
 
     orderStore.preOrder.forEach((item) => {
       item.modifiers.forEach((mod) => {
-        const product = menu.products.find(({ id }) => id == mod.id);
+        const product = menu.products.find(({ id }) => id == mod.id)
 
         orderItems.push({
           productId: product.id,
@@ -183,21 +226,21 @@ const onMakeOrder = async () => {
           type: 'Product',
           amount: 1
         })
-      });
-    });
+      })
+    })
 
     await axios.post('/order', {
       table: tables[0],
-      items: orderItems,
-    });
-  } catch(error) {
-    console.log('Ошибка получения заказа', error);
+      items: orderItems
+    })
+  } catch (error) {
+    console.log('Ошибка получения заказа', error)
   }
 }
 
 const onUpdateOrder = async () => {
   try {
-    isOrderUpdating.value = true;
+    isOrderUpdating.value = true
 
     await axios.put('/order', {
       order: orderStore.orderInfo.orderId,
@@ -206,10 +249,10 @@ const onUpdateOrder = async () => {
         price: item.sizePrices[0].price.currentPrice,
         type: 'Product',
         amount: item.amount
-      })),
-    });
-  } catch(error) {
-    console.log('Ошибка получения заказа', error);
+      }))
+    })
+  } catch (error) {
+    console.log('Ошибка получения заказа', error)
   }
 }
 

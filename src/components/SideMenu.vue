@@ -2,12 +2,19 @@
   <div
     class="relative w-[312px] !h-screen bg-darkBlue flex flex-col box-border py-[30px] px-[20px] shrink-0 border-r-gold border-solid border-r-[2px] default-transition pointer-events-none overflow-hidden"
   >
-    <div class="relative w-full flex items-center h-[71px] animated-down">
+    <div
+      class="relative w-full flex items-center h-[71px] animated-down"
+      @mousedown="startTimer"
+      @mouseup="clearTimer"
+      @mouseleave="clearTimer"
+      @touchstart="startTimer"
+      @touchend="clearTimer"
+      @touchcancel="clearTimer"
+    >
       <img class="h-full w-auto" src="/icons/IconLogo.png" alt="" />
       <div class="relative flex flex-col ml-[15px]">
         <h1
           class="font-Sitka font-normal text-[36px] leading-[96%] tracking-[0.09em] uppercase text-gold pointer-events-auto"
-          @click="toWaiterView"
         >
           SIMFERO
         </h1>
@@ -111,6 +118,21 @@ const props = defineProps({
   }
 })
 
+const pressTimer = ref(null)
+
+const startTimer = () => {
+  pressTimer.value = setTimeout(() => {
+    toWaiterView()
+  }, 6000)
+}
+
+const clearTimer = () => {
+  if (pressTimer.value) {
+    clearTimeout(pressTimer.value)
+    pressTimer.value = null
+  }
+}
+
 const emit = defineEmits(['select', 'selectGroup', 'selectSubGroup'])
 const router = useRouter()
 const activeGroupIndex = ref()
@@ -147,9 +169,9 @@ const selectFirstAcc = () => {
 const orderStore = useOrderStore()
 
 const toWaiterView = () => {
-  window.localStorage.removeItem('selectedTables');
-  orderStore.order = [];
-  orderStore.preOrder = [];
+  window.localStorage.removeItem('selectedTables')
+  orderStore.order = []
+  orderStore.preOrder = []
   orderStore.orderInfo = {
     orderId: null,
     orderAmount: 0

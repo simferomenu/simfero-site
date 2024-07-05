@@ -25,35 +25,42 @@
         <span class="simple-text">
           {{ description }}
         </span>
-        <!-- <div class="relative flex w-full items-center justify-between h-[107px] mt-[15px]">
-          <div class="absolute top-0 right-0 h-[1px] bg-[#fff] w-[70vw]"></div>
+        <div
+          class="relative flex w-full items-center justify-between h-[107px] mt-[15px]"
+          v-if="fpcAmount[0].amount != 0"
+        >
+          <div class="absolute top-0 right-0 h-[1px] bg-[#fff] w-[100%] mr-[2.5%]"></div>
           <div class="flex flex-col items-center">
             <span class="simple-text mb-[8px]">Жиры</span>
             <span class="bold-text">{{ product.fatAmount }}</span>
           </div>
+          <div class="top-[10px] right-0 w-[1px] bg-[#fff] h-[60%]"></div>
           <div class="flex flex-col items-center">
             <span class="simple-text mb-[8px]">Белки</span>
             <span class="bold-text">{{ product.proteinsAmount }}</span>
           </div>
-          <div class="flex flex-col items-center">
+          <div class="top-[10px] right-0 w-[1px] bg-[#fff] h-[60%]"></div>
+          <div class="flex flex-col items-center mr-[7.5%]">
             <span class="simple-text mb-[8px]">Углеводы</span>
             <span class="bold-text">{{ product.carbohydratesAmount }}</span>
           </div>
-          <div class="absolute bottom-0 right-0 h-[1px] bg-[#fff] w-[70vw]"></div>
-        </div> -->
-        <div
+          <div class="absolute bottom-0 right-0 h-[1px] bg-[#fff] w-[100%] mr-[2.5%]"></div>
+        </div>
+        <!-- <div
+          v-for="fpc of filteredFpc"
+          :key="fpc.name"
           class="relative w-full flex justify-between pb-[20px] mt-[45px] border-solid border-b-[1px] border-b-gold"
         >
           <span
             class="font-Segoe text-[#fff] font-semibold uppercase text-[16px] leading-[200%] tracking-[0.07em]"
-            >Время приготовления:</span
+            >{{ fpc.name }}:</span
           >
           <span
             class="font-Segoe text-[#fff] font-semibold uppercase text-[16px] leading-[200%] tracking-[0.07em]"
           >
-            10 мин.</span
+            {{ fpc.amount }}</span
           >
-        </div>
+        </div> -->
         <div class="relative w-full flex items-center justify-between mt-[30px]">
           <div class="relative h-full flex flex-col justify-between">
             <span
@@ -62,7 +69,7 @@
             >
             <span
               class="font-Segoe font-semibold text-[21px] leading-[110%] tracking-[0.03em] upppercase text-darkGold mt-[18px]"
-              >{{ product.weight }} Г.</span
+              >{{ product.weight }} {{ product.weightMeasure }}</span
             >
           </div>
           <AddButton v-if="!isProductInOrder && isButtonVisible" @select="addToOrder" />
@@ -79,7 +86,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineProps, computed } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 // import { Swiper, SwiperSlide } from 'swiper/vue'
 import { AddButton, AddButtonActive, IconCross } from '@/components'
 import { useProductsStore } from '@/stores/products.store'
@@ -91,6 +98,14 @@ const props = defineProps({
     type: Object
   }
 })
+
+const fpcAmount = ref([
+  { name: 'Белки', amount: props.product.proteinsAmount },
+  { name: 'Жиры', amount: props.product.fatAmount },
+  { name: 'Углеводы', amount: props.product.carbohydratesAmount }
+])
+
+const filteredFpc = fpcAmount.value.filter((fpc) => fpc.amount != 0)
 
 const productsStore = useProductsStore()
 const businessStore = useBusinessStore()

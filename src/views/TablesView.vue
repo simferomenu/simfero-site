@@ -68,17 +68,29 @@
         <!--          >-->
         <!--        </div>-->
       </div>
-      <div class="relative flex flex-col h-full w-[310px]">
+      <div>
         <span
+          v-if="selectedTables.length != 0"
           class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold cursor-pointer !pointer-events-auto"
+          @click="onOrderDelete"
+        >
+          Удалить заказ
+        </span>
+      </div>
+      <div
+        class="flex flex-col w-fit shrink-0 border-solid border-b-[1px] border-b-darkGold px-[10%] mb-[-10px] translate-x-[60px] default-transition"
+      >
+        <span
+          class="absolute font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase left-[10px] text-gold cursor-pointer !pointer-events-auto bottom-[7.5px]"
           @click="onTablesSelected"
         >
           Выбрать
         </span>
-        <div class="absolute bottom-[-20px] right-[-285px] w-[600px] flex shrink-1 items-center">
-          <img class="block h-[15px] w-auto" src="/icons/IconRhombusGold.svg" alt="" />
-          <div class="h-[1px] w-full bg-gold"></div>
-        </div>
+        <img
+          class="absolute h-[15px] w-auto left-[-12px] bottom-[-7.5px]"
+          src="/icons/IconRhombusGold.svg"
+          alt=""
+        />
       </div>
     </div>
   </div>
@@ -89,9 +101,9 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { IconCross, IconBack, NumberCell } from '@/components'
-import { useProductsStore } from '@/stores/products.store';
-import { useOrderStore } from '@/stores/order.store';
-import { useBusinessStore } from '@/stores/business.store';
+import { useProductsStore } from '@/stores/products.store'
+import { useOrderStore } from '@/stores/order.store'
+import { useBusinessStore } from '@/stores/business.store'
 
 const router = useRouter()
 const toWaiter = () => {
@@ -105,22 +117,51 @@ const groupIndexRemove = ref([])
 const subGroupIndexRemove = ref([])
 const businessStore = useBusinessStore()
 const businessLunchGroupIndex = ref(null)
-const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт' ]
+const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт']
+const drinksSubGroupsId = ref([])
 
 const isUpperCase = (str) => {
   return str === str.toUpperCase()
 }
 
+const onOrderDelete = () => {
+  alert('Заказ удален')
+}
+
 const storageMenu = window.localStorage.getItem('menu')
 menuProducts.value = storageMenu ? JSON.parse(storageMenu) : null
-menuProducts.value.products.forEach(function (product) {
+menuProducts.value.groups.forEach((group) => {
+  if (
+    group.parentGroup == 'f53b9025-673c-41ef-a1b3-02fddee5fbbc' ||
+    group.parentGroup == '1e815609-ed6a-466d-9914-bc9ca89a3761' ||
+    group.parentGroup == '606700d7-17e3-46b5-b753-900f279f9522'
+  ) {
+    drinksSubGroupsId.value.push(group.id)
+  }
+})
+
+productsStore.drinksSubGroupsId = drinksSubGroupsId.value
+
+menuProducts.value.products.forEach((product) => {
   product.isRendered = false
   product.amount = 0
+  if (drinksSubGroupsId.value.includes(product.parentGroup)) {
+    if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
+      product.weightMeasure = 'л.'
+    } else {
+      product.weightMeasure = 'г.'
+    }
+  } else {
+    if (product.weight != null && product.weight < 1) {
+      product.weight = product.weight * 1000
+      product.weightMeasure = 'г.'
+    }
+  }
 })
 const filteredMenuProducts = menuProducts.value.products
   .filter((product) => product.type === 'Dish' || product.type === 'Good')
   .filter((product) => !product.isDeleted)
-  .filter((product) => product.sizePrices[0].price.currentPrice!=0)
+  .filter((product) => product.sizePrices[0].price.currentPrice != 0)
 
 menuProducts.value.products = filteredMenuProducts
 
@@ -133,14 +174,18 @@ for (const group of groups.value) {
 
 for (let group of productsList.value) {
   subGroupIndexRemove.value = []
-  const subGroups = menuProducts.value.groups.filter((subGroup) => subGroup.parentGroup === group.id)
+  const subGroups = menuProducts.value.groups.filter(
+    (subGroup) => subGroup.parentGroup === group.id
+  )
   if (subGroups.length != 0) {
     group.subGroups = subGroups
   } else {
     group.subGroups = [
       {
         name: group.name,
-        products: menuProducts.value.products.filter((subGroup) => subGroup.parentGroup === group.id)
+        products: menuProducts.value.products.filter(
+          (subGroup) => subGroup.parentGroup === group.id
+        )
       }
     ]
   }
@@ -174,15 +219,23 @@ productsList.value = productsList.value.filter(
 
 productsList.value.sort((a, b) => a.order - b.order)
 
-businessLunchGroupIndex.value = (productsList.value.map(e => e.id).indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f'))
+businessLunchGroupIndex.value = productsList.value
+  .map((e) => e.id)
+  .indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f')
 businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
 
 for (const subGroup of businessStore.businessProducts.subGroups) {
   subGroup.daysOfWeek = []
-  for (let i = 0; i<daysOfWeekArr.length; i++) {
-    subGroup.daysOfWeek.push(subGroup.products.filter((product) => product.additionalInfo != null).filter((product) => product.additionalInfo.includes(daysOfWeekArr[i])))
-    const filterNoDay = subGroup.products.filter((product) => product.additionalInfo==null).filter((product) => product.name != null)
-    if (filterNoDay.length!=0) {
+  for (let i = 0; i < daysOfWeekArr.length; i++) {
+    subGroup.daysOfWeek.push(
+      subGroup.products
+        .filter((product) => product.additionalInfo != null)
+        .filter((product) => product.additionalInfo.includes(daysOfWeekArr[i]))
+    )
+    const filterNoDay = subGroup.products
+      .filter((product) => product.additionalInfo == null)
+      .filter((product) => product.name != null)
+    if (filterNoDay.length != 0) {
       subGroup.daysOfWeek[i].push(...filterNoDay)
     }
   }
@@ -192,7 +245,7 @@ businessStore.finalCost = 0
 
 businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
   subGroup.products.forEach((product, productIndex) => {
-    product.subGroupIndex=subGroupIndex
+    product.subGroupIndex = subGroupIndex
     product.productIndex = productIndex
   })
 })

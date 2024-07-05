@@ -2,11 +2,12 @@ import { defineStore } from 'pinia'
 
 export const useProductsStore = defineStore('products', {
   state: () => ({
-    productsList: []
+    productsList: [],
+    drinksSubGroupsId: []
   }),
   actions: {
     setProductsList(products) {
-      this.productsList = products;
+      this.productsList = products
     }
   },
   persist: true
