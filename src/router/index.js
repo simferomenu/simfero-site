@@ -13,11 +13,6 @@ const router = createRouter({
       }
     },
     {
-      path: '/order',
-      name: 'order',
-      component: () => import('../views/OrderView.vue')
-    },
-    {
       path: '/waiter',
       name: 'waiter',
       component: () => import('../views/WaiterView.vue')
