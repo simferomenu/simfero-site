@@ -153,7 +153,7 @@ menuProducts.value.products.forEach((product) => {
     }
   } else {
     if (product.weight != null && product.weight < 1) {
-      product.weight = product.weight * 1000
+      product.weight = (product.weight * 1000).toFixed(2)
       product.weightMeasure = 'г.'
     }
   }
