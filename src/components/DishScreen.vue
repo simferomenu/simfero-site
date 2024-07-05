@@ -105,8 +105,6 @@ const fpcAmount = ref([
   { name: 'Углеводы', amount: props.product.carbohydratesAmount }
 ])
 
-const filteredFpc = fpcAmount.value.filter((fpc) => fpc.amount != 0)
-
 const productsStore = useProductsStore()
 const businessStore = useBusinessStore()
 const isButtonVisible = ref(null)

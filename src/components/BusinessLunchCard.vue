@@ -27,13 +27,13 @@
           ref="productName"
           class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000] clip-5 mb-[5px]"
         >
-          {{ title }}
+          {{ product.name }}
         </span>
         <span
           class="font-Segoe font-[350] text-[14px] leading-[136%] text-darkBlue clip-4"
           v-if="!isDescrHidden"
         >
-          {{ description }}
+          {{ product.description }}
         </span>
       </div>
       <div v-if="businessStore.isCurrentDaySelected">
@@ -68,9 +68,6 @@ const props = defineProps({
   imgSrc: {
     type: String
   },
-  name: {
-    type: String
-  },
   description: {
     type: String
   },
@@ -85,17 +82,12 @@ const emit = defineEmits(['select'])
 const productInfo = ref(props.product)
 productInfo.value.dayIndex = props.day
 const onSelect = () => emit('select', productInfo.value)
-const title = ref(null)
 const businessStore = useBusinessStore()
 const orderStore = useOrderStore()
 const cardElement = ref(null)
 const productName = ref(null)
 const isDescrHidden = ref(false)
-if (props.product.name.includes('ДО ')) {
-  title.value = props.product.name.replace('ДО ', '')
-} else {
-  title.value = props.product.name
-}
+
 const productAmount = computed(() => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   return indexInOrder >= 0 && orderStore.preOrder[indexInOrder].amount
