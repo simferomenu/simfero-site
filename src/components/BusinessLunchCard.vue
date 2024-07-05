@@ -36,7 +36,7 @@
           {{ product.description }}
         </span>
       </div>
-      <div v-if="businessStore.isCurrentDaySelected">
+      <div v-if="businessStore.isCurrentDaySelected && businessStore.isBusinessAvailable">
         <Transition name="expand">
           <Counter
             v-if="isProductInOrder"

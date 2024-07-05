@@ -122,7 +122,7 @@ const isProductInOrder = computed(() => {
 
 if (props.product.subGroupIndex == null) {
   isButtonVisible.value = true
-} else if (businessStore.isCurrentDaySelected) {
+} else if (businessStore.isCurrentDaySelected && businessStore.isBusinessAvailable) {
   isButtonVisible.value = true
 }
 
