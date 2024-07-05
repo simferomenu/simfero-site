@@ -12,11 +12,6 @@ const router = createRouter({
         return selectedTables ? import('../views/HomeView.vue') : import('../views/WaiterView.vue')
       }
     },
-    // {
-    //   path: '/order',
-    //   name: 'order',
-    //   component: () => import('../views/OrderView.vue')
-    // },
     {
       path: '/waiter',
       name: 'waiter',
