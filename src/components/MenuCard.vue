@@ -212,6 +212,7 @@ const onAddToOrder = (event) => {
     props.cardIndex
   ].amount = 1;
 
+  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
   orderStore.orderInfo.orderAmount++;
 
   orderStore.preOrder.push(
@@ -275,6 +276,7 @@ const productAmount = computed(() => {
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   orderStore.preOrder[indexInOrder].amount += iterator
+  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
   orderStore.orderInfo.orderAmount += iterator
 
   if (orderStore.preOrder[indexInOrder].amount == 0) {

@@ -6,7 +6,8 @@ export const useOrderStore = defineStore('order', {
     preOrder: [],
     orderInfo: {
       orderId: null,
-      orderAmount: 0
+      orderAmount: 0,
+      prevOrderAmount: 0,
     }
   }),
   getters: {},

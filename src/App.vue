@@ -21,14 +21,16 @@ import { useProductsStore } from '@/stores/products.store'
 const isUpdateLocked = ref(false);
 const orderStore = useOrderStore();
 const route = useRoute();
-const productsStore = useProductsStore();
 
 /* Так как нет единого action, приходится слушать апдейт стейта тут */
-orderStore.$subscribe(async (data, { preOrder }) => {
+orderStore.$subscribe(async (data, { orderInfo, preOrder }) => {
   try {
     const tables = JSON.parse(window.localStorage.getItem('selectedTables'));
 
-    if (tables && (data.events.oldValue === 1 || preOrder.length )) {
+    if (tables && (preOrder.length || !preOrder.length && orderInfo.prevOrderAmount === 1)) {
+      if (!preOrder.length && orderInfo.prevOrderAmount === 1) {
+        orderInfo.prevOrderAmount = 0;
+      }
       await axios.put('/pre-order', {
         table: tables[0],
         items: preOrder.length ? preOrder : null,
@@ -116,6 +118,7 @@ async function syncOrderData() {
 
             if (orderStore.orderInfo.orderAmount !== totalAmount) {
               orderStore.orderInfo = {
+                prevOrderAmount: orderStore.orderInfo.orderAmount,
                 orderAmount: totalAmount
               };
             }
