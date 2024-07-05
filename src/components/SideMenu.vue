@@ -63,7 +63,7 @@
     >
       <div class="absolute left-0 top-0 w-[312px] translate-x-[-20px] h-[150%] bg-[#27282b]"></div>
       <div
-        v-if="businessStore.isBusinessAvailable"
+        :class="{ 'opacity-50': businessStore.isBusinessAvailable == false }"
         class="relative flex items-center !pointer-events-auto"
         @click="onBusinessClick"
       >
@@ -206,11 +206,13 @@ onMounted(() => {
 })
 
 const onBusinessClick = () => {
-  activeGroupIndex.value = null
-  businessStore.isBusinessVisible = true
-  for (let i = 0; i < acc.length; i++) {
-    acc[i].nextElementSibling.style.maxHeight = 0
-    acc[i].classList.remove('active')
+  if (businessStore.isBusinessAvailable == true) {
+    activeGroupIndex.value = null
+    businessStore.isBusinessVisible = true
+    for (let i = 0; i < acc.length; i++) {
+      acc[i].nextElementSibling.style.maxHeight = 0
+      acc[i].classList.remove('active')
+    }
   }
 }
 </script>
