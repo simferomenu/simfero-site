@@ -46,6 +46,7 @@ const menuProducts = ref(null)
 const storageMenu = window.localStorage.getItem('menu')
 const filteredProducts = ref([])
 const filteredMenuProducts = ref()
+const drinksSubGroupsId = productsStore.drinksSubGroupsId
 menuData.value = storageMenu ? JSON.parse(storageMenu) : null
 
 const onChoose = (product) => emit('choose', product)
@@ -59,7 +60,7 @@ filteredMenuProducts.value = menuProducts.value.products
   .filter((product) => product.additionalInfo == null)
 
 filteredMenuProducts.value.forEach((product) => {
-  if (productsStore.drinksSubGroupsId.includes(product.parentGroup)) {
+  if (drinksSubGroupsId.includes(product.parentGroup)) {
     if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
       product.weightMeasure = 'л.'
     } else {
@@ -67,7 +68,12 @@ filteredMenuProducts.value.forEach((product) => {
     }
   } else {
     if (product.weight != null && product.weight < 1) {
-      product.weight = (product.weight * 1000).toFixed(2)
+      product.weight = product.weight * 1000
+      if (product.weight - product.weight == 0) {
+        product.weight = product.weight.toFixed(0)
+      } else {
+        product.weight = product.weight.toFixed(2)
+      }
       product.weightMeasure = 'г.'
     }
   }

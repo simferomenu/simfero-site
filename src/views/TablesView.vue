@@ -136,6 +136,7 @@ const onOrderDelete = async () => {
 
 const storageMenu = window.localStorage.getItem('menu')
 menuProducts.value = storageMenu ? JSON.parse(storageMenu) : null
+console.log(menuProducts)
 menuProducts.value.groups.forEach((group) => {
   if (
     group.parentGroup == 'f53b9025-673c-41ef-a1b3-02fddee5fbbc' ||
