@@ -180,7 +180,7 @@ const onMakeOrder = async () => {
         orderItems.push({
           productId: product.id,
           price: product.sizePrices[0].price.currentPrice,
-          type: 'Modifier',
+          type: 'Product',
           amount: 1
         })
       });
