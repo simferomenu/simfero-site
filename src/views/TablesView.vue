@@ -124,8 +124,14 @@ const isUpperCase = (str) => {
   return str === str.toUpperCase()
 }
 
-const onOrderDelete = () => {
-  alert('Заказ удален')
+const onOrderDelete = async () => {
+  if (window.confirm('Вы уверены?')) {
+    for (let i = 0; i < selectedTables.value.length; i++) {
+      await axios.delete('/order', { params: { tableId: selectedTables.value[i]} }).then((response) => {
+        alert('Заказ удалён');
+      })
+    }
+  }
 }
 
 const storageMenu = window.localStorage.getItem('menu')

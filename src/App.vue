@@ -7,6 +7,7 @@
 <script setup>
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router';
 import { useOrderStore } from '@/stores/order.store';
 import { useProductsStore } from '@/stores/products.store'
 
@@ -19,6 +20,7 @@ import { useProductsStore } from '@/stores/products.store'
 
 const isUpdateLocked = ref(false);
 const orderStore = useOrderStore();
+const route = useRoute();
 const productsStore = useProductsStore();
 
 /* Так как нет единого action, приходится слушать апдейт стейта тут */
@@ -51,6 +53,10 @@ async function syncOrderData() {
       }
 
       if (isUpdateLocked.value) return;
+
+      if (['/tables'].includes(route.path)) {
+        return;
+      }
 
       await axios.get(`/table/check/${table}`).then((response) => {
         if (isUpdateLocked.value) return;
