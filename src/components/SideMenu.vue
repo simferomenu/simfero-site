@@ -62,10 +62,14 @@
       class="relative w-full flex flex-col pt-[30px] [&>*:not(:last-child)]:mb-[30px] animated-up"
     >
       <div class="absolute left-0 top-0 w-[312px] translate-x-[-20px] h-[150%] bg-[#27282b]"></div>
-      <div class="relative flex items-center !pointer-events-auto" @click="onBusinessClick">
+      <div
+        :class="{ 'opacity-50': businessStore.isBusinessAvailable == false }"
+        class="relative flex items-center !pointer-events-auto"
+        @click="onBusinessClick"
+      >
         <img class="w-[32px] h-[32px]" src="/icons/IconBriefcaseGold.svg" alt="" />
         <span class="menu-link ml-[15px]" :class="{ active: businessStore.isBusinessVisible }"
-          >Деловые обеды</span
+          >Деловые обеды (12:00-16:00)</span
         >
       </div>
       <!-- <div class="relative flex items-center !pointer-events-auto">
@@ -111,6 +115,12 @@ import { useOrderStore } from '@/stores/order.store'
 import { useBusinessStore } from '@/stores/business.store'
 
 const businessStore = useBusinessStore()
+const currentTime = new Date().getHours()
+if (currentTime >= 12 && currentTime < 16) {
+  businessStore.isBusinessAvailable = true
+} else {
+  businessStore.isBusinessAvailable = false
+}
 
 const props = defineProps({
   categories: {
@@ -196,11 +206,13 @@ onMounted(() => {
 })
 
 const onBusinessClick = () => {
-  activeGroupIndex.value = null
-  businessStore.isBusinessVisible = true
-  for (let i = 0; i < acc.length; i++) {
-    acc[i].nextElementSibling.style.maxHeight = 0
-    acc[i].classList.remove('active')
+  if (businessStore.isBusinessAvailable == true) {
+    activeGroupIndex.value = null
+    businessStore.isBusinessVisible = true
+    for (let i = 0; i < acc.length; i++) {
+      acc[i].nextElementSibling.style.maxHeight = 0
+      acc[i].classList.remove('active')
+    }
   }
 }
 </script>
