@@ -130,7 +130,6 @@ const onOrderDelete = () => {
 
 const storageMenu = window.localStorage.getItem('menu')
 menuProducts.value = storageMenu ? JSON.parse(storageMenu) : null
-console.log(menuProducts)
 menuProducts.value.groups.forEach((group) => {
   if (
     group.parentGroup == 'f53b9025-673c-41ef-a1b3-02fddee5fbbc' ||
@@ -146,7 +145,7 @@ productsStore.drinksSubGroupsId = drinksSubGroupsId.value
 menuProducts.value.products.forEach((product) => {
   product.isRendered = false
   product.amount = 0
-  product.name = product.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', '').replaceAll('ДО', '')
+  product.name = product.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', '').replaceAll('ДО ', '')
   if (drinksSubGroupsId.value.includes(product.parentGroup)) {
     if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
       product.weightMeasure = 'л.'
@@ -198,7 +197,7 @@ for (let group of productsList.value) {
   }
   // Fill sub with products
   for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
-    subGroup.name = subGroup.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', '').replaceAll('ДО', '')
+    subGroup.name = subGroup.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', '').replaceAll(' ДО', '')
     const products = menuProducts.value.products.filter(
       (product) => product.parentGroup === subGroup.id
     )
