@@ -112,7 +112,9 @@ import { useBusinessStore } from '@/stores/business.store'
 
 const businessStore = useBusinessStore()
 const currentTime = new Date().getHours()
-if (currentTime >= 11 && currentTime < 16) {
+const currentDay = new Date().getDay() - 1
+// const currentDay = 5
+if (currentTime >= 11 && currentTime < 16 && currentDay <= 4) {
   businessStore.isBusinessAvailable = true
 } else {
   businessStore.isBusinessAvailable = false

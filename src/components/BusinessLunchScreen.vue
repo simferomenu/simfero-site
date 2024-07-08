@@ -122,6 +122,7 @@ const emit = defineEmits(['choose'])
 // const orderStore = useOrderStore()
 const selectedDay = ref(null)
 const currentDay = new Date().getDay() - 1
+// const currentDay = 5
 if (currentDay > 4) {
   selectedDay.value = 0
 } else {
@@ -150,7 +151,9 @@ const handleDaySelect = (dayIndex) => {
 }
 
 const daysOfWeekArr = ref(['ПОНЕДЕЛЬНИК', 'ВТОРНИК', 'СРЕДА', 'ЧЕТВЕРГ', 'ПЯТНИЦА'])
-daysOfWeekArr.value[currentDay] = 'СЕГОДНЯ ◆'
+if (currentDay <= 4) {
+  daysOfWeekArr.value[currentDay] = 'СЕГОДНЯ ◆'
+}
 
 // for (const subGroup of businessStore.businessProducts.subGroups) {
 //   for (const product of subGroup.daysOfWeek[selectedDay.value]) {
