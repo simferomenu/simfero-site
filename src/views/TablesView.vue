@@ -151,7 +151,7 @@ productsStore.drinksSubGroupsId = drinksSubGroupsId.value
 menuProducts.value.products.forEach((product) => {
   product.isRendered = false
   product.amount = 0
-  product.name = product.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', '').replaceAll('ДО', '')
+  product.name = product.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', '').replaceAll('ДО ', '')
   if (drinksSubGroupsId.value.includes(product.parentGroup)) {
     if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
       product.weightMeasure = 'л.'
@@ -203,7 +203,7 @@ for (let group of productsList.value) {
   }
   // Fill sub with products
   for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
-    subGroup.name = subGroup.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', '').replaceAll('ДО', '')
+    subGroup.name = subGroup.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', '').replaceAll(' ДО', '')
     const products = menuProducts.value.products.filter(
       (product) => product.parentGroup === subGroup.id
     )

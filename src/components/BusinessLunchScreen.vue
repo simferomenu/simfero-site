@@ -2,11 +2,11 @@
   <div
     class="relative flex flex-col shrink-1 w-full h-screen overflow-x-hidden box-border main-bg py-[40px] pl-[37px] pointer-events-auto"
   >
-  <span
-        class="font-normal text-[#000] uppercase text-[36px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit pb-[40px] pt-[20px]"
-      >
-        ДЕЛОВЫЕ ОБЕДЫ
-      </span>
+    <span
+      class="font-normal text-[#000] uppercase text-[36px] leading-[117%] tracking-[0.11em] font-Sitka mr-[14px] block shrink-0 w-fit pb-[40px] pt-[20px]"
+    >
+      ДЕЛОВЫЕ ОБЕДЫ
+    </span>
     <!-- <div class="relative pr-[37px] mb-[55px]">
       <div
         class="relative w-full flex flex-col border-solid border-y-[2px] border-y-gold box-border p-[16px]"
@@ -25,26 +25,32 @@
       </div>
     </div> -->
     <div class="flex flex-row gap-[10px] pb-[40px]">
-      <button class="rounded-[21px] px-[20px] pt-[10px] pb-[10px] text-[14px] font-[350] menu-card-bg"
-      :class="{
-        'bg-black text-white font-semilight': index === selectedDay,
-        'font-semibold ': index === currentDay
-      }"
-      v-for="(day, index) in daysOfWeekArr.length"
-      :key="index" @click="handleDaySelect(index)">{{ daysOfWeekArr[index] }}</button>
-    </div>
-      <BusinessLunchSection
-        v-for="(subGroup) of businessStore.businessProducts.subGroups"
-        :key="subGroup.id"
-        :subGroup="subGroup"
+      <button
+        class="rounded-[21px] px-[20px] pt-[10px] pb-[10px] text-[14px] font-[350] menu-card-bg"
+        :class="{
+          'bg-black text-white font-semilight': index === selectedDay,
+          'font-semibold ': index === currentDay
+        }"
+        v-for="(day, index) in daysOfWeekArr.length"
+        :key="index"
+        @click="handleDaySelect(index)"
       >
-      <BusinessLunchCard v-for="(product) of subGroup.daysOfWeek[selectedDay]"
+        {{ daysOfWeekArr[index] }}
+      </button>
+    </div>
+    <BusinessLunchSection
+      v-for="subGroup of businessStore.businessProducts.subGroups"
+      :key="subGroup.id"
+      :subGroup="subGroup"
+    >
+      <BusinessLunchCard
+        v-for="product of subGroup.daysOfWeek[selectedDay]"
         :key="product.id"
         :product="product"
         :description="product.description"
         :day="currentDay"
         :imgSrc="product.imageLinks[0]"
-        :isCardEmpty=false
+        :isCardEmpty="false"
         @select="onChoose(product)"
       />
       <!-- <BusinessLunchCard
@@ -107,20 +113,27 @@
 
 <script setup>
 import { BusinessLunchCard, BusinessLunchSection } from '@/components'
-import { ref } from 'vue';
-import { useBusinessStore } from '@/stores/business.store';
+import { ref } from 'vue'
+import { useBusinessStore } from '@/stores/business.store'
 // import { useOrderStore } from '@/stores/order.store';
 
 const emit = defineEmits(['choose'])
 
 // const orderStore = useOrderStore()
-const selectedDay = ref((new Date().getDay())-1)
-const currentDay = (new Date().getDay())-1
+const selectedDay = ref(null)
+const currentDay = new Date().getDay() - 1
+// const currentDay = 5
+if (currentDay > 4) {
+  selectedDay.value = 0
+} else {
+  selectedDay.value = new Date().getDay() - 1
+}
+
 const isCurrentDaySelected = ref(true)
 
 const businessStore = useBusinessStore()
 
-businessStore.isCurrentDaySelected=true
+businessStore.isCurrentDaySelected = true
 
 const orderCost = ref(0)
 
@@ -129,16 +142,18 @@ const onChoose = (product) => emit('choose', product)
 const handleDaySelect = (dayIndex) => {
   selectedDay.value = dayIndex
   if (selectedDay.value == currentDay) {
-    isCurrentDaySelected.value=true
+    isCurrentDaySelected.value = true
     businessStore.isCurrentDaySelected = true
   } else {
-    isCurrentDaySelected.value=false
+    isCurrentDaySelected.value = false
     businessStore.isCurrentDaySelected = false
   }
 }
 
 const daysOfWeekArr = ref(['ПОНЕДЕЛЬНИК', 'ВТОРНИК', 'СРЕДА', 'ЧЕТВЕРГ', 'ПЯТНИЦА'])
-daysOfWeekArr.value[currentDay]="СЕГОДНЯ ◆"
+if (currentDay <= 4) {
+  daysOfWeekArr.value[currentDay] = 'СЕГОДНЯ ◆'
+}
 
 // for (const subGroup of businessStore.businessProducts.subGroups) {
 //   for (const product of subGroup.daysOfWeek[selectedDay.value]) {
@@ -168,5 +183,4 @@ businessStore.$subscribe(() => {
 //     }
 //   }
 // }
-
 </script>

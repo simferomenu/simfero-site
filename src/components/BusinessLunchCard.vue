@@ -93,7 +93,11 @@ const productAmount = computed(() => {
   return indexInOrder >= 0 && orderStore.preOrder[indexInOrder].amount
 })
 const isProductInOrder = computed(() => {
-  if (!props.isCardEmpty && businessStore.isCurrentDaySelected) {
+  if (
+    !props.isCardEmpty &&
+    businessStore.isCurrentDaySelected &&
+    businessStore.isBusinessAvailable
+  ) {
     const index = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
     if (index == -1) {
       return false
