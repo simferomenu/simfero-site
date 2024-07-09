@@ -118,10 +118,12 @@ import { useBusinessStore } from '@/stores/business.store'
 // import { useOrderStore } from '@/stores/order.store';
 
 const emit = defineEmits(['choose'])
+const businessStore = useBusinessStore()
 
 // const orderStore = useOrderStore()
 const selectedDay = ref(null)
 const currentDay = new Date().getDay() - 1
+const currentTime = new Date().getHours()
 // const currentDay = 5
 if (currentDay > 4) {
   selectedDay.value = 0
@@ -129,9 +131,13 @@ if (currentDay > 4) {
   selectedDay.value = new Date().getDay() - 1
 }
 
-const isCurrentDaySelected = ref(true)
+if (currentTime >= 11 && currentTime < 16 && currentDay <= 4) {
+  businessStore.isBusinessAvailable = true
+} else {
+  businessStore.isBusinessAvailable = false
+}
 
-const businessStore = useBusinessStore()
+const isCurrentDaySelected = ref(true)
 
 businessStore.isCurrentDaySelected = true
 

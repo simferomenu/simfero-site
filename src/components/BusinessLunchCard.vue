@@ -44,7 +44,11 @@
       </span>
       <Transition name="expand">
         <Counter
-          v-if="isProductInOrder && businessStore.isBusinessAvailable"
+          v-if="
+            isProductInOrder &&
+            businessStore.isBusinessAvailable &&
+            businessStore.isCurrentDaySelected
+          "
           isBlack
           class="pointer-events-auto"
           :quantity="productAmount"
@@ -52,7 +56,11 @@
         />
         <IconPlus
           ref="iconPlus"
-          v-else-if="!isProductInOrder && businessStore.isBusinessAvailable"
+          v-else-if="
+            !isProductInOrder &&
+            businessStore.isBusinessAvailable &&
+            businessStore.isCurrentDaySelected
+          "
           :isBlack="true"
           @click="onAddToOrder"
         />
