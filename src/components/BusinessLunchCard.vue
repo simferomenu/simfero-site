@@ -42,23 +42,21 @@
       >
         {{ product.sizePrices[0].price.currentPrice }} Руб.
       </span>
-      <div v-if="businessStore.isCurrentDaySelected && businessStore.isBusinessAvailable">
-        <Transition name="expand">
-          <Counter
-            v-if="isProductInOrder"
-            isBlack
-            class="pointer-events-auto"
-            :quantity="productAmount"
-            @update="onProductCounterUpdate"
-          />
-          <IconPlus
-            ref="iconPlus"
-            v-else-if="!isProductInOrder"
-            :isBlack="true"
-            @click="onAddToOrder"
-          />
-        </Transition>
-      </div>
+      <Transition name="expand">
+        <Counter
+          v-if="isProductInOrder && businessStore.isBusinessAvailable"
+          isBlack
+          class="pointer-events-auto"
+          :quantity="productAmount"
+          @update="onProductCounterUpdate"
+        />
+        <IconPlus
+          ref="iconPlus"
+          v-else-if="!isProductInOrder && businessStore.isBusinessAvailable"
+          :isBlack="true"
+          @click="onAddToOrder"
+        />
+      </Transition>
     </div>
   </div>
 </template>
