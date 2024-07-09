@@ -13,10 +13,13 @@
             : 'top-0 left-0 w-[130px] h-[130px]'
         "
       >
+        <img class="h-[80px] w-[80px] z-[-1]" src="/icons/loadingBlack.gif" alt="" />
         <img
+          @load="onImageLoad"
           class="inner-img animated"
           :src="imgSrc || '/images/ImageBasicDish.png'"
           ref="cardImage"
+          v-show="isImageLoaded"
           alt=""
         />
       </div>
@@ -90,15 +93,25 @@ const props = defineProps({
     type: Boolean
   }
 })
+
 const emit = defineEmits(['select'])
+
+const isImageLoaded = ref(false)
+
 const productInfo = ref(props.product)
-productInfo.value.dayIndex = props.day
-const onSelect = () => emit('select', productInfo.value)
 const businessStore = useBusinessStore()
 const orderStore = useOrderStore()
 const cardElement = ref(null)
 const productName = ref(null)
 const isDescrHidden = ref(false)
+
+const onSelect = () => emit('select', productInfo.value)
+
+productInfo.value.dayIndex = props.day
+
+const onImageLoad = () => {
+  isImageLoaded.value = true
+}
 
 const productAmount = computed(() => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
