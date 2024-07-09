@@ -36,6 +36,12 @@
           {{ product.description }}
         </span>
       </div>
+      <span
+        class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue"
+        @click="onSelect"
+      >
+        {{ product.sizePrices[0].price.currentPrice }} Руб.
+      </span>
       <div v-if="businessStore.isCurrentDaySelected && businessStore.isBusinessAvailable">
         <Transition name="expand">
           <Counter
@@ -113,14 +119,14 @@ const onAddToOrder = () => {
   businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.day][
     props.product.productIndex
   ].amount = 1
-  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
+  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
   orderStore.orderInfo.orderAmount += 1
   isProductInOrder.value = true
 }
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   orderStore.preOrder[indexInOrder].amount += iterator
-  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
+  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
   orderStore.orderInfo.orderAmount += iterator
   if (
     orderStore.preOrder[indexInOrder].amount == 0 &&

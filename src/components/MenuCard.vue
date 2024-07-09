@@ -83,7 +83,7 @@
 <style scoped></style>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { IconPlus, Counter } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 import { useProductsStore } from '@/stores/products.store'
@@ -142,9 +142,18 @@ const handleVisibilityChange = (entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
       const cardId = entry.target.getAttribute('data-id')
-      if (cardId == productsStore.productsList[groupIndex.value].subGroups[subGroupIndex.value].products.length - 1) {
-        if(productsStore.productsList[groupIndex.value].subGroups[subGroupIndex.value + 1] != null) {
-          for (const product of productsStore.productsList[groupIndex.value].subGroups[subGroupIndex.value + 1].products) {
+      if (
+        cardId ==
+        productsStore.productsList[groupIndex.value].subGroups[subGroupIndex.value].products
+          .length -
+          1
+      ) {
+        if (
+          productsStore.productsList[groupIndex.value].subGroups[subGroupIndex.value + 1] != null
+        ) {
+          for (const product of productsStore.productsList[groupIndex.value].subGroups[
+            subGroupIndex.value + 1
+          ].products) {
             product.isRendered = true
           }
         }
@@ -155,7 +164,6 @@ const handleVisibilityChange = (entries) => {
 
 let observer = null
 onMounted(() => {
-
   observer = new IntersectionObserver(handleVisibilityChange, {
     root: null,
     rootMargin: '0px',
@@ -206,22 +214,22 @@ onBeforeUnmount(() => {
 // )
 
 const onAddToOrder = (event) => {
-  event && event.stopPropagation();
+  event && event.stopPropagation()
 
   productsStore.productsList[props.groupIndex].subGroups[props.subGroupIndex].products[
     props.cardIndex
-  ].amount = 1;
+  ].amount = 1
 
-  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
-  orderStore.orderInfo.orderAmount++;
+  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
+  orderStore.orderInfo.orderAmount++
 
   orderStore.preOrder.push(
     productsStore.productsList[props.groupIndex].subGroups[props.subGroupIndex].products[
       props.cardIndex
     ]
-  );
+  )
 
-  isProductInOrder.value = true;
+  isProductInOrder.value = true
 
   // const rawOrderData = window.localStorage.getItem('order')
   // const selectedTables = window.localStorage.getItem('selectedTables')
@@ -270,19 +278,19 @@ const onAddToOrder = (event) => {
 
 const productAmount = computed(() => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
-  return indexInOrder >= 0 && orderStore.preOrder[indexInOrder].amount;
+  return indexInOrder >= 0 && orderStore.preOrder[indexInOrder].amount
 })
 
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   orderStore.preOrder[indexInOrder].amount += iterator
-  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
+  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
   orderStore.orderInfo.orderAmount += iterator
 
   if (orderStore.preOrder[indexInOrder].amount == 0) {
     isProductInOrder.value = false
-    orderStore.preOrder.splice(indexInOrder, 1);
-    console.log(orderStore.preOrder, orderStore.preOrder.length);
+    orderStore.preOrder.splice(indexInOrder, 1)
+    console.log(orderStore.preOrder, orderStore.preOrder.length)
   }
 }
 </script>
