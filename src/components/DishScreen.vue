@@ -8,7 +8,7 @@
       class="relative flex items-center shrink w-full box-border px-[20px] h-full"
     >
       <div
-        class="relative max-h-full aspect-square w-full shrink z-[2] rounded-[50%] overflow-hidden"
+        class="relative max-h-full min-h-full !aspect-square w-auto shrink z-[2] rounded-[50%] overflow-hidden"
       >
         <img
           class="inner-img scale-105"
@@ -159,7 +159,7 @@ const addToOrder = () => {
     )
   }
   isProductInOrder.value = true
-  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
+  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
   orderStore.orderInfo.orderAmount++
 }
 
@@ -175,7 +175,7 @@ const onProductCounterUpdate = (iterator) => {
         cardInfo.value.subGroupIndex
       ].products[cardInfo.value.cardIndex].amount += iterator
     }
-    orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
+    orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
     orderStore.orderInfo.orderAmount += iterator
     orderStore.preOrder.splice(indexInOrder, 1)
     isProductInOrder.value = false
@@ -189,7 +189,7 @@ const onProductCounterUpdate = (iterator) => {
         cardInfo.value.subGroupIndex
       ].products[cardInfo.value.cardIndex].amount += iterator
     }
-    orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
+    orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
     orderStore.orderInfo.orderAmount += iterator
   }
 }
