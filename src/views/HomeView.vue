@@ -195,14 +195,14 @@ const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
 }
 
 const onGroupSelect = ({ selectedGroupIndex }) => {
+  displayedGroupIndex.value = selectedGroupIndex
+  selectedCategory.value = selectedGroupIndex
+  productsStore.productsList[selectedGroupIndex].subGroups[0].products.forEach((product) => {
+    product.isRendered = true
+  })
   setTimeout(() => {
-    displayedGroupIndex.value = selectedGroupIndex
-    selectedCategory.value = selectedGroupIndex
-    productsStore.productsList[selectedGroupIndex].subGroups[0].products.forEach((product) => {
-      product.isRendered = true
-    })
     scrollBody.value.scrollTo({ top: 0, behavior: 'smooth' })
-  }, 250)
+  })
   // if (productsStore.productsList[selectedGroupIndex].subGroups.length == 1) {
   //   for (
   //     let i = 0;
