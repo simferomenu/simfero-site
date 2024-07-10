@@ -159,7 +159,7 @@ const addToOrder = () => {
     )
   }
   isProductInOrder.value = true
-  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
+  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
   orderStore.orderInfo.orderAmount++
 }
 
@@ -175,7 +175,7 @@ const onProductCounterUpdate = (iterator) => {
         cardInfo.value.subGroupIndex
       ].products[cardInfo.value.cardIndex].amount += iterator
     }
-    orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
+    orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
     orderStore.orderInfo.orderAmount += iterator
     orderStore.preOrder.splice(indexInOrder, 1)
     isProductInOrder.value = false
@@ -189,7 +189,7 @@ const onProductCounterUpdate = (iterator) => {
         cardInfo.value.subGroupIndex
       ].products[cardInfo.value.cardIndex].amount += iterator
     }
-    orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
+    orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
     orderStore.orderInfo.orderAmount += iterator
   }
 }

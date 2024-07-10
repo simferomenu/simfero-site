@@ -94,8 +94,7 @@
         </MenuSection> -->
       </div>
     </div>
-    <BusinessLunchScreen v-if="businessStore.isBusinessVisible" 
-    @choose="toggleDish"/>
+    <BusinessLunchScreen v-if="businessStore.isBusinessVisible" @choose="toggleDish" />
   </div>
 </template>
 
@@ -196,6 +195,14 @@ const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
 }
 
 const onGroupSelect = ({ selectedGroupIndex }) => {
+  displayedGroupIndex.value = selectedGroupIndex
+  selectedCategory.value = selectedGroupIndex
+  productsStore.productsList[selectedGroupIndex].subGroups[0].products.forEach((product) => {
+    product.isRendered = true
+  })
+  setTimeout(() => {
+    scrollBody.value.scrollTo({ top: 0, behavior: 'smooth' })
+  })
   // if (productsStore.productsList[selectedGroupIndex].subGroups.length == 1) {
   //   for (
   //     let i = 0;
@@ -209,15 +216,11 @@ const onGroupSelect = ({ selectedGroupIndex }) => {
   //     productsStore.productsList[selectedGroupIndex].subGroups[0].products[i].isRendered = true
   //   }
   // }
-  displayedGroupIndex.value = selectedGroupIndex
-  selectedCategory.value = selectedGroupIndex
-
-  if (scrollElement.value) {
-    scrollElement.value.scrollIntoView()
-  }
-  for (const product of productsStore.productsList[selectedGroupIndex].subGroups[0].products) {
-    product.isRendered = true
-  }
+  // setTimeout(() => {
+  //   // scrollBody.value.scrollTo({ top: 0 })
+  //   scrollBody.value.scrollTo({ top: 0 })
+  //   scrollBody.value.scrollBy({ top: 0, behavior: 'smooth' })
+  // }, 10)
   // scrollBody.value.scrollBy(0, -40)
 }
 

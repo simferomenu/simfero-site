@@ -13,10 +13,13 @@
             : 'top-0 left-0 w-[130px] h-[130px]'
         "
       >
+        <img class="h-[80px] w-[80px] z-[-1]" src="/icons/loadingBlack.gif" alt="" />
         <img
+          @load="onImageLoad"
           class="inner-img animated"
           :src="imgSrc || '/images/ImageBasicDish.png'"
           ref="cardImage"
+          v-show="isImageLoaded"
           alt=""
         />
       </div>
@@ -36,23 +39,35 @@
           {{ product.description }}
         </span>
       </div>
-      <div v-if="businessStore.isCurrentDaySelected && businessStore.isBusinessAvailable">
-        <Transition name="expand">
-          <Counter
-            v-if="isProductInOrder"
-            isBlack
-            class="pointer-events-auto"
-            :quantity="productAmount"
-            @update="onProductCounterUpdate"
-          />
-          <IconPlus
-            ref="iconPlus"
-            v-else-if="!isProductInOrder"
-            :isBlack="true"
-            @click="onAddToOrder"
-          />
-        </Transition>
-      </div>
+      <span
+        class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue"
+        @click="onSelect"
+      >
+        {{ product.sizePrices[0].price.currentPrice }} Руб.
+      </span>
+      <Transition name="expand">
+        <Counter
+          v-if="
+            isProductInOrder &&
+            businessStore.isBusinessAvailable &&
+            businessStore.isCurrentDaySelected
+          "
+          isBlack
+          class="pointer-events-auto"
+          :quantity="productAmount"
+          @update="onProductCounterUpdate"
+        />
+        <IconPlus
+          ref="iconPlus"
+          v-else-if="
+            !isProductInOrder &&
+            businessStore.isBusinessAvailable &&
+            businessStore.isCurrentDaySelected
+          "
+          :isBlack="true"
+          @click="onAddToOrder"
+        />
+      </Transition>
     </div>
   </div>
 </template>
@@ -78,15 +93,25 @@ const props = defineProps({
     type: Boolean
   }
 })
+
 const emit = defineEmits(['select'])
+
+const isImageLoaded = ref(false)
+
 const productInfo = ref(props.product)
-productInfo.value.dayIndex = props.day
-const onSelect = () => emit('select', productInfo.value)
 const businessStore = useBusinessStore()
 const orderStore = useOrderStore()
 const cardElement = ref(null)
 const productName = ref(null)
 const isDescrHidden = ref(false)
+
+const onSelect = () => emit('select', productInfo.value)
+
+productInfo.value.dayIndex = props.day
+
+const onImageLoad = () => {
+  isImageLoaded.value = true
+}
 
 const productAmount = computed(() => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
@@ -113,14 +138,14 @@ const onAddToOrder = () => {
   businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.day][
     props.product.productIndex
   ].amount = 1
-  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
+  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
   orderStore.orderInfo.orderAmount += 1
   isProductInOrder.value = true
 }
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   orderStore.preOrder[indexInOrder].amount += iterator
-  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
+  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
   orderStore.orderInfo.orderAmount += iterator
   if (
     orderStore.preOrder[indexInOrder].amount == 0 &&
