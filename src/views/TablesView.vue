@@ -127,9 +127,11 @@ const isUpperCase = (str) => {
 const onOrderDelete = async () => {
   if (window.confirm('Вы уверены?')) {
     for (let i = 0; i < selectedTables.value.length; i++) {
-      await axios.delete('/order', { params: { tableId: selectedTables.value[i]} }).then((response) => {
-        alert('Заказ удалён');
-      })
+      await axios
+        .delete('/order', { params: { tableId: selectedTables.value[i] } })
+        .then((response) => {
+          alert('Заказ удалён')
+        })
     }
   }
 }
@@ -140,7 +142,10 @@ menuProducts.value.groups.forEach((group) => {
   if (
     group.parentGroup == 'f53b9025-673c-41ef-a1b3-02fddee5fbbc' ||
     group.parentGroup == '1e815609-ed6a-466d-9914-bc9ca89a3761' ||
-    group.parentGroup == '606700d7-17e3-46b5-b753-900f279f9522'
+    group.parentGroup == '606700d7-17e3-46b5-b753-900f279f9522' ||
+    group.parentGroup == 'fb4c7653-caef-4e4a-a293-f647b36fe518' ||
+    group.parentGroup == '3f2450be-532b-4aa2-9a82-9bab316f8690' ||
+    group.parentGroup == '440934a4-f73d-41c9-841c-c302f5209efb'
   ) {
     drinksSubGroupsId.value.push(group.id)
   }
@@ -153,29 +158,33 @@ menuProducts.value.products.forEach((product) => {
   product.amount = 0
   product.name = product.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', '').replaceAll('ДО ', '')
   if (drinksSubGroupsId.value.includes(product.parentGroup)) {
-    if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
+    if (product.weight != null && product.weight >= 1) {
       product.weightMeasure = 'л.'
     } else {
       product.weightMeasure = 'г.'
+      product.weight = product.weight * 1000
     }
   } else {
-    if (product.weight != null && product.weight < 1) {
-      product.weight = product.weight * 1000
-      if (product.weight - product.weight == 0) {
-        product.weight = product.weight.toFixed(0)
-      } else {
-        product.weight = product.weight.toFixed(2)
-      }
-      product.weightMeasure = 'г.'
-    }
+    product.weightMeasure = 'г.'
+    product.weight = product.weight * 1000
   }
+  // if (drinksSubGroupsId.value.includes(product.parentGroup)) {
+  //   if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
+  //     product.weightMeasure = 'л.'
+  //   } else {
+  //     product.weightMeasure = 'г.'
+  //   }
+  // } else {
+  //   if (product.weight != null && product.weight < 1) {
+  //     if (product.weight - product.weight == 0) {
+  //       product.weight = product.weight.toFixed(0)
+  //     } else {
+  //       product.weight = product.weight.toFixed(2)
+  //     }
+  //     product.weightMeasure = 'г.'
+  //   }
+  // }
 })
-const filteredMenuProducts = menuProducts.value.products
-  .filter((product) => product.type === 'Dish' || product.type === 'Good')
-  .filter((product) => !product.isDeleted)
-  .filter((product) => product.sizePrices[0].price.currentPrice != 0)
-
-menuProducts.value.products = filteredMenuProducts
 
 const groups = ref(menuProducts.value.groups)
 for (const group of groups.value) {
@@ -282,7 +291,7 @@ productsStore.productsList = productsList.value
 
 const orderStore = useOrderStore()
 orderStore.order = []
-orderStore.orderInfo.prevOrderAmount = 0;
+orderStore.orderInfo.prevOrderAmount = 0
 orderStore.orderInfo.orderAmount = 0
 orderStore.tables = []
 orderStore.products = []
