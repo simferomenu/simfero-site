@@ -29,22 +29,24 @@
           class="relative flex items-center justify-between h-[107px] mt-[15px]"
           v-if="fatAmount != 0"
         >
-          <div class="absolute top-0 right-0 h-[1px] bg-[#fff] w-[100%] mr-[2.5%]"></div>
+          <div class="absolute top-0 right-0 h-[1px] bg-[#fff] w-[100%] mr-[2.5%] opacity-50"></div>
           <div class="flex flex-col items-center w-[25%]">
             <span class="simple-text mb-[8px]">Жиры</span>
             <span class="bold-text">{{ fatAmount }}</span>
           </div>
-          <div class="top-[10px] right-0 w-[1px] bg-[#fff] h-[60%]"></div>
+          <div class="top-[10px] right-0 w-[1px] bg-[#fff] h-[60%] opacity-50"></div>
           <div class="flex flex-col items-center w-[25%]">
             <span class="simple-text mb-[8px]">Белки</span>
             <span class="bold-text">{{ proteinsAmount }}</span>
           </div>
-          <div class="top-[10px] right-0 w-[1px] bg-[#fff] h-[60%]"></div>
+          <div class="top-[10px] right-0 w-[1px] bg-[#fff] h-[60%] opacity-50"></div>
           <div class="flex flex-col items-center mr-[7.5%] w-[25%]">
             <span class="simple-text mb-[8px]">Углеводы</span>
             <span class="bold-text">{{ carbohydratesAmount }}</span>
           </div>
-          <div class="absolute bottom-0 right-0 h-[1px] bg-[#fff] w-[100%] mr-[2.5%]"></div>
+          <div
+            class="absolute bottom-0 right-0 h-[1px] bg-[#fff] w-[100%] mr-[2.5%] opacity-50"
+          ></div>
         </div>
         <!-- <div
           v-for="fpc of filteredFpc"

@@ -111,8 +111,6 @@ import { useOrderStore } from '@/stores/order.store'
 import { useBusinessStore } from '@/stores/business.store'
 
 const businessStore = useBusinessStore()
-const currentTime = new Date().getHours()
-const currentDay = new Date().getDay() - 1
 
 const props = defineProps({
   categories: {

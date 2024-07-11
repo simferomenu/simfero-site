@@ -186,6 +186,10 @@ menuProducts.value.products.forEach((product) => {
   // }
 })
 
+menuProducts.value.products = menuProducts.value.products.filter(
+  (product) => product.sizePrices[0].price.currentPrice != 0
+)
+
 const groups = ref(menuProducts.value.groups)
 for (const group of groups.value) {
   if (group.parentGroup == null && isUpperCase(group.name) == true) {

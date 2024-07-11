@@ -33,7 +33,7 @@
 
 <script setup>
 import { IconCross, FilteredProduct } from '@/components'
-import { useBusinessStore } from '@/stores/business.store'
+// import { useBusinessStore } from '@/stores/business.store'
 import { useProductsStore } from '@/stores/products.store'
 import { ref, watch } from 'vue'
 
@@ -43,7 +43,7 @@ const searchTerm = ref(null)
 
 const menuData = ref(null)
 const productsStore = useProductsStore()
-const businessStore = useBusinessStore()
+// const businessStore = useBusinessStore()
 const storageMenu = window.localStorage.getItem('menu')
 const filteredProducts = ref([])
 const filteredMenuProducts = ref([])
@@ -77,11 +77,11 @@ productsStore.productsList.forEach((group) => {
   })
 })
 
-businessStore.businessProducts.subGroups.forEach((subGroup) => {
-  subGroup.daysOfWeek.forEach((day) => {
-    filteredMenuProducts.value.push(...day)
-  })
-})
+// businessStore.businessProducts.subGroups.forEach((subGroup) => {
+//   subGroup.daysOfWeek.forEach((day) => {
+//     filteredMenuProducts.value.push(...day)
+//   })
+// })
 
 watch(
   () => searchTerm.value,
