@@ -119,212 +119,193 @@ const businessStore = useBusinessStore()
 const businessLunchGroupIndex = ref(null)
 const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт']
 const drinksSubGroupsId = ref([])
+const storageMenu = ref()
+const isMenuLoading = ref(true)
 
-const propertiesToRemove = [
-  'energyAmount',
-  'fatFullAmount',
-  'proteinsFullAmount',
-  'carbohydratesFullAmount',
-  'energyFullAmount',
-  'groupId',
-  'productCategoryId',
-  'type',
-  'orderItemType',
-  'modifierSchemaId',
-  'modifierSchemaName',
-  'splittable',
-  'measureUnit',
-  'modifiers',
-  'groupModifiers',
-  'fullNameEnglish',
-  'useBalanceForSell',
-  'canSetOpenPrice',
-  'paymentSubject',
-  'doNotPrintInCheque',
-  'code',
-  'tags',
-  'isDeleted',
-  'seoDescription',
-  'seoText',
-  'seoKeywords',
-  'seoTitle'
-]
+const fillProducts = () => {
+  const propertiesToRemove = [
+    'energyAmount',
+    'fatFullAmount',
+    'proteinsFullAmount',
+    'carbohydratesFullAmount',
+    'energyFullAmount',
+    'groupId',
+    'productCategoryId',
+    'type',
+    'orderItemType',
+    'modifierSchemaId',
+    'modifierSchemaName',
+    'splittable',
+    'measureUnit',
+    'modifiers',
+    'groupModifiers',
+    'fullNameEnglish',
+    'useBalanceForSell',
+    'canSetOpenPrice',
+    'paymentSubject',
+    'doNotPrintInCheque',
+    'code',
+    'tags',
+    'isDeleted',
+    'seoDescription',
+    'seoText',
+    'seoKeywords',
+    'seoTitle'
+  ]
 
-const isUpperCase = (str) => {
-  return str === str.toUpperCase()
-}
+  const isUpperCase = (str) => {
+    return str === str.toUpperCase()
+  }
 
-const onOrderDelete = async () => {
-  if (window.confirm('Вы уверены?')) {
-    for (let i = 0; i < selectedTables.value.length; i++) {
-      await axios
-        .delete('/order', { params: { tableId: selectedTables.value[i] } })
-        .then((response) => {
-          alert('Заказ удалён')
-        })
+  menuProducts.value = storageMenu.value ? JSON.parse(storageMenu.value) : null
+  menuProducts.value.groups.forEach((group) => {
+    if (
+      group.parentGroup == 'f53b9025-673c-41ef-a1b3-02fddee5fbbc' ||
+      group.parentGroup == '1e815609-ed6a-466d-9914-bc9ca89a3761' ||
+      group.parentGroup == '606700d7-17e3-46b5-b753-900f279f9522' ||
+      group.parentGroup == 'fb4c7653-caef-4e4a-a293-f647b36fe518' ||
+      group.parentGroup == '3f2450be-532b-4aa2-9a82-9bab316f8690' ||
+      group.parentGroup == '440934a4-f73d-41c9-841c-c302f5209efb'
+    ) {
+      drinksSubGroupsId.value.push(group.id)
     }
-  }
-}
-
-const storageMenu = window.localStorage.getItem('menu')
-menuProducts.value = storageMenu ? JSON.parse(storageMenu) : null
-menuProducts.value.groups.forEach((group) => {
-  if (
-    group.parentGroup == 'f53b9025-673c-41ef-a1b3-02fddee5fbbc' ||
-    group.parentGroup == '1e815609-ed6a-466d-9914-bc9ca89a3761' ||
-    group.parentGroup == '606700d7-17e3-46b5-b753-900f279f9522' ||
-    group.parentGroup == 'fb4c7653-caef-4e4a-a293-f647b36fe518' ||
-    group.parentGroup == '3f2450be-532b-4aa2-9a82-9bab316f8690' ||
-    group.parentGroup == '440934a4-f73d-41c9-841c-c302f5209efb'
-  ) {
-    drinksSubGroupsId.value.push(group.id)
-  }
-})
-
-productsStore.drinksSubGroupsId = drinksSubGroupsId.value
-
-menuProducts.value.products.forEach((product) => {
-  propertiesToRemove.forEach((prop) => {
-    delete product[prop]
   })
-  product.isRendered = false
-  product.amount = 0
-  product.name = product.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', '').replaceAll('ДО ', '')
-  if (drinksSubGroupsId.value.includes(product.parentGroup)) {
-    if (product.weight != null && product.weight >= 1) {
-      product.weightMeasure = 'л.'
+
+  productsStore.drinksSubGroupsId = drinksSubGroupsId.value
+
+  menuProducts.value.products.forEach((product) => {
+    propertiesToRemove.forEach((prop) => {
+      delete product[prop]
+    })
+    product.isRendered = false
+    product.amount = 0
+    product.name = product.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace('ДО ', '')
+    if (drinksSubGroupsId.value.includes(product.parentGroup)) {
+      if (product.weight != null && product.weight >= 1) {
+        product.weightMeasure = 'л.'
+      } else {
+        product.weightMeasure = 'г.'
+        product.weight = product.weight * 1000
+      }
     } else {
       product.weightMeasure = 'г.'
       product.weight = product.weight * 1000
     }
-  } else {
-    product.weightMeasure = 'г.'
-    product.weight = product.weight * 1000
-  }
-  // if (drinksSubGroupsId.value.includes(product.parentGroup)) {
-  //   if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
-  //     product.weightMeasure = 'л.'
-  //   } else {
-  //     product.weightMeasure = 'г.'
-  //   }
-  // } else {
-  //   if (product.weight != null && product.weight < 1) {
-  //     if (product.weight - product.weight == 0) {
-  //       product.weight = product.weight.toFixed(0)
-  //     } else {
-  //       product.weight = product.weight.toFixed(2)
-  //     }
-  //     product.weightMeasure = 'г.'
-  //   }
-  // }
-})
-
-menuProducts.value.products = menuProducts.value.products.filter(
-  (product) => product.sizePrices[0].price.currentPrice != 0
-)
-
-const groups = ref(menuProducts.value.groups)
-for (const group of groups.value) {
-  if (group.parentGroup == null && isUpperCase(group.name) == true) {
-    productsList.value.push(group)
-  }
-}
-
-for (let group of productsList.value) {
-  subGroupIndexRemove.value = []
-  const subGroups = menuProducts.value.groups.filter(
-    (subGroup) => subGroup.parentGroup === group.id
-  )
-  if (subGroups.length != 0) {
-    group.subGroups = subGroups
-  } else {
-    group.subGroups = [
-      {
-        name: group.name,
-        products: menuProducts.value.products.filter(
-          (subGroup) => subGroup.parentGroup === group.id
-        )
-      }
-    ]
-  }
-  // Fill sub with products
-  for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
-    subGroup.name = subGroup.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', '').replaceAll(' ДО', '')
-    const products = menuProducts.value.products.filter(
-      (product) => product.parentGroup === subGroup.id
-    )
-    const subSubGroups = menuProducts.value.groups.filter(
-      (subSubGroups) => subSubGroups.parentGroup === subGroup.id
-    )
-    if (subSubGroups.length !== 0) {
-      group.subGroups.push(...subSubGroups)
-    }
-    if (products.length !== 0) {
-      subGroup.products = products
-    }
-    if (subGroup.products == null) {
-      subGroupIndexRemove.value.push(subGroupIndex)
-    }
-  }
-  if (group.subGroups.length == 1 && group.subGroups[0].products.length == 0) {
-    groupIndexRemove.value.push(productsList.value.indexOf(group))
-  }
-  group.subGroups = group.subGroups.filter((_, index) => !subGroupIndexRemove.value.includes(index))
-  group.subGroups.sort((a, b) => a.order - b.order)
-}
-productsList.value = productsList.value.filter(
-  (_, index) => !groupIndexRemove.value.includes(index)
-)
-
-productsList.value.sort((a, b) => a.order - b.order)
-
-businessLunchGroupIndex.value = productsList.value
-  .map((e) => e.id)
-  .indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f')
-businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
-
-for (const subGroup of businessStore.businessProducts.subGroups) {
-  subGroup.daysOfWeek = []
-  for (let i = 0; i < daysOfWeekArr.length; i++) {
-    subGroup.daysOfWeek.push(
-      subGroup.products
-        .filter((product) => product.additionalInfo != null)
-        .filter((product) => product.additionalInfo.includes(daysOfWeekArr[i]))
-    )
-    const filterNoDay = subGroup.products
-      .filter((product) => product.additionalInfo == null)
-      .filter((product) => product.name != null)
-    if (filterNoDay.length != 0) {
-      subGroup.daysOfWeek[i].push(...filterNoDay)
-    }
-  }
-}
-businessStore.businessOrder = []
-businessStore.finalCost = 0
-
-businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
-  subGroup.products.forEach((product, productIndex) => {
-    product.subGroupIndex = subGroupIndex
-    product.productIndex = productIndex
   })
-})
 
-businessStore.businessProducts.subGroups.forEach((subGroup) => {
-  subGroup.daysOfWeek.forEach((day, dayIndex) => {
-    day.forEach((product, productIndex) => {
-      product.dayIndex = dayIndex
+  window.localStorage.setItem('menu', JSON.stringify(menuProducts.value.products))
+
+  menuProducts.value.products = menuProducts.value.products.filter(
+    (product) => product.sizePrices[0].price.currentPrice != 0
+  )
+
+  const groups = ref(menuProducts.value.groups)
+  for (const group of groups.value) {
+    if (group.parentGroup == null && isUpperCase(group.name) == true) {
+      productsList.value.push(group)
+    }
+  }
+
+  for (let group of productsList.value) {
+    subGroupIndexRemove.value = []
+    const subGroups = menuProducts.value.groups.filter(
+      (subGroup) => subGroup.parentGroup === group.id
+    )
+    if (subGroups.length != 0) {
+      group.subGroups = subGroups
+    } else {
+      group.subGroups = [
+        {
+          name: group.name,
+          products: menuProducts.value.products.filter(
+            (subGroup) => subGroup.parentGroup === group.id
+          )
+        }
+      ]
+    }
+    // Fill sub with products
+    for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
+      subGroup.name = subGroup.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace(' ДО', '')
+      const products = menuProducts.value.products.filter(
+        (product) => product.parentGroup === subGroup.id
+      )
+      const subSubGroups = menuProducts.value.groups.filter(
+        (subSubGroups) => subSubGroups.parentGroup === subGroup.id
+      )
+      if (subSubGroups.length !== 0) {
+        group.subGroups.push(...subSubGroups)
+      }
+      if (products.length !== 0) {
+        subGroup.products = products
+      }
+      if (subGroup.products == null) {
+        subGroupIndexRemove.value.push(subGroupIndex)
+      }
+    }
+    if (group.subGroups.length == 1 && group.subGroups[0].products.length == 0) {
+      groupIndexRemove.value.push(productsList.value.indexOf(group))
+    }
+    group.subGroups = group.subGroups.filter(
+      (_, index) => !subGroupIndexRemove.value.includes(index)
+    )
+    group.subGroups.sort((a, b) => a.order - b.order)
+  }
+  productsList.value = productsList.value.filter(
+    (_, index) => !groupIndexRemove.value.includes(index)
+  )
+
+  productsList.value.sort((a, b) => a.order - b.order)
+
+  businessLunchGroupIndex.value = productsList.value
+    .map((e) => e.id)
+    .indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f')
+  businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
+
+  for (const subGroup of businessStore.businessProducts.subGroups) {
+    subGroup.daysOfWeek = []
+    for (let i = 0; i < daysOfWeekArr.length; i++) {
+      subGroup.daysOfWeek.push(
+        subGroup.products
+          .filter((product) => product.additionalInfo != null)
+          .filter((product) => product.additionalInfo.includes(daysOfWeekArr[i]))
+      )
+      const filterNoDay = subGroup.products
+        .filter((product) => product.additionalInfo == null)
+        .filter((product) => product.name != null)
+      if (filterNoDay.length != 0) {
+        subGroup.daysOfWeek[i].push(...filterNoDay)
+      }
+    }
+  }
+  businessStore.businessOrder = []
+  businessStore.finalCost = 0
+
+  businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
+    subGroup.products.forEach((product, productIndex) => {
+      product.subGroupIndex = subGroupIndex
       product.productIndex = productIndex
     })
   })
-})
 
-productsList.value.splice(businessLunchGroupIndex.value, 1)
+  businessStore.businessProducts.subGroups.forEach((subGroup) => {
+    subGroup.daysOfWeek.forEach((day, dayIndex) => {
+      day.forEach((product, productIndex) => {
+        product.dayIndex = dayIndex
+        product.productIndex = productIndex
+      })
+    })
+  })
 
-for (const group of productsList.value) {
-  group.subGroups = group.subGroups.filter((subGroup) => !subGroup.name.includes('ДОПЫ'))
+  productsList.value.splice(businessLunchGroupIndex.value, 1)
+
+  for (const group of productsList.value) {
+    group.subGroups = group.subGroups.filter((subGroup) => !subGroup.name.includes('ДОПЫ'))
+  }
+
+  productsStore.productsList = productsList.value
+
+  isMenuLoading.value = false
 }
-
-productsStore.productsList = productsList.value
 
 const orderStore = useOrderStore()
 orderStore.order = []
@@ -357,7 +338,23 @@ const onTablesSelected = () => {
   window.location = '/'
 }
 
+const onOrderDelete = async () => {
+  if (window.confirm('Вы уверены?')) {
+    for (let i = 0; i < selectedTables.value.length; i++) {
+      await axios
+        .delete('/order', { params: { tableId: selectedTables.value[i] } })
+        .then((response) => {
+          alert('Заказ удалён')
+        })
+    }
+  }
+}
+
 onMounted(() => {
+  axios.get('/menu').then((menuResponse) => {
+    storageMenu.value = JSON.stringify(menuResponse.data)
+    fillProducts()
+  })
   axios.get('/tables').then((response) => {
     zones.value = response.data
     selectedTables.value = JSON.parse(window.localStorage.getItem('selectedTables')) || []
