@@ -120,6 +120,36 @@ const businessLunchGroupIndex = ref(null)
 const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт']
 const drinksSubGroupsId = ref([])
 
+const propertiesToRemove = [
+  'energyAmount',
+  'fatFullAmount',
+  'proteinsFullAmount',
+  'carbohydratesFullAmount',
+  'energyFullAmount',
+  'groupId',
+  'productCategoryId',
+  'type',
+  'orderItemType',
+  'modifierSchemaId',
+  'modifierSchemaName',
+  'splittable',
+  'measureUnit',
+  'modifiers',
+  'groupModifiers',
+  'fullNameEnglish',
+  'useBalanceForSell',
+  'canSetOpenPrice',
+  'paymentSubject',
+  'doNotPrintInCheque',
+  'code',
+  'tags',
+  'isDeleted',
+  'seoDescription',
+  'seoText',
+  'seoKeywords',
+  'seoTitle'
+]
+
 const isUpperCase = (str) => {
   return str === str.toUpperCase()
 }
@@ -154,6 +184,9 @@ menuProducts.value.groups.forEach((group) => {
 productsStore.drinksSubGroupsId = drinksSubGroupsId.value
 
 menuProducts.value.products.forEach((product) => {
+  propertiesToRemove.forEach((prop) => {
+    delete product[prop]
+  })
   product.isRendered = false
   product.amount = 0
   product.name = product.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', '').replaceAll('ДО ', '')
