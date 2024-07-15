@@ -14,7 +14,7 @@
     </div>
 
     <div
-      v-if="isFetchingTables && isMenuLoading"
+      v-if="isMenuLoading"
       class="absolute left-1/2 translate-x-[-50%] w-[150px] h-[150px] loader-top-position"
     >
       <img src="/icons/loading.gif" alt="" />
@@ -22,6 +22,7 @@
 
     <div
       class="flex relative w-full h-[100%] mt-[40px] box-border pl-[40px] overflow-hidden animated-up"
+      v-if="!isFetchingTables && !isMenuLoading"
     >
       <div
         class="relative w-1/2 shrink-0 h-full flex flex-col mr-[20px]"
@@ -54,6 +55,7 @@
 
     <div
       class="w-full relative flex justify-between box-border px-[40px] mt-[40px] mb-[30px] shrink-0 h-fit"
+      v-if="!isFetchingTables && !isMenuLoading"
     >
       <div class="flex flex-col w-[320px]">
         <!--        <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"-->
