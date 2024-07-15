@@ -39,10 +39,10 @@
         </span>
       </div>
       <span
-        class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue"
+        class="font-Segoe font-bold text-[19px] leading-[115%] tracking-[0.03em] text-darkBlue"
         @click="onChoose"
       >
-        {{ product.sizePrices[0].price.currentPrice }} Руб.
+        {{ product.sizePrices[0].price.currentPrice }} руб
       </span>
       <Transition name="expand">
         <Counter
@@ -89,6 +89,10 @@ import { useOrderStore } from '@/stores/order.store'
 import { useProductsStore } from '@/stores/products.store'
 
 const isImageLoaded = ref(false)
+// const isProductInOrder = ref(null)
+
+const orderStore = useOrderStore()
+const productsStore = useProductsStore()
 
 const onImageLoad = () => {
   isImageLoaded.value = true
@@ -118,6 +122,23 @@ const props = defineProps({
 const emit = defineEmits(['choose', 'order-update', 'expand'])
 
 const onChoose = () => emit('choose', props.product)
+
+// if (orderStore.preOrder.map((e) => e.id).indexOf(props.product.id) == -1) {
+//   isProductInOrder.value = false
+// } else {
+//   isProductInOrder.value = true
+// }
+
+// watch(
+//   () => props.product.amount,
+//   () => {
+//     if (props.product.amount <= 0) {
+//       isProductInOrder.value = false
+//     } else {
+//       isProductInOrder.value = true
+//     }
+//   }
+// )
 
 const isProductInOrder = computed(() => {
   const index = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
@@ -175,15 +196,12 @@ onMounted(() => {
   }
   setTimeout(() => {
     if (cardElement.value) {
-      if (productName.value && productName.value.clientHeight > 48) {
+      if (productName.value && productName.value.clientHeight > 44) {
         isDescrHidden.value = true
       }
     }
   })
 })
-
-const orderStore = useOrderStore()
-const productsStore = useProductsStore()
 
 onBeforeUnmount(() => {
   if (observer && cardElement.value) {

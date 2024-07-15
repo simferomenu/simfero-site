@@ -105,6 +105,8 @@ const proteinsAmount = props.product.proteinsAmount.toFixed(1)
 const fatAmount = props.product.fatAmount.toFixed(1)
 const carbohydratesAmount = props.product.carbohydratesAmount.toFixed(1)
 
+console.log(props.product)
+
 const productsStore = useProductsStore()
 const businessStore = useBusinessStore()
 const isButtonVisible = ref(null)
@@ -160,7 +162,7 @@ const addToOrder = () => {
         .products[cardInfo.value.cardIndex]
     )
   }
-  isProductInOrder.value = true
+  // isProductInOrder.value = true
   orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
   orderStore.orderInfo.orderAmount++
 }
@@ -180,7 +182,7 @@ const onProductCounterUpdate = (iterator) => {
     orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
     orderStore.orderInfo.orderAmount += iterator
     orderStore.preOrder.splice(indexInOrder, 1)
-    isProductInOrder.value = false
+    // isProductInOrder.value = false
   } else {
     if (isBusinessProduct.value) {
       businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[

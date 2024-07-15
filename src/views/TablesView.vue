@@ -191,7 +191,7 @@ const fillProducts = () => {
       }
     } else {
       product.weightMeasure = 'г.'
-      product.weight = product.weight * 1000
+      product.weight = (product.weight * 1000).toFixed(0)
     }
   })
 
@@ -354,6 +354,7 @@ const onOrderDelete = async () => {
 onMounted(() => {
   axios.get('/menu').then((menuResponse) => {
     storageMenu.value = JSON.stringify(menuResponse.data)
+    console.log(storageMenu.value ? JSON.parse(storageMenu.value) : null)
     fillProducts()
   })
   axios.get('/tables').then((response) => {
