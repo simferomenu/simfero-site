@@ -14,7 +14,7 @@
     </div>
 
     <div
-      v-if="isFetchingTables"
+      v-if="isFetchingTables && isMenuLoading"
       class="absolute left-1/2 translate-x-[-50%] w-[150px] h-[150px] loader-top-position"
     >
       <img src="/icons/loading.gif" alt="" />
@@ -194,6 +194,7 @@ const fillProducts = () => {
   })
 
   window.localStorage.setItem('menu', JSON.stringify(menuProducts.value.products))
+  isMenuLoading.value = false
 
   menuProducts.value.products = menuProducts.value.products.filter(
     (product) => product.sizePrices[0].price.currentPrice != 0
@@ -303,8 +304,6 @@ const fillProducts = () => {
   }
 
   productsStore.productsList = productsList.value
-
-  isMenuLoading.value = false
 }
 
 const orderStore = useOrderStore()
