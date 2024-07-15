@@ -194,13 +194,17 @@ onMounted(() => {
   if (cardElement.value) {
     observer.observe(cardElement.value)
   }
-  setTimeout(() => {
-    if (cardElement.value) {
-      if (productName.value && productName.value.clientHeight > 44) {
-        isDescrHidden.value = true
-      }
-    }
-  })
+
+  if (props.product.name.length > 34) {
+    isDescrHidden.value = true
+  }
+  //   setTimeout(() => {
+  //   if (cardElement.value) {
+  //     if (productName.value && productName.value.clientHeight > 44) {
+  //       isDescrHidden.value = true
+  //     }
+  //   }
+  // }, 1000)
 })
 
 onBeforeUnmount(() => {
