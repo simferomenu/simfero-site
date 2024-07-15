@@ -10,19 +10,19 @@
       class="flex justify-center items-center h-full w-auto !pointer-events-auto animated"
       @click="onQuantityChange($event, -1)"
     >
-      <img v-if="isBlack" src="/icons/IconMinusGold.svg" alt="" class="shrink-0 w-[18px] h-auto" />
+      <img v-if="isBlack" src="/icons/IconMinusGold.svg" alt="" class="shrink-0 w-[23px] h-auto" />
       <img
         v-if="!isBlack"
         src="/icons/IconMinusBlack.svg"
         alt=""
-        class="shrink-0 w-[18px] h-auto"
+        class="shrink-0 w-[23px] h-auto"
       />
     </div>
     <div
       :class="
         isBlack
-          ? 'font-Segoe font-semibold text-[18px] tracking-[0.15em] uppercase text-gold text-center mx-[10px] pointer-events-none'
-          : 'font-Segoe font-semibold text-[18px] tracking-[0.15em] uppercase text-[#000] text-center mx-[10px] pointer-events-none'
+          ? 'font-Segoe font-semibold text-[18px] tracking-[0.15em] uppercase text-gold text-center mx-[15px] pointer-events-none'
+          : 'font-Segoe font-semibold text-[18px] tracking-[0.15em] uppercase text-[#000] text-center mx-[15px] pointer-events-none'
       "
     >
       {{ quantity }}
@@ -31,8 +31,8 @@
       class="flex justify-center items-center h-full w-auto !pointer-events-auto animated"
       @click="onQuantityChange($event, 1)"
     >
-      <img v-if="!isBlack" src="/icons/IconPlusBlack.svg" alt="" class="shrink-0 w-[18px] h-auto" />
-      <img v-if="isBlack" src="/icons/IconPlusGold.svg" alt="" class="shrink-0 w-[18px] h-auto" />
+      <img v-if="!isBlack" src="/icons/IconPlusBlack.svg" alt="" class="shrink-0 w-[23px] h-auto" />
+      <img v-if="isBlack" src="/icons/IconPlusGold.svg" alt="" class="shrink-0 w-[23px] h-auto" />
     </div>
   </div>
 </template>
