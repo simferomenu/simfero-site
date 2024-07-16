@@ -119,18 +119,13 @@ import {
 const productsStore = useProductsStore()
 const businessStore = useBusinessStore()
 
-// const menuData = ref(null)
-// const menu = ref([])
-// const categories = ref([])
 const selectedCategory = ref(null)
 const isLoading = ref(false)
 const selectedProduct = ref(null)
 const menuOrderCount = ref(null)
 const displayedGroupIndex = ref(0)
-console.log(productsStore.productsList)
 const scrollElement = ref(null)
 const scrollSection = ref(null)
-// const selectedSubGroupIndex = ref(null)
 const scrollBody = ref(null)
 
 const onSubGroupSelect = ({ selectedSubGroupIndex }) => {

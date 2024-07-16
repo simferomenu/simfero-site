@@ -19,9 +19,6 @@
           v-show="isImageLoaded"
         />
       </div>
-      <!-- <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">
-        <img src="/icons/IconThreeDots.svg" alt="" />
-      </div> -->
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
       <div class="relative flex flex-col" @click="onChoose">
@@ -61,23 +58,6 @@
       </Transition>
     </div>
   </div>
-  <!-- <div
-    class="relative flex flex-col h-[350px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated-long"
-    ref="cardElement"
-  >
-    <div class="relative h-[145px] w-full shrink-0">
-      <div
-        class="absolute w-[183px] h-[183px] top-[-30px] left-[-25px] overflow-hidden flex rounded-full bg-[#fff]"
-      ></div>
-    </div>
-    <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
-      <div class="flex flex-col">
-        <div class="w-[50%] h-[15px] bg-darkBlue opacity-20 rounded-full"></div>
-        <div class="w-[30%] h-[15px] bg-darkBlue opacity-20 rounded-full mt-[10px]"></div>
-      </div>
-      <div class="w-[30%] h-[15px] bg-darkBlue opacity-20 rounded-full"></div>
-    </div>
-  </div> -->
 </template>
 
 <style scoped></style>
@@ -87,6 +67,7 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { IconPlus, Counter } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 import { useProductsStore } from '@/stores/products.store'
+import { useElementSize } from '@vueuse/core'
 
 const isImageLoaded = ref(false)
 // const isProductInOrder = ref(null)
@@ -123,23 +104,6 @@ const emit = defineEmits(['choose', 'order-update', 'expand'])
 
 const onChoose = () => emit('choose', props.product)
 
-// if (orderStore.preOrder.map((e) => e.id).indexOf(props.product.id) == -1) {
-//   isProductInOrder.value = false
-// } else {
-//   isProductInOrder.value = true
-// }
-
-// watch(
-//   () => props.product.amount,
-//   () => {
-//     if (props.product.amount <= 0) {
-//       isProductInOrder.value = false
-//     } else {
-//       isProductInOrder.value = true
-//     }
-//   }
-// )
-
 const isProductInOrder = computed(() => {
   const index = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   if (index == -1) {
@@ -149,15 +113,25 @@ const isProductInOrder = computed(() => {
   }
 })
 
-const isDescrHidden = ref(false)
 const productName = ref(null)
 const description =
   props.product.description ||
   'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'
 const groupIndex = ref(props.groupIndex)
 const subGroupIndex = ref(props.subGroupIndex)
-// const cardIndex = ref(props.cardIndex)
 const cardElement = ref(null)
+
+const isDescrHidden = computed(() => {
+  if (useElementSize(productName).height.value != 0) {
+    if (useElementSize(productName).height.value < 72) {
+      return false
+    } else {
+      return true
+    }
+  } else {
+    return false
+  }
+})
 
 const handleVisibilityChange = (entries) => {
   entries.forEach((entry) => {
@@ -194,17 +168,6 @@ onMounted(() => {
   if (cardElement.value) {
     observer.observe(cardElement.value)
   }
-
-  if (props.product.name.length > 34) {
-    isDescrHidden.value = true
-  }
-  //   setTimeout(() => {
-  //   if (cardElement.value) {
-  //     if (productName.value && productName.value.clientHeight > 44) {
-  //       isDescrHidden.value = true
-  //     }
-  //   }
-  // }, 1000)
 })
 
 onBeforeUnmount(() => {
@@ -212,28 +175,6 @@ onBeforeUnmount(() => {
     observer.unobserve(cardElement.value)
   }
 })
-
-// Попытка слежения за localstorage заказа и изменения isProductInOrder
-
-// watch(
-//   () => isProductInOrder.value,
-//   () => {
-//     console.log(JSON.parse(window.localStorage.getItem('order')))
-//     console.log(isProductInOrder.value)
-//     const orderProducts = JSON.parse(window.localStorage.getItem('order'))
-//     let [arrayKey, value] = Object.entries(orderProducts)[1]
-//     let orderProductsArr = value
-//     for (let i = 0; i < orderProductsArr.length; i++) {
-//       if ((orderProductsArr[i].id = props.product.id)) {
-//         isProductInOrder.value = true
-//         console.log('yes')
-//       }
-//     }
-//     if ((orderProductsArr.length = 0)) {
-//       isProductInOrder.value = false
-//     }
-//   }
-// )
 
 const onAddToOrder = (event) => {
   event && event.stopPropagation()
@@ -252,51 +193,7 @@ const onAddToOrder = (event) => {
   )
 
   isProductInOrder.value = true
-
-  // const rawOrderData = window.localStorage.getItem('order')
-  // const selectedTables = window.localStorage.getItem('selectedTables')
-
-  // try {
-  //   let order = null
-
-  //   if (rawOrderData) {
-  //     order = JSON.parse(rawOrderData)
-  //     const product = order.products.find((p) => p.id === props.product.id)
-
-  //     if (product) {
-  //       product.amount = amount
-  //     } else {
-  //       order.products.push({ ...props.product, amount })
-  //     }
-  //   } else {
-  //     order = {
-  //       tables: [...JSON.parse(selectedTables)],
-  //       products: [{ ...props.product, amount }]
-  //     }
-  //   }
-
-  //   isProductInOrder.value = true
-  //   window.localStorage.setItem('order', JSON.stringify(order))
-
-  //   emit('order-update')
-  // } catch (error) {
-  //   console.log('Ошибка добавления в заказа', error)
-  // }
 }
-
-// const onDeleteFromOrder = () => {
-//   const rawOrderData = window.localStorage.getItem('order')
-
-//   try {
-//     let order = JSON.parse(rawOrderData)
-//     order.products = order.products.filter((p) => p.id !== props.product.id)
-//     isProductInOrder.value = false
-//     window.localStorage.setItem('order', JSON.stringify(order))
-//     emit('order-update')
-//   } catch (error) {
-//     console.log('Ошибка удаления из заказа', error)
-//   }
-// }
 
 const productAmount = computed(() => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
