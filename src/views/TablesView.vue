@@ -254,21 +254,11 @@ const fillProducts = () => {
           }
         })
       })
-    } else if (
-      group.id != 'd9b01578-bd7f-4934-bf6e-2806900c3e1f' &&
-      !drinksGroupsId.includes(group.id)
-    ) {
+    } else if (!drinksGroupsId.includes(group.id)) {
       group.subGroups.forEach((subGroup) => {
         subGroup.products.forEach((product) => {
           product.weightMeasure = 'г.'
           product.weight = (product.weight * 1000).toFixed(0)
-        })
-      })
-    }
-    if (group.id == 'd9b01578-bd7f-4934-bf6e-2806900c3e1f') {
-      group.subGroups.forEach((subGroup) => {
-        subGroup.products.forEach((product) => {
-          console.log('cc')
         })
       })
     }
@@ -369,7 +359,6 @@ const onOrderDelete = async () => {
 onMounted(() => {
   axios.get('/menu').then((menuResponse) => {
     storageMenu.value = JSON.stringify(menuResponse.data)
-    console.log(storageMenu.value ? JSON.parse(storageMenu.value) : null)
     fillProducts()
   })
   axios.get('/tables').then((response) => {
