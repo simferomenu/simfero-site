@@ -4,8 +4,9 @@
     :class="{ 'active-menu-card border-animation': isProductInOrder }"
     ref="cardElement"
     v-if="product.isRendered"
+    @click="onChoose"
   >
-    <div class="relative h-[145px] w-full shrink-0" @click="onChoose">
+    <div class="relative h-[145px] w-full shrink-0">
       <div
         class="absolute w-[183px] h-[183px] top-[-30px] left-[-25px] overflow-hidden rounded-[100px] animated bg-[#fff] flex justify-center items-center"
       >
@@ -21,7 +22,7 @@
       </div>
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
-      <div class="relative flex flex-col" @click="onChoose">
+      <div class="relative flex flex-col">
         <span
           ref="productName"
           class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000] clip-5 mb-[5px]"
@@ -53,7 +54,7 @@
           ref="iconPlus"
           v-else-if="!isProductInOrder"
           :isBlack="true"
-          @click="onAddToOrder"
+          @click="onAddToOrder($event)"
         />
       </Transition>
     </div>

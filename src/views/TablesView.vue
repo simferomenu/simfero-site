@@ -120,9 +120,15 @@ const subGroupIndexRemove = ref([])
 const businessStore = useBusinessStore()
 const businessLunchGroupIndex = ref(null)
 const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт']
-const drinksSubGroupsId = ref([])
 const storageMenu = ref()
 const isMenuLoading = ref(true)
+
+const drinksGroupsId = [
+  'f53b9025-673c-41ef-a1b3-02fddee5fbbc',
+  '1e815609-ed6a-466d-9914-bc9ca89a3761',
+  '606700d7-17e3-46b5-b753-900f279f9522'
+]
+const businessDrinksGroupId = 'a4411b8a-76ef-4364-afc9-11387256de9f'
 
 const fillProducts = () => {
   const propertiesToRemove = [
@@ -160,20 +166,6 @@ const fillProducts = () => {
   }
 
   menuProducts.value = storageMenu.value ? JSON.parse(storageMenu.value) : null
-  menuProducts.value.groups.forEach((group) => {
-    if (
-      group.parentGroup == 'f53b9025-673c-41ef-a1b3-02fddee5fbbc' ||
-      group.parentGroup == '1e815609-ed6a-466d-9914-bc9ca89a3761' ||
-      group.parentGroup == '606700d7-17e3-46b5-b753-900f279f9522' ||
-      group.parentGroup == 'fb4c7653-caef-4e4a-a293-f647b36fe518' ||
-      group.parentGroup == '3f2450be-532b-4aa2-9a82-9bab316f8690' ||
-      group.parentGroup == '440934a4-f73d-41c9-841c-c302f5209efb'
-    ) {
-      drinksSubGroupsId.value.push(group.id)
-    }
-  })
-
-  productsStore.drinksSubGroupsId = drinksSubGroupsId.value
 
   menuProducts.value.products.forEach((product) => {
     propertiesToRemove.forEach((prop) => {
@@ -182,17 +174,6 @@ const fillProducts = () => {
     product.isRendered = false
     product.amount = 0
     product.name = product.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace('ДО ', '')
-    if (drinksSubGroupsId.value.includes(product.parentGroup)) {
-      if (product.weight != null && product.weight >= 1) {
-        product.weightMeasure = 'л.'
-      } else {
-        product.weightMeasure = 'г.'
-        product.weight = product.weight * 1000
-      }
-    } else {
-      product.weightMeasure = 'г.'
-      product.weight = (product.weight * 1000).toFixed(0)
-    }
   })
 
   window.localStorage.setItem('menu', JSON.stringify(menuProducts.value.products))
@@ -258,6 +239,40 @@ const fillProducts = () => {
   )
 
   productsList.value.sort((a, b) => a.order - b.order)
+
+  productsList.value.forEach((group) => {
+    if (drinksGroupsId.includes(group.id)) {
+      group.subGroups.forEach((subGroup) => {
+        subGroup.products.forEach((product) => {
+          if (product.weight != 0 && product.weight != null) {
+            if (product.weight * 1000 >= 1000) {
+              product.weightMeasure = 'л.'
+            } else {
+              product.weight = product.weight * 1000
+              product.weightMeasure = 'мл.'
+            }
+          }
+        })
+      })
+    } else if (
+      group.id != 'd9b01578-bd7f-4934-bf6e-2806900c3e1f' &&
+      !drinksGroupsId.includes(group.id)
+    ) {
+      group.subGroups.forEach((subGroup) => {
+        subGroup.products.forEach((product) => {
+          product.weightMeasure = 'г.'
+          product.weight = (product.weight * 1000).toFixed(0)
+        })
+      })
+    }
+    if (group.id == 'd9b01578-bd7f-4934-bf6e-2806900c3e1f') {
+      group.subGroups.forEach((subGroup) => {
+        subGroup.products.forEach((product) => {
+          console.log('cc')
+        })
+      })
+    }
+  })
 
   businessLunchGroupIndex.value = productsList.value
     .map((e) => e.id)
