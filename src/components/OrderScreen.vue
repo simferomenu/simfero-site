@@ -18,7 +18,7 @@
         :key="item.id"
         :index="itemIndex"
         :orderItemsPosition="orderItemsPosition[itemIndex]"
-        @chooseFromOrder="onChooseFromOrder"
+        @chooseFromOrder="onChoose"
         @order-update="onOrderUpdate"
       />
     </div>
@@ -123,9 +123,9 @@ import { IconCross, IconBack, OrderCard } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 import { useProductsStore } from '@/stores/products.store'
 
-const emit = defineEmits(['updateOrder'])
+const emit = defineEmits(['updateOrder', 'choose'])
 
-const onChooseFromOrder = () => {}
+const onChoose = (product) => emit('choose', product)
 
 const orderItems = ref([])
 const orderItemsPosition = ref([])
