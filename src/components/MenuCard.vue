@@ -64,7 +64,7 @@
 <style scoped></style>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { IconPlus, Counter } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 import { useProductsStore } from '@/stores/products.store'
@@ -121,18 +121,22 @@ const description =
 const groupIndex = ref(props.groupIndex)
 const subGroupIndex = ref(props.subGroupIndex)
 const cardElement = ref(null)
+const isDescrHidden = ref(false)
 
-const isDescrHidden = computed(() => {
-  if (useElementSize(productName).height.value != 0) {
-    if (useElementSize(productName).height.value < 72) {
-      return false
+watch(
+  () => useElementSize(productName).height.value,
+  () => {
+    if (useElementSize(productName).height.value != 0) {
+      if (useElementSize(productName).height.value < 72) {
+        isDescrHidden.value = false
+      } else {
+        isDescrHidden.value = true
+      }
     } else {
-      return true
+      isDescrHidden.value = false
     }
-  } else {
-    return false
   }
-})
+)
 
 const handleVisibilityChange = (entries) => {
   entries.forEach((entry) => {
