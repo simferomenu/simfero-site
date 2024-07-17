@@ -31,7 +31,7 @@
           >Сумма заказа:</span
         >
         <span class="font-Segoe font-bold text-[26px] tracking-[0.03em] text-[#fff] ml-[30px]"
-          >{{ totalPrice }} Руб.</span
+          >{{ totalPrice }} руб</span
         >
       </div>
       <!-- Кнопки -->

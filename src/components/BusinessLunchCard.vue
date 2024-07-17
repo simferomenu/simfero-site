@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative flex flex-col h-[320px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated"
+    class="relative flex flex-col h-[350px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated"
     :class="{ 'active-menu-card border-animation': isProductInOrder }"
     @click="onSelect"
     ref="cardElement"
@@ -41,7 +41,7 @@
         </span>
       </div>
       <span class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue">
-        {{ product.sizePrices[0].price.currentPrice }} Руб.
+        {{ product.sizePrices[0].price.currentPrice }} руб
       </span>
       <Transition name="expand">
         <Counter
@@ -70,7 +70,8 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
+import { useElementSize } from '@vueuse/core'
 import { IconPlus, Counter } from '@/components'
 import { useBusinessStore } from '@/stores/business.store'
 import { useOrderStore } from '@/stores/order.store'
@@ -156,11 +157,18 @@ const onProductCounterUpdate = (iterator) => {
     orderStore.preOrder.splice(indexInOrder, 1)
   }
 }
-onMounted(() => {
-  if (cardElement.value) {
-    if (productName.value && productName.value.clientHeight > 48) {
-      isDescrHidden.value = true
+watch(
+  () => useElementSize(productName).height.value,
+  () => {
+    if (useElementSize(productName).height.value != 0) {
+      if (useElementSize(productName).height.value < 72) {
+        isDescrHidden.value = false
+      } else {
+        isDescrHidden.value = true
+      }
+    } else {
+      isDescrHidden.value = false
     }
   }
-})
+)
 </script>

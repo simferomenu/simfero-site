@@ -10,9 +10,9 @@
       >
         <img :src="product.imageLinks[0] || '/images/ImageBasicDish.png'" alt="" />
       </div>
-<!--      <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">-->
-<!--        <img src="/icons/IconThreeDotsWhite.svg" alt="" />-->
-<!--      </div>-->
+      <!--      <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">-->
+      <!--        <img src="/icons/IconThreeDotsWhite.svg" alt="" />-->
+      <!--      </div>-->
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
       <span
@@ -28,18 +28,20 @@
         {{ description }}
       </span>
       <span class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-[#fff]">
-        {{ product.sizePrices[0].price.currentPrice }} Руб.
+        {{ product.sizePrices[0].price.currentPrice }} руб
       </span>
-      <div class="flex items-center font-[600] align-center justify-center box-border px-[8px] py-[12px] w-[35px] h-[35px] bg-gold rounded-[33px] absolute right-[-10px] bottom-0 z-[3] pointer-events-none pointer-events-auto">
-        {{product.amount}}
+      <div
+        class="flex items-center font-[600] align-center justify-center box-border px-[8px] py-[12px] w-[35px] h-[35px] bg-gold rounded-[33px] absolute right-[-10px] bottom-0 z-[3] pointer-events-none pointer-events-auto"
+      >
+        {{ product.amount }}
       </div>
       <Counter
-        v-if='!product.isOrdered'
+        v-if="!product.isOrdered"
         class="pointer-events-auto"
         :quantity="product.amount"
         @update="onProductCounterUpdate"
       />
-      <IconPlus v-if='!product.isOrdered'/>
+      <IconPlus v-if="!product.isOrdered" />
     </div>
   </div>
 </template>
@@ -49,7 +51,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { IconPlus, Counter } from '@/components'
-import { useOrderStore } from '@/stores/order.store';
+import { useOrderStore } from '@/stores/order.store'
 
 const props = defineProps({
   product: {
@@ -84,7 +86,7 @@ onMounted(() => {
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   orderStore.preOrder[indexInOrder].amount += iterator
-  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
+  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
   orderStore.orderInfo.orderAmount += iterator
   if (orderStore.preOrder[indexInOrder].amount == 0) {
     isProductInOrder.value = false

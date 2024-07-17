@@ -67,7 +67,7 @@
           <div class="relative h-full flex flex-col justify-between">
             <span
               class="font-Segoe font-semibold text-[24px] leading-[110%] tracking-[0.03em] upppercase text-[#fff]"
-              >{{ product.sizePrices[0].price.currentPrice }} Руб.</span
+              >{{ product.sizePrices[0].price.currentPrice }} руб</span
             >
             <span
               class="font-Segoe font-semibold text-[21px] leading-[110%] tracking-[0.03em] upppercase text-darkGold mt-[18px]"
