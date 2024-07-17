@@ -70,7 +70,7 @@
         <!--          >-->
         <!--        </div>-->
       </div>
-      <div>
+      <div class="absolute right-[50%] translate-x-[50%] bottom-[50%] translate-y-[50%]">
         <span
           v-if="selectedTables.length != 0"
           class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold cursor-pointer !pointer-events-auto"
