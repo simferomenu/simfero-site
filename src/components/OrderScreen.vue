@@ -208,6 +208,7 @@ const onMakeOrder = async () => {
 
     const tables = JSON.parse(window.localStorage.getItem('selectedTables'))
     const menu = JSON.parse(window.localStorage.getItem('menu'))
+    console.log(menu)
 
     const orderItems = orderStore.preOrder.map((item) => ({
       productId: item.id,
@@ -218,7 +219,7 @@ const onMakeOrder = async () => {
 
     orderStore.preOrder.forEach((item) => {
       item.modifiers.forEach((mod) => {
-        const product = menu.products.find(({ id }) => id == mod.id)
+        const product = menu.find(({ id }) => id == mod.id)
 
         orderItems.push({
           productId: product.id,

@@ -138,14 +138,11 @@ const fillProducts = () => {
     'energyFullAmount',
     'groupId',
     'productCategoryId',
-    'type',
     'orderItemType',
     'modifierSchemaId',
     'modifierSchemaName',
     'splittable',
     'measureUnit',
-    'modifiers',
-    'groupModifiers',
     'fullNameEnglish',
     'useBalanceForSell',
     'canSetOpenPrice',
@@ -165,6 +162,7 @@ const fillProducts = () => {
   }
 
   menuProducts.value = storageMenu.value ? JSON.parse(storageMenu.value) : null
+  window.localStorage.setItem('menu', JSON.stringify(menuProducts.value.products))
 
   menuProducts.value.products.forEach((product) => {
     propertiesToRemove.forEach((prop) => {
@@ -175,7 +173,6 @@ const fillProducts = () => {
     product.name = product.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace('ДО ', '')
   })
 
-  window.localStorage.setItem('menu', JSON.stringify(menuProducts.value.products))
   isMenuLoading.value = false
 
   menuProducts.value.products = menuProducts.value.products.filter(
@@ -372,6 +369,7 @@ const onOrderDelete = async () => {
 onMounted(() => {
   axios.get('/menu').then((menuResponse) => {
     storageMenu.value = JSON.stringify(menuResponse.data)
+    console.log(JSON.parse(storageMenu.value))
     fillProducts()
   })
   axios.get('/tables').then((response) => {
