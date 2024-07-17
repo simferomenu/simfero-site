@@ -128,7 +128,6 @@ const drinksGroupsId = [
   '1e815609-ed6a-466d-9914-bc9ca89a3761',
   '606700d7-17e3-46b5-b753-900f279f9522'
 ]
-const businessDrinksGroupId = 'a4411b8a-76ef-4364-afc9-11387256de9f'
 
 const fillProducts = () => {
   const propertiesToRemove = [
@@ -254,12 +253,26 @@ const fillProducts = () => {
           }
         })
       })
-    } else if (!drinksGroupsId.includes(group.id)) {
+    }
+    if (!drinksGroupsId.includes(group.id)) {
       group.subGroups.forEach((subGroup) => {
-        subGroup.products.forEach((product) => {
-          product.weightMeasure = 'г.'
-          product.weight = (product.weight * 1000).toFixed(0)
-        })
+        if (subGroup.id != 'a4411b8a-76ef-4364-afc9-11387256de9f') {
+          subGroup.products.forEach((product) => {
+            product.weightMeasure = 'г.'
+            product.weight = (product.weight * 1000).toFixed(0)
+          })
+        } else if (subGroup.id == 'a4411b8a-76ef-4364-afc9-11387256de9f') {
+          subGroup.products.forEach((product) => {
+            if (product.weight != 0 && product.weight != null) {
+              if (product.weight * 1000 >= 1000) {
+                product.weightMeasure = 'л.'
+              } else {
+                product.weight = product.weight * 1000
+                product.weightMeasure = 'мл.'
+              }
+            }
+          })
+        }
       })
     }
   })
