@@ -5,7 +5,7 @@ import MenuCard from '@/components/MenuCard.vue'
 import MenuSmallCard from '@/components/MenuSmallCard.vue'
 import AddButton from '@/components/AddButton.vue'
 import AddButtonActive from '@/components/AddButtonActive.vue'
-import CardCounter from '@/components/CardCounter.vue'
+import Counter from '@/components/Counter.vue'
 import SmallCounter from '@/components/SmallCounter.vue'
 import OrderCard from '@/components/OrderCard.vue'
 import BusinessLunchCard from '@/components/BusinessLunchCard.vue'
@@ -32,7 +32,7 @@ export {
   AddButton,
   AddButtonActive,
   IconBack,
-  CardCounter,
+  Counter,
   SmallCounter,
   OrderCard,
   BusinessLunchCard,

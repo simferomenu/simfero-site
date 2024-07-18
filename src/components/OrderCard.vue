@@ -35,7 +35,7 @@
       >
         {{ product.amount }}
       </div>
-      <CardCounter
+      <Counter
         v-if="!product.isOrdered"
         class="pointer-events-auto"
         :quantity="product.amount"
@@ -50,7 +50,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { IconPlus, CardCounter } from '@/components'
+import { IconPlus, Counter } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 
 const props = defineProps({
