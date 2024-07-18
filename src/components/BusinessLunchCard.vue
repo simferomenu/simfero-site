@@ -70,7 +70,7 @@
   </div>
 </template>
 <script setup>
-import { ref, watch, computed, onMounted } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import { IconPlus, Counter } from '@/components'
 import { useBusinessStore } from '@/stores/business.store'

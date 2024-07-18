@@ -9,7 +9,6 @@ import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useOrderStore } from '@/stores/order.store'
-import { useProductsStore } from '@/stores/products.store'
 
 // import { useScreenOrientation } from '@vueuse/core'
 
