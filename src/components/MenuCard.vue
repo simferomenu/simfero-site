@@ -43,7 +43,7 @@
         {{ product.sizePrices[0].price.currentPrice }} руб
       </span>
       <Transition name="expand">
-        <Counter
+        <CardCounter
           v-if="isProductInOrder"
           isBlack
           class="pointer-events-auto"
@@ -65,7 +65,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
-import { IconPlus, Counter } from '@/components'
+import { IconPlus, CardCounter } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 import { useProductsStore } from '@/stores/products.store'
 import { useElementSize } from '@vueuse/core'

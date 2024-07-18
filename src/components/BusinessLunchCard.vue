@@ -44,7 +44,7 @@
         {{ product.sizePrices[0].price.currentPrice }} руб
       </span>
       <Transition name="expand">
-        <Counter
+        <CardCounter
           v-if="
             isProductInOrder &&
             businessStore.isBusinessAvailable &&
@@ -72,7 +72,7 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
 import { useElementSize } from '@vueuse/core'
-import { IconPlus, Counter } from '@/components'
+import { IconPlus, CardCounter } from '@/components'
 import { useBusinessStore } from '@/stores/business.store'
 import { useOrderStore } from '@/stores/order.store'
 const props = defineProps({
