@@ -49,8 +49,9 @@
 <style scoped></style>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { IconPlus, Counter } from '@/components'
+import { useElementSize } from '@vueuse/core'
 import { useOrderStore } from '@/stores/order.store'
 
 const props = defineProps({
@@ -77,12 +78,6 @@ const description =
 
 const onChoose = () => emit('chooseFromOrder', props.product)
 
-onMounted(() => {
-  if (productName.value.clientHeight > 48) {
-    isDescrHidden.value = true
-  }
-})
-
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   orderStore.preOrder[indexInOrder].amount += iterator
@@ -93,4 +88,19 @@ const onProductCounterUpdate = (iterator) => {
     orderStore.preOrder.splice(indexInOrder, 1)
   }
 }
+
+watch(
+  () => useElementSize(productName).height.value,
+  () => {
+    if (useElementSize(productName).height.value != 0) {
+      if (useElementSize(productName).height.value < 72) {
+        isDescrHidden.value = false
+      } else {
+        isDescrHidden.value = true
+      }
+    } else {
+      isDescrHidden.value = false
+    }
+  }
+)
 </script>
