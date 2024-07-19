@@ -26,25 +26,27 @@
           {{ description }}
         </span>
         <div
-          class="relative flex w-full items-center justify-between h-[107px] mt-[15px]"
+          class="relative flex items-center justify-between h-[107px] mt-[15px]"
           v-if="fatAmount != 0"
         >
-          <div class="absolute top-0 right-0 h-[1px] bg-[#fff] w-[100%] mr-[2.5%]"></div>
-          <div class="flex flex-col items-center">
+          <div class="absolute top-0 right-0 h-[1px] bg-[#fff] w-[100%] mr-[2.5%] opacity-50"></div>
+          <div class="flex flex-col items-center w-[25%]">
             <span class="simple-text mb-[8px]">Жиры</span>
             <span class="bold-text">{{ fatAmount }}</span>
           </div>
-          <div class="top-[10px] right-0 w-[1px] bg-[#fff] h-[60%]"></div>
-          <div class="flex flex-col items-center">
+          <div class="top-[10px] right-0 w-[1px] bg-[#fff] h-[60%] opacity-50"></div>
+          <div class="flex flex-col items-center w-[25%]">
             <span class="simple-text mb-[8px]">Белки</span>
             <span class="bold-text">{{ proteinsAmount }}</span>
           </div>
-          <div class="top-[10px] right-0 w-[1px] bg-[#fff] h-[60%]"></div>
-          <div class="flex flex-col items-center mr-[7.5%]">
+          <div class="top-[10px] right-0 w-[1px] bg-[#fff] h-[60%] opacity-50"></div>
+          <div class="flex flex-col items-center mr-[7.5%] w-[25%]">
             <span class="simple-text mb-[8px]">Углеводы</span>
             <span class="bold-text">{{ carbohydratesAmount }}</span>
           </div>
-          <div class="absolute bottom-0 right-0 h-[1px] bg-[#fff] w-[100%] mr-[2.5%]"></div>
+          <div
+            class="absolute bottom-0 right-0 h-[1px] bg-[#fff] w-[100%] mr-[2.5%] opacity-50"
+          ></div>
         </div>
         <!-- <div
           v-for="fpc of filteredFpc"
@@ -65,7 +67,7 @@
           <div class="relative h-full flex flex-col justify-between">
             <span
               class="font-Segoe font-semibold text-[24px] leading-[110%] tracking-[0.03em] upppercase text-[#fff]"
-              >{{ product.sizePrices[0].price.currentPrice }} Руб.</span
+              >{{ product.sizePrices[0].price.currentPrice }} руб</span
             >
             <span
               class="font-Segoe font-semibold text-[21px] leading-[110%] tracking-[0.03em] upppercase text-darkGold mt-[18px]"
@@ -99,10 +101,11 @@ const props = defineProps({
   }
 })
 
+console.log(props.product)
+
 const proteinsAmount = props.product.proteinsAmount.toFixed(1)
 const fatAmount = props.product.fatAmount.toFixed(1)
 const carbohydratesAmount = props.product.carbohydratesAmount.toFixed(1)
-
 const productsStore = useProductsStore()
 const businessStore = useBusinessStore()
 const isButtonVisible = ref(null)
@@ -158,7 +161,7 @@ const addToOrder = () => {
         .products[cardInfo.value.cardIndex]
     )
   }
-  isProductInOrder.value = true
+  // isProductInOrder.value = true
   orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
   orderStore.orderInfo.orderAmount++
 }
@@ -178,7 +181,7 @@ const onProductCounterUpdate = (iterator) => {
     orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
     orderStore.orderInfo.orderAmount += iterator
     orderStore.preOrder.splice(indexInOrder, 1)
-    isProductInOrder.value = false
+    // isProductInOrder.value = false
   } else {
     if (isBusinessProduct.value) {
       businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[

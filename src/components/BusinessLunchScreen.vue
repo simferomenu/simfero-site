@@ -141,8 +141,6 @@ const isCurrentDaySelected = ref(true)
 
 businessStore.isCurrentDaySelected = true
 
-const orderCost = ref(0)
-
 const onChoose = (product) => emit('choose', product)
 
 const handleDaySelect = (dayIndex) => {
@@ -166,10 +164,6 @@ if (currentDay <= 4) {
 
 //   }
 // }
-
-businessStore.$subscribe(() => {
-  orderCost.value = businessStore.finalCost
-})
 
 // const onMakeOrder = () => {
 //   for (const orderItem of businessStore.businessOrder) {

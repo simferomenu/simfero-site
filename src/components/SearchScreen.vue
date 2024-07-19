@@ -33,6 +33,7 @@
 
 <script setup>
 import { IconCross, FilteredProduct } from '@/components'
+// import { useBusinessStore } from '@/stores/business.store'
 import { useProductsStore } from '@/stores/products.store'
 import { ref, watch } from 'vue'
 
@@ -42,42 +43,45 @@ const searchTerm = ref(null)
 
 const menuData = ref(null)
 const productsStore = useProductsStore()
-const menuProducts = ref(null)
+// const businessStore = useBusinessStore()
 const storageMenu = window.localStorage.getItem('menu')
 const filteredProducts = ref([])
-const filteredMenuProducts = ref()
-const drinksSubGroupsId = productsStore.drinksSubGroupsId
+const filteredMenuProducts = ref([])
 menuData.value = storageMenu ? JSON.parse(storageMenu) : null
 
 const onChoose = (product) => emit('choose', product)
 
-menuProducts.value = storageMenu ? JSON.parse(storageMenu) : null
+// filteredMenuProducts.value = menuProducts.value.products
+//   .filter((product) => product.type === 'Dish' || product.type === 'Good')
+//   .filter((product) => !product.isDeleted)
+//   .filter((product) => product.sizePrices[0].price.currentPrice != 0)
+//   .filter((product) => product.additionalInfo == null)
 
-filteredMenuProducts.value = menuProducts.value.products
-  .filter((product) => product.type === 'Dish' || product.type === 'Good')
-  .filter((product) => !product.isDeleted)
-  .filter((product) => product.sizePrices[0].price.currentPrice != 0)
-  .filter((product) => product.additionalInfo == null)
+// filteredMenuProducts.value.forEach((product) => {
+//   if (drinksSubGroupsId.includes(product.parentGroup)) {
+//     if (product.weight != null && product.weight >= 1) {
+//       product.weightMeasure = 'л.'
+//     } else {
+//       product.weightMeasure = 'г.'
+//       product.weight = product.weight * 1000
+//     }
+//   } else {
+//     product.weightMeasure = 'г.'
+//     product.weight = product.weight * 1000
+//   }
+// })
 
-filteredMenuProducts.value.forEach((product) => {
-  if (drinksSubGroupsId.includes(product.parentGroup)) {
-    if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
-      product.weightMeasure = 'л.'
-    } else {
-      product.weightMeasure = 'г.'
-    }
-  } else {
-    if (product.weight != null && product.weight < 1) {
-      product.weight = product.weight * 1000
-      if (product.weight - product.weight == 0) {
-        product.weight = product.weight.toFixed(0)
-      } else {
-        product.weight = product.weight.toFixed(2)
-      }
-      product.weightMeasure = 'г.'
-    }
-  }
+productsStore.productsList.forEach((group) => {
+  group.subGroups.forEach((subGroup) => {
+    filteredMenuProducts.value.push(...subGroup.products)
+  })
 })
+
+// businessStore.businessProducts.subGroups.forEach((subGroup) => {
+//   subGroup.daysOfWeek.forEach((day) => {
+//     filteredMenuProducts.value.push(...day)
+//   })
+// })
 
 watch(
   () => searchTerm.value,

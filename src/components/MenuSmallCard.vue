@@ -13,7 +13,7 @@
       <span
         class="font-Segoe font-semibold text-[18px] leading-[128%] tracking-[0.04em] text-[#fff]"
       >
-        1200 Руб.
+        1200 руб
       </span>
       <IconPlus />
     </div>

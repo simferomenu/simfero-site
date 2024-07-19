@@ -10,9 +10,9 @@
       >
         <img :src="product.imageLinks[0] || '/images/ImageBasicDish.png'" alt="" />
       </div>
-<!--      <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">-->
-<!--        <img src="/icons/IconThreeDotsWhite.svg" alt="" />-->
-<!--      </div>-->
+      <!--      <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">-->
+      <!--        <img src="/icons/IconThreeDotsWhite.svg" alt="" />-->
+      <!--      </div>-->
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
       <span
@@ -30,16 +30,18 @@
       <span class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-[#fff]">
         {{ product.sizePrices[0].price.currentPrice }} Руб.
       </span>
-      <div class="flex items-center font-[600] align-center justify-center box-border px-[8px] py-[12px] w-[35px] h-[35px] bg-gold rounded-[33px] absolute right-[-10px] bottom-0 z-[3] pointer-events-none pointer-events-auto">
-        {{product.amount}}
+      <div
+        class="flex items-center font-[600] align-center justify-center box-border px-[8px] py-[12px] w-[35px] h-[35px] bg-gold rounded-[33px] absolute right-[-10px] bottom-0 z-[3] pointer-events-none pointer-events-auto"
+      >
+        {{ product.amount }}
       </div>
       <Counter
-        v-if='!product.isOrdered'
+        v-if="!product.isOrdered"
         class="pointer-events-auto"
         :quantity="product.amount"
         @update="onProductCounterUpdate"
       />
-      <IconPlus v-if='!product.isOrdered'/>
+      <IconPlus v-if="!product.isOrdered" />
     </div>
   </div>
 </template>
@@ -47,9 +49,10 @@
 <style scoped></style>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { IconPlus, Counter } from '@/components'
-import { useOrderStore } from '@/stores/order.store';
+import { useElementSize } from '@vueuse/core'
+import { useOrderStore } from '@/stores/order.store'
 
 const props = defineProps({
   product: {
@@ -75,20 +78,29 @@ const description =
 
 const onChoose = () => emit('chooseFromOrder', props.product)
 
-onMounted(() => {
-  if (productName.value.clientHeight > 48) {
-    isDescrHidden.value = true
-  }
-})
-
 const onProductCounterUpdate = (iterator) => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
   orderStore.preOrder[indexInOrder].amount += iterator
-  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount;
+  orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
   orderStore.orderInfo.orderAmount += iterator
   if (orderStore.preOrder[indexInOrder].amount == 0) {
     isProductInOrder.value = false
     orderStore.preOrder.splice(indexInOrder, 1)
   }
 }
+
+watch(
+  () => useElementSize(productName).height.value,
+  () => {
+    if (useElementSize(productName).height.value != 0) {
+      if (useElementSize(productName).height.value < 72) {
+        isDescrHidden.value = false
+      } else {
+        isDescrHidden.value = true
+      }
+    } else {
+      isDescrHidden.value = false
+    }
+  }
+)
 </script>

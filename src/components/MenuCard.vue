@@ -4,8 +4,9 @@
     :class="{ 'active-menu-card border-animation': isProductInOrder }"
     ref="cardElement"
     v-if="product.isRendered"
+    @click="onChoose"
   >
-    <div class="relative h-[145px] w-full shrink-0" @click="onChoose">
+    <div class="relative h-[145px] w-full shrink-0">
       <div
         class="absolute w-[183px] h-[183px] top-[-30px] left-[-25px] overflow-hidden rounded-[100px] animated bg-[#fff] flex justify-center items-center"
       >
@@ -19,12 +20,9 @@
           v-show="isImageLoaded"
         />
       </div>
-      <!-- <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">
-        <img src="/icons/IconThreeDots.svg" alt="" />
-      </div> -->
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
-      <div class="relative flex flex-col" @click="onChoose">
+      <div class="relative flex flex-col">
         <span
           ref="productName"
           class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000] clip-5 mb-[5px]"
@@ -39,10 +37,10 @@
         </span>
       </div>
       <span
-        class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue"
+        class="font-Segoe font-bold text-[19px] leading-[115%] tracking-[0.03em] text-darkBlue"
         @click="onChoose"
       >
-        {{ product.sizePrices[0].price.currentPrice }} Руб.
+        {{ product.sizePrices[0].price.currentPrice }} руб
       </span>
       <Transition name="expand">
         <Counter
@@ -56,39 +54,27 @@
           ref="iconPlus"
           v-else-if="!isProductInOrder"
           :isBlack="true"
-          @click="onAddToOrder"
+          @click="onAddToOrder($event)"
         />
       </Transition>
     </div>
   </div>
-  <!-- <div
-    class="relative flex flex-col h-[350px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated-long"
-    ref="cardElement"
-  >
-    <div class="relative h-[145px] w-full shrink-0">
-      <div
-        class="absolute w-[183px] h-[183px] top-[-30px] left-[-25px] overflow-hidden flex rounded-full bg-[#fff]"
-      ></div>
-    </div>
-    <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
-      <div class="flex flex-col">
-        <div class="w-[50%] h-[15px] bg-darkBlue opacity-20 rounded-full"></div>
-        <div class="w-[30%] h-[15px] bg-darkBlue opacity-20 rounded-full mt-[10px]"></div>
-      </div>
-      <div class="w-[30%] h-[15px] bg-darkBlue opacity-20 rounded-full"></div>
-    </div>
-  </div> -->
 </template>
 
 <style scoped></style>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { IconPlus, Counter } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 import { useProductsStore } from '@/stores/products.store'
+import { useElementSize } from '@vueuse/core'
 
 const isImageLoaded = ref(false)
+// const isProductInOrder = ref(null)
+
+const orderStore = useOrderStore()
+const productsStore = useProductsStore()
 
 const onImageLoad = () => {
   isImageLoaded.value = true
@@ -128,15 +114,29 @@ const isProductInOrder = computed(() => {
   }
 })
 
-const isDescrHidden = ref(false)
 const productName = ref(null)
 const description =
   props.product.description ||
   'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'
 const groupIndex = ref(props.groupIndex)
 const subGroupIndex = ref(props.subGroupIndex)
-// const cardIndex = ref(props.cardIndex)
 const cardElement = ref(null)
+const isDescrHidden = ref(false)
+
+watch(
+  () => useElementSize(productName).height.value,
+  () => {
+    if (useElementSize(productName).height.value != 0) {
+      if (useElementSize(productName).height.value < 72) {
+        isDescrHidden.value = false
+      } else {
+        isDescrHidden.value = true
+      }
+    } else {
+      isDescrHidden.value = false
+    }
+  }
+)
 
 const handleVisibilityChange = (entries) => {
   entries.forEach((entry) => {
@@ -173,45 +173,13 @@ onMounted(() => {
   if (cardElement.value) {
     observer.observe(cardElement.value)
   }
-  setTimeout(() => {
-    if (cardElement.value) {
-      if (productName.value && productName.value.clientHeight > 48) {
-        isDescrHidden.value = true
-      }
-    }
-  })
 })
-
-const orderStore = useOrderStore()
-const productsStore = useProductsStore()
 
 onBeforeUnmount(() => {
   if (observer && cardElement.value) {
     observer.unobserve(cardElement.value)
   }
 })
-
-// Попытка слежения за localstorage заказа и изменения isProductInOrder
-
-// watch(
-//   () => isProductInOrder.value,
-//   () => {
-//     console.log(JSON.parse(window.localStorage.getItem('order')))
-//     console.log(isProductInOrder.value)
-//     const orderProducts = JSON.parse(window.localStorage.getItem('order'))
-//     let [arrayKey, value] = Object.entries(orderProducts)[1]
-//     let orderProductsArr = value
-//     for (let i = 0; i < orderProductsArr.length; i++) {
-//       if ((orderProductsArr[i].id = props.product.id)) {
-//         isProductInOrder.value = true
-//         console.log('yes')
-//       }
-//     }
-//     if ((orderProductsArr.length = 0)) {
-//       isProductInOrder.value = false
-//     }
-//   }
-// )
 
 const onAddToOrder = (event) => {
   event && event.stopPropagation()
@@ -230,51 +198,7 @@ const onAddToOrder = (event) => {
   )
 
   isProductInOrder.value = true
-
-  // const rawOrderData = window.localStorage.getItem('order')
-  // const selectedTables = window.localStorage.getItem('selectedTables')
-
-  // try {
-  //   let order = null
-
-  //   if (rawOrderData) {
-  //     order = JSON.parse(rawOrderData)
-  //     const product = order.products.find((p) => p.id === props.product.id)
-
-  //     if (product) {
-  //       product.amount = amount
-  //     } else {
-  //       order.products.push({ ...props.product, amount })
-  //     }
-  //   } else {
-  //     order = {
-  //       tables: [...JSON.parse(selectedTables)],
-  //       products: [{ ...props.product, amount }]
-  //     }
-  //   }
-
-  //   isProductInOrder.value = true
-  //   window.localStorage.setItem('order', JSON.stringify(order))
-
-  //   emit('order-update')
-  // } catch (error) {
-  //   console.log('Ошибка добавления в заказа', error)
-  // }
 }
-
-// const onDeleteFromOrder = () => {
-//   const rawOrderData = window.localStorage.getItem('order')
-
-//   try {
-//     let order = JSON.parse(rawOrderData)
-//     order.products = order.products.filter((p) => p.id !== props.product.id)
-//     isProductInOrder.value = false
-//     window.localStorage.setItem('order', JSON.stringify(order))
-//     emit('order-update')
-//   } catch (error) {
-//     console.log('Ошибка удаления из заказа', error)
-//   }
-// }
 
 const productAmount = computed(() => {
   const indexInOrder = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
