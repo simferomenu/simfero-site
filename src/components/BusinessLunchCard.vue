@@ -1,11 +1,10 @@
 <template>
   <div
-    class="relative flex flex-col h-[350px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated"
+    class="relative flex flex-col h-[320px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated"
     :class="{ 'active-menu-card border-animation': isProductInOrder }"
-    @click="onSelect"
     ref="cardElement"
   >
-    <div class="relative h-[145px] w-full shrink-0">
+    <div class="relative h-[145px] w-full shrink-0" @click="onSelect">
       <div
         class="absolute overflow-hidden rounded-[100px] animated flex justify-center items-center"
         :class="
@@ -26,7 +25,7 @@
       </div>
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
-      <div class="relative flex flex-col">
+      <div class="relative flex flex-col" @click="onSelect">
         <span
           ref="productName"
           class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000] clip-5 mb-[5px]"
@@ -40,8 +39,11 @@
           {{ product.description }}
         </span>
       </div>
-      <span class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue">
-        {{ product.sizePrices[0].price.currentPrice }} руб
+      <span
+        class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue"
+        @click="onSelect"
+      >
+        {{ product.sizePrices[0].price.currentPrice }} Руб.
       </span>
       <Transition name="expand">
         <Counter
@@ -65,15 +67,14 @@
             productsStore.orderFunc == true
           "
           :isBlack="true"
-          @click="onAddToOrder($event)"
+          @click="onAddToOrder"
         />
       </Transition>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, watch, computed } from 'vue'
-import { useElementSize } from '@vueuse/core'
+import { ref, onMounted, computed } from 'vue'
 import { IconPlus, Counter } from '@/components'
 import { useBusinessStore } from '@/stores/business.store'
 import { useOrderStore } from '@/stores/order.store'
@@ -137,8 +138,7 @@ const isProductInOrder = computed(() => {
     return null
   }
 })
-const onAddToOrder = (event) => {
-  event.stopPropagation()
+const onAddToOrder = () => {
   orderStore.preOrder.push(props.product)
   businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.day][
     props.product.productIndex
@@ -162,18 +162,11 @@ const onProductCounterUpdate = (iterator) => {
     orderStore.preOrder.splice(indexInOrder, 1)
   }
 }
-watch(
-  () => useElementSize(productName).height.value,
-  () => {
-    if (useElementSize(productName).height.value != 0) {
-      if (useElementSize(productName).height.value < 72) {
-        isDescrHidden.value = false
-      } else {
-        isDescrHidden.value = true
-      }
-    } else {
-      isDescrHidden.value = false
+onMounted(() => {
+  if (cardElement.value) {
+    if (productName.value && productName.value.clientHeight > 48) {
+      isDescrHidden.value = true
     }
   }
-)
+})
 </script>

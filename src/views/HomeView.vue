@@ -22,7 +22,7 @@
         v-if="isOrderVisible"
         :product="product"
         @closeOrder="isOrderVisible = false"
-        @choose="toggleDish"
+        @chooseFromOrder="toggleDish"
         @updateOrder="onOrderUpdate"
       />
     </Transition>

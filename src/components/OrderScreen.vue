@@ -18,7 +18,7 @@
         :key="item.id"
         :index="itemIndex"
         :orderItemsPosition="orderItemsPosition[itemIndex]"
-        @chooseFromOrder="onChoose"
+        @chooseFromOrder="onChooseFromOrder"
         @order-update="onOrderUpdate"
       />
     </div>
@@ -31,7 +31,7 @@
           >Сумма заказа:</span
         >
         <span class="font-Segoe font-bold text-[26px] tracking-[0.03em] text-[#fff] ml-[30px]"
-          >{{ totalPrice }} руб</span
+          >{{ totalPrice }} Руб.</span
         >
       </div>
       <!-- Кнопки -->
@@ -123,9 +123,9 @@ import { IconCross, IconBack, OrderCard } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 import { useProductsStore } from '@/stores/products.store'
 
-const emit = defineEmits(['updateOrder', 'choose'])
+const emit = defineEmits(['updateOrder'])
 
-const onChoose = (product) => emit('choose', product)
+const onChooseFromOrder = () => {}
 
 const orderItems = ref([])
 const orderItemsPosition = ref([])
@@ -208,7 +208,6 @@ const onMakeOrder = async () => {
 
     const tables = JSON.parse(window.localStorage.getItem('selectedTables'))
     const menu = JSON.parse(window.localStorage.getItem('menu'))
-    console.log(menu)
 
     const orderItems = orderStore.preOrder.map((item) => ({
       productId: item.id,
@@ -219,7 +218,7 @@ const onMakeOrder = async () => {
 
     orderStore.preOrder.forEach((item) => {
       item.modifiers.forEach((mod) => {
-        const product = menu.find(({ id }) => id == mod.id)
+        const product = menu.products.find(({ id }) => id == mod.id)
 
         orderItems.push({
           productId: product.id,

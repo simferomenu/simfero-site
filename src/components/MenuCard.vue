@@ -4,9 +4,8 @@
     :class="{ 'active-menu-card border-animation': isProductInOrder }"
     ref="cardElement"
     v-if="product.isRendered"
-    @click="onChoose"
   >
-    <div class="relative h-[145px] w-full shrink-0">
+    <div class="relative h-[145px] w-full shrink-0" @click="onChoose">
       <div
         class="absolute w-[183px] h-[183px] top-[-30px] left-[-25px] overflow-hidden rounded-[100px] animated bg-[#fff] flex justify-center items-center"
       >
@@ -20,9 +19,12 @@
           v-show="isImageLoaded"
         />
       </div>
+      <!-- <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">
+        <img src="/icons/IconThreeDots.svg" alt="" />
+      </div> -->
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
-      <div class="relative flex flex-col">
+      <div class="relative flex flex-col" @click="onChoose">
         <span
           ref="productName"
           class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000] clip-5 mb-[5px]"
@@ -37,10 +39,10 @@
         </span>
       </div>
       <span
-        class="font-Segoe font-bold text-[19px] leading-[115%] tracking-[0.03em] text-darkBlue"
+        class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue"
         @click="onChoose"
       >
-        {{ product.sizePrices[0].price.currentPrice }} руб
+        {{ product.sizePrices[0].price.currentPrice }} Руб.
       </span>
       <Transition name="expand">
         <Counter
@@ -54,7 +56,7 @@
           ref="iconPlus"
           v-else-if="!isProductInOrder && productsStore.orderFunc == true"
           :isBlack="true"
-          @click="onAddToOrder($event)"
+          @click="onAddToOrder"
         />
       </Transition>
     </div>
@@ -64,17 +66,12 @@
 <style scoped></style>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { IconPlus, Counter } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 import { useProductsStore } from '@/stores/products.store'
-import { useElementSize } from '@vueuse/core'
 
 const isImageLoaded = ref(false)
-// const isProductInOrder = ref(null)
-
-const orderStore = useOrderStore()
-const productsStore = useProductsStore()
 
 const onImageLoad = () => {
   isImageLoaded.value = true
@@ -114,6 +111,7 @@ const isProductInOrder = computed(() => {
   }
 })
 
+const isDescrHidden = ref(false)
 const productName = ref(null)
 const description =
   props.product.description ||
@@ -121,22 +119,6 @@ const description =
 const groupIndex = ref(props.groupIndex)
 const subGroupIndex = ref(props.subGroupIndex)
 const cardElement = ref(null)
-const isDescrHidden = ref(false)
-
-watch(
-  () => useElementSize(productName).height.value,
-  () => {
-    if (useElementSize(productName).height.value != 0) {
-      if (useElementSize(productName).height.value < 72) {
-        isDescrHidden.value = false
-      } else {
-        isDescrHidden.value = true
-      }
-    } else {
-      isDescrHidden.value = false
-    }
-  }
-)
 
 const handleVisibilityChange = (entries) => {
   entries.forEach((entry) => {
@@ -173,7 +155,17 @@ onMounted(() => {
   if (cardElement.value) {
     observer.observe(cardElement.value)
   }
+  setTimeout(() => {
+    if (cardElement.value) {
+      if (productName.value && productName.value.clientHeight > 48) {
+        isDescrHidden.value = true
+      }
+    }
+  })
 })
+
+const orderStore = useOrderStore()
+const productsStore = useProductsStore()
 
 onBeforeUnmount(() => {
   if (observer && cardElement.value) {
