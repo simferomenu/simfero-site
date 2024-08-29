@@ -20,9 +20,11 @@
 <style scoped></style>
 
 <script setup>
+import { useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { useProductsStore } from '@/stores/products.store'
 
+const router = useRouter()
 const sectionElement = ref(null)
 const productsStore = useProductsStore()
 
@@ -43,9 +45,14 @@ const handleVisibilityChange = (entries) => {
       if (sectionId == 0 || sectionId % 2 == 0) {
         for (let i = sectionId + 2; i < sectionId + 4; i++) {
           if (productsStore.productsList[props.groupIndex].subGroups[i] != null) {
-            for (const product of productsStore.productsList[props.groupIndex].subGroups[i]
-              .products) {
-              product.isRendered = true
+            if (
+              productsStore.productsList[props.groupIndex].subGroups[i].products[0].isRendered ==
+              false
+            ) {
+              for (const product of productsStore.productsList[props.groupIndex].subGroups[i]
+                .products) {
+                product.isRendered = true
+              }
             }
           }
         }
@@ -67,4 +74,8 @@ onMounted(() => {
     observer.observe(sectionElement.value)
   }
 })
+
+const toTuna = () => {
+  router.push('dish/tuna')
+}
 </script>

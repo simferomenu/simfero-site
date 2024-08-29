@@ -5,9 +5,9 @@ import App from './App.vue'
 import router from './router'
 
 // axios.defaults.baseURL = 'http://localhost:3000'
-axios.maxContentLength = 3000
-axios.defaults.baseURL = 'http://178.34.180.164:3000'
-axios.defaults.headers.publicKey = 'eYd75HxAXtTbj6q4aZRPnrKgLvyGWMc9FfU8kNmE'
+axios.maxContentLength = 3000;
+axios.defaults.baseURL = 'https://api.simfero.cirus-it.com'
+axios.defaults.headers.publicKey = 'eYd75HxAXtTbj6q4aZRPnrKgLvyGWMc9FfU8kNmE';
 
 import './assets/index.css'
 import axios from 'axios'

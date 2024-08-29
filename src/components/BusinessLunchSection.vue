@@ -8,6 +8,11 @@
   </div>
   <div class="relative w-full flex flex-wrap">
     <slot></slot>
+    <!--        <BusinessLunchCard-->
+    <!--          :name="'Не выбирать'"-->
+    <!--          :description="'-200 руб. от стоимости заказа'"-->
+    <!--          :img-src="'/icons/IconCancel.svg'"-->
+    <!--        />-->
   </div>
 </template>
 

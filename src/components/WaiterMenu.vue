@@ -19,8 +19,7 @@
     <div class="relative flex items-center shrink h-full">
       <div class="flex flex-col items-center justify-center h-full animated-up" @click="toTables">
         <div class="h-[250px] w-[250px] mb-[70px]">
-          <img src="/icons/loading.gif" class="absolute top-0" v-if="isMenuLoading" />
-          <img class="w-full h-full" src="/icons/IconKnifeFork.svg" alt="" v-else />
+          <img class="w-full h-full" src="/icons/IconKnifeFork.svg" alt="" />
         </div>
         <span
           class="font-Sitka text-[25px] font-normal tracking-[0.02em] uppercase text-center text-[#fff]"
@@ -28,6 +27,23 @@
           Новые гости
         </span>
       </div>
+
+      <!-- <div class="relative h-full w-[1px] bg-gold mx-[140px]">
+        <img
+          class="absolute top-1/2 left-0 h-[10px] w-[10px]"
+          src="/icons/IconRhombusGold.svg"
+          alt=""
+        />
+      </div> -->
+      <!-- <div class="flex flex-col items-center justify-center h-full">
+        <div class="h-[250px] w-[250px] mb-[70px]">
+          <img class="w-full h-full" src="/icons/IconKnifeSpoon.svg" alt="" />
+        </div>
+        <span
+          class="font-Sitka text-[25px] font-normal tracking-[0.02em] uppercase text-center text-[#fff]"
+          >Дополнить заказ</span
+        >
+      </div> -->
     </div>
   </div>
 </template>
@@ -37,10 +53,12 @@ import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { IconCross } from '@/components'
+import { useProductsStore } from '@/stores/products.store'
+
+const productsStore = useProductsStore()
 
 const router = useRouter()
 const anyTable = JSON.parse(window.localStorage.getItem('selectedTables'))
-const isMenuLoading = ref(true)
 
 const toMain = () => {
   router.push('/')
@@ -49,13 +67,6 @@ const toMain = () => {
 const toTables = () => {
   router.push('/tables')
 }
-
-onMounted(() => {
-  axios.get('/menu').then((response) => {
-    window.localStorage.setItem('menu', JSON.stringify(response.data))
-    isMenuLoading.value = false
-  })
-})
 </script>
 
 <style scoped></style>

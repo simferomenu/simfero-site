@@ -78,7 +78,7 @@ async function syncOrderData() {
 
             if (response.data.order) {
               orderData.items.forEach((item) => {
-                const product = originMenu.products.find(({ id }) => item.id === id)
+                const product = originMenu.find(({ id }) => item.id === id)
 
                 if (product) {
                   const productFromStore = orderStore.order.find(({ id }) => item.id === id)
@@ -94,7 +94,7 @@ async function syncOrderData() {
 
             if (response.data.preOrder) {
               preOrderData.items.forEach((item) => {
-                const product = originMenu.products.find(({ id }) => item.id === id)
+                const product = originMenu.find(({ id }) => item.id === id)
 
                 if (product) {
                   const productFromStore = orderStore.preOrder.find(({ id }) => item.id === id)

@@ -33,6 +33,7 @@
 
 <script setup>
 import { IconCross, FilteredProduct } from '@/components'
+// import { useBusinessStore } from '@/stores/business.store'
 import { useProductsStore } from '@/stores/products.store'
 import { ref, watch } from 'vue'
 
@@ -42,6 +43,7 @@ const searchTerm = ref(null)
 
 const menuData = ref(null)
 const productsStore = useProductsStore()
+// const businessStore = useBusinessStore()
 const storageMenu = window.localStorage.getItem('menu')
 const filteredProducts = ref([])
 const filteredMenuProducts = ref([])
@@ -49,11 +51,37 @@ menuData.value = storageMenu ? JSON.parse(storageMenu) : null
 
 const onChoose = (product) => emit('choose', product)
 
+// filteredMenuProducts.value = menuProducts.value.products
+//   .filter((product) => product.type === 'Dish' || product.type === 'Good')
+//   .filter((product) => !product.isDeleted)
+//   .filter((product) => product.sizePrices[0].price.currentPrice != 0)
+//   .filter((product) => product.additionalInfo == null)
+
+// filteredMenuProducts.value.forEach((product) => {
+//   if (drinksSubGroupsId.includes(product.parentGroup)) {
+//     if (product.weight != null && product.weight >= 1) {
+//       product.weightMeasure = 'л.'
+//     } else {
+//       product.weightMeasure = 'г.'
+//       product.weight = product.weight * 1000
+//     }
+//   } else {
+//     product.weightMeasure = 'г.'
+//     product.weight = product.weight * 1000
+//   }
+// })
+
 productsStore.productsList.forEach((group) => {
   group.subGroups.forEach((subGroup) => {
     filteredMenuProducts.value.push(...subGroup.products)
   })
 })
+
+// businessStore.businessProducts.subGroups.forEach((subGroup) => {
+//   subGroup.daysOfWeek.forEach((day) => {
+//     filteredMenuProducts.value.push(...day)
+//   })
+// })
 
 watch(
   () => searchTerm.value,
