@@ -14,7 +14,7 @@
     </div>
 
     <div
-      v-if="isMenuLoading"
+      v-if="isFetchingTables"
       class="absolute left-1/2 translate-x-[-50%] w-[150px] h-[150px] loader-top-position"
     >
       <img src="/icons/loading.gif" alt="" />
@@ -22,7 +22,6 @@
 
     <div
       class="flex relative w-full h-[100%] mt-[40px] box-border pl-[40px] overflow-hidden animated-up"
-      v-if="!isFetchingTables && !isMenuLoading"
     >
       <div
         class="relative w-1/2 shrink-0 h-full flex flex-col mr-[20px]"
@@ -55,7 +54,6 @@
 
     <div
       class="w-full relative flex justify-between box-border px-[40px] mt-[40px] mb-[30px] shrink-0 h-fit"
-      v-if="!isFetchingTables && !isMenuLoading"
     >
       <div class="flex items-center w-[320px] pointer-events-auto" @click="changeOrderFunc">
         <label
@@ -74,7 +72,7 @@
           >
         </div> -->
       </div>
-      <div class="absolute right-[50%] translate-x-[50%] bottom-[50%]">
+      <div>
         <span
           v-if="selectedTables.length != 0"
           class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold cursor-pointer !pointer-events-auto"
@@ -128,46 +126,53 @@ const subGroupIndexRemove = ref([])
 const businessStore = useBusinessStore()
 const businessLunchGroupIndex = ref(null)
 const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт']
-const storageMenu = ref()
-const isMenuLoading = ref(true)
+const drinksSubGroupsId = ref([])
 
-const drinksGroupsId = [
-  'f53b9025-673c-41ef-a1b3-02fddee5fbbc',
-  '1e815609-ed6a-466d-9914-bc9ca89a3761',
-  '606700d7-17e3-46b5-b753-900f279f9522'
+const propertiesToRemove = [
+  'energyAmount',
+  'fatFullAmount',
+  'proteinsFullAmount',
+  'carbohydratesFullAmount',
+  'energyFullAmount',
+  'groupId',
+  'productCategoryId',
+  'type',
+  'orderItemType',
+  'modifierSchemaId',
+  'modifierSchemaName',
+  'splittable',
+  'measureUnit',
+  'modifiers',
+  'groupModifiers',
+  'fullNameEnglish',
+  'useBalanceForSell',
+  'canSetOpenPrice',
+  'paymentSubject',
+  'doNotPrintInCheque',
+  'code',
+  'tags',
+  'isDeleted',
+  'seoDescription',
+  'seoText',
+  'seoKeywords',
+  'seoTitle'
 ]
 
-const fillProducts = () => {
-  const propertiesToRemove = [
-    'energyAmount',
-    'fatFullAmount',
-    'proteinsFullAmount',
-    'carbohydratesFullAmount',
-    'energyFullAmount',
-    'groupId',
-    'productCategoryId',
-    'orderItemType',
-    'modifierSchemaId',
-    'modifierSchemaName',
-    'splittable',
-    'measureUnit',
-    'fullNameEnglish',
-    'useBalanceForSell',
-    'canSetOpenPrice',
-    'paymentSubject',
-    'doNotPrintInCheque',
-    'code',
-    'tags',
-    'isDeleted',
-    'seoDescription',
-    'seoText',
-    'seoKeywords',
-    'seoTitle'
-  ]
+const isUpperCase = (str) => {
+  return str === str.toUpperCase()
+}
 
-  const isUpperCase = (str) => {
-    return str === str.toUpperCase()
+const onOrderDelete = async () => {
+  if (window.confirm('Вы уверены?')) {
+    for (let i = 0; i < selectedTables.value.length; i++) {
+      await axios
+        .delete('/order', { params: { tableId: selectedTables.value[i] } })
+        .then((response) => {
+          alert('Заказ удалён')
+        })
+    }
   }
+}
 
 const changeOrderFunc = () => {
   productsStore.orderFunc = !productsStore.orderFunc
@@ -188,13 +193,11 @@ menuProducts.value.groups.forEach((group) => {
   }
 })
 
-  menuProducts.value.products.forEach((product) => {
-    propertiesToRemove.forEach((prop) => {
-      delete product[prop]
-    })
-    product.isRendered = false
-    product.amount = 0
-    product.name = product.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace('ДО ', '')
+productsStore.drinksSubGroupsId = drinksSubGroupsId.value
+
+menuProducts.value.products.forEach((product) => {
+  propertiesToRemove.forEach((prop) => {
+    delete product[prop]
   })
   product.isRendered = false
   product.amount = 0
@@ -212,155 +215,112 @@ menuProducts.value.groups.forEach((group) => {
   }
 })
 
-  isMenuLoading.value = false
+menuProducts.value.products = menuProducts.value.products.filter(
+  (product) => product.sizePrices[0].price.currentPrice != 0
+)
 
-  menuProducts.value.products = menuProducts.value.products.filter(
-    (product) => product.sizePrices[0].price.currentPrice != 0
+const groups = ref(menuProducts.value.groups)
+for (const group of groups.value) {
+  if (group.parentGroup == null && isUpperCase(group.name) == true) {
+    productsList.value.push(group)
+  }
+}
+
+for (let group of productsList.value) {
+  subGroupIndexRemove.value = []
+  const subGroups = menuProducts.value.groups.filter(
+    (subGroup) => subGroup.parentGroup === group.id
   )
-
-  const groups = ref(menuProducts.value.groups)
-  for (const group of groups.value) {
-    if (group.parentGroup == null && isUpperCase(group.name) == true) {
-      productsList.value.push(group)
+  if (subGroups.length != 0) {
+    group.subGroups = subGroups
+  } else {
+    group.subGroups = [
+      {
+        name: group.name,
+        products: menuProducts.value.products.filter(
+          (subGroup) => subGroup.parentGroup === group.id
+        )
+      }
+    ]
+  }
+  // Fill sub with products
+  for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
+    subGroup.name = subGroup.name.replaceAll('ДЕЛОВЫЕ ОБЕДЫ', '').replaceAll(' ДО', '')
+    const products = menuProducts.value.products.filter(
+      (product) => product.parentGroup === subGroup.id
+    )
+    const subSubGroups = menuProducts.value.groups.filter(
+      (subSubGroups) => subSubGroups.parentGroup === subGroup.id
+    )
+    if (subSubGroups.length !== 0) {
+      group.subGroups.push(...subSubGroups)
+    }
+    if (products.length !== 0) {
+      subGroup.products = products
+    }
+    if (subGroup.products == null) {
+      subGroupIndexRemove.value.push(subGroupIndex)
     }
   }
-
-  for (let group of productsList.value) {
-    subGroupIndexRemove.value = []
-    const subGroups = menuProducts.value.groups.filter(
-      (subGroup) => subGroup.parentGroup === group.id
-    )
-    if (subGroups.length != 0) {
-      group.subGroups = subGroups
-    } else {
-      group.subGroups = [
-        {
-          name: group.name,
-          products: menuProducts.value.products.filter(
-            (subGroup) => subGroup.parentGroup === group.id
-          )
-        }
-      ]
-    }
-    // Fill sub with products
-    for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
-      subGroup.name = subGroup.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace(' ДО', '')
-      const products = menuProducts.value.products.filter(
-        (product) => product.parentGroup === subGroup.id
-      )
-      const subSubGroups = menuProducts.value.groups.filter(
-        (subSubGroups) => subSubGroups.parentGroup === subGroup.id
-      )
-      if (subSubGroups.length !== 0) {
-        group.subGroups.push(...subSubGroups)
-      }
-      if (products.length !== 0) {
-        subGroup.products = products
-      }
-      if (subGroup.products == null) {
-        subGroupIndexRemove.value.push(subGroupIndex)
-      }
-    }
-    if (group.subGroups.length == 1 && group.subGroups[0].products.length == 0) {
-      groupIndexRemove.value.push(productsList.value.indexOf(group))
-    }
-    group.subGroups = group.subGroups.filter(
-      (_, index) => !subGroupIndexRemove.value.includes(index)
-    )
-    group.subGroups.sort((a, b) => a.order - b.order)
+  if (group.subGroups.length == 1 && group.subGroups[0].products.length == 0) {
+    groupIndexRemove.value.push(productsList.value.indexOf(group))
   }
-  productsList.value = productsList.value.filter(
-    (_, index) => !groupIndexRemove.value.includes(index)
-  )
+  group.subGroups = group.subGroups.filter((_, index) => !subGroupIndexRemove.value.includes(index))
+  group.subGroups.sort((a, b) => a.order - b.order)
+}
+productsList.value = productsList.value.filter(
+  (_, index) => !groupIndexRemove.value.includes(index)
+)
 
-  productsList.value.sort((a, b) => a.order - b.order)
+productsList.value.sort((a, b) => a.order - b.order)
 
-  productsList.value.forEach((group) => {
-    if (drinksGroupsId.includes(group.id)) {
-      group.subGroups.forEach((subGroup) => {
-        subGroup.products.forEach((product) => {
-          if (product.weight != 0 && product.weight != null) {
-            if (product.weight * 1000 >= 1000) {
-              product.weightMeasure = 'л.'
-            } else {
-              product.weight = product.weight * 1000
-              product.weightMeasure = 'мл.'
-            }
-          }
-        })
-      })
+businessLunchGroupIndex.value = productsList.value
+  .map((e) => e.id)
+  .indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f')
+businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
+
+for (const subGroup of businessStore.businessProducts.subGroups) {
+  subGroup.daysOfWeek = []
+  for (let i = 0; i < daysOfWeekArr.length; i++) {
+    subGroup.daysOfWeek.push(
+      subGroup.products
+        .filter((product) => product.additionalInfo != null)
+        .filter((product) => product.additionalInfo.includes(daysOfWeekArr[i]))
+    )
+    const filterNoDay = subGroup.products
+      .filter((product) => product.additionalInfo == null)
+      .filter((product) => product.name != null)
+    if (filterNoDay.length != 0) {
+      subGroup.daysOfWeek[i].push(...filterNoDay)
     }
-    if (!drinksGroupsId.includes(group.id)) {
-      group.subGroups.forEach((subGroup) => {
-        if (subGroup.id != 'a4411b8a-76ef-4364-afc9-11387256de9f') {
-          subGroup.products.forEach((product) => {
-            product.weightMeasure = 'г.'
-            product.weight = (product.weight * 1000).toFixed(0)
-          })
-        } else if (subGroup.id == 'a4411b8a-76ef-4364-afc9-11387256de9f') {
-          subGroup.products.forEach((product) => {
-            if (product.weight != 0 && product.weight != null) {
-              if (product.weight * 1000 >= 1000) {
-                product.weightMeasure = 'л.'
-              } else {
-                product.weight = product.weight * 1000
-                product.weightMeasure = 'мл.'
-              }
-            }
-          })
-        }
-      })
-    }
+  }
+}
+businessStore.businessOrder = []
+businessStore.finalCost = 0
+
+businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
+  subGroup.products.forEach((product, productIndex) => {
+    product.subGroupIndex = subGroupIndex
+    product.productIndex = productIndex
   })
+})
 
-  businessLunchGroupIndex.value = productsList.value
-    .map((e) => e.id)
-    .indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f')
-  businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
-
-  for (const subGroup of businessStore.businessProducts.subGroups) {
-    subGroup.daysOfWeek = []
-    for (let i = 0; i < daysOfWeekArr.length; i++) {
-      subGroup.daysOfWeek.push(
-        subGroup.products
-          .filter((product) => product.additionalInfo != null)
-          .filter((product) => product.additionalInfo.includes(daysOfWeekArr[i]))
-      )
-      const filterNoDay = subGroup.products
-        .filter((product) => product.additionalInfo == null)
-        .filter((product) => product.name != null)
-      if (filterNoDay.length != 0) {
-        subGroup.daysOfWeek[i].push(...filterNoDay)
-      }
-    }
-  }
-  businessStore.businessOrder = []
-  businessStore.finalCost = 0
-
-  businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
-    subGroup.products.forEach((product, productIndex) => {
-      product.subGroupIndex = subGroupIndex
+businessStore.businessProducts.subGroups.forEach((subGroup) => {
+  subGroup.daysOfWeek.forEach((day, dayIndex) => {
+    day.forEach((product, productIndex) => {
+      product.dayIndex = dayIndex
       product.productIndex = productIndex
     })
   })
+})
 
-  businessStore.businessProducts.subGroups.forEach((subGroup) => {
-    subGroup.daysOfWeek.forEach((day, dayIndex) => {
-      day.forEach((product, productIndex) => {
-        product.dayIndex = dayIndex
-        product.productIndex = productIndex
-      })
-    })
-  })
+productsList.value.splice(businessLunchGroupIndex.value, 1)
 
-  productsList.value.splice(businessLunchGroupIndex.value, 1)
-
-  for (const group of productsList.value) {
-    group.subGroups = group.subGroups.filter((subGroup) => !subGroup.name.includes('ДОПЫ'))
-  }
-
-  productsStore.productsList = productsList.value
+for (const group of productsList.value) {
+  group.subGroups = group.subGroups.filter((subGroup) => !subGroup.name.includes('ДОПЫ'))
 }
+
+productsStore.productsList = productsList.value
 
 const orderStore = useOrderStore()
 orderStore.order = []
@@ -393,24 +353,7 @@ const onTablesSelected = () => {
   window.location = '/'
 }
 
-const onOrderDelete = async () => {
-  if (window.confirm('Вы уверены?')) {
-    for (let i = 0; i < selectedTables.value.length; i++) {
-      await axios
-        .delete('/order', { params: { tableId: selectedTables.value[i] } })
-        .then((response) => {
-          alert('Заказ удалён')
-        })
-    }
-  }
-}
-
 onMounted(() => {
-  axios.get('/menu').then((menuResponse) => {
-    storageMenu.value = JSON.stringify(menuResponse.data)
-    console.log(JSON.parse(storageMenu.value))
-    fillProducts()
-  })
   axios.get('/tables').then((response) => {
     zones.value = response.data
     selectedTables.value = JSON.parse(window.localStorage.getItem('selectedTables')) || []
