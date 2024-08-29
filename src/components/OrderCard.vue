@@ -10,9 +10,6 @@
       >
         <img :src="product.imageLinks[0] || '/images/ImageBasicDish.png'" alt="" />
       </div>
-      <!--      <div class="absolute w-[5px] h-auto top-[11px] right-[13px]">-->
-      <!--        <img src="/icons/IconThreeDotsWhite.svg" alt="" />-->
-      <!--      </div>-->
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
       <span
@@ -36,12 +33,12 @@
         {{ product.amount }}
       </div>
       <Counter
-        v-if="!product.isOrdered"
+        v-if="!product.isOrdered && productsStore.orderFunc == true"
         class="pointer-events-auto"
         :quantity="product.amount"
         @update="onProductCounterUpdate"
       />
-      <IconPlus v-if="!product.isOrdered" />
+      <IconPlus v-if="!product.isOrdered && productsStore.orderFunc == true" />
     </div>
   </div>
 </template>
@@ -51,8 +48,8 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { IconPlus, Counter } from '@/components'
-import { useElementSize } from '@vueuse/core'
 import { useOrderStore } from '@/stores/order.store'
+import { useProductsStore } from '@/stores/products.store'
 
 const props = defineProps({
   product: {
@@ -70,6 +67,7 @@ const emit = defineEmits(['chooseFromOrder', 'order-update'])
 
 const isProductInOrder = ref(props.product.selected)
 const orderStore = useOrderStore()
+const productsStore = useProductsStore()
 const isDescrHidden = ref(false)
 const productName = ref(null)
 const description =

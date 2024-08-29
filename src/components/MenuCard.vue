@@ -44,7 +44,7 @@
       </span>
       <Transition name="expand">
         <Counter
-          v-if="isProductInOrder"
+          v-if="isProductInOrder && productsStore.orderFunc == true"
           isBlack
           class="pointer-events-auto"
           :quantity="productAmount"
@@ -52,7 +52,7 @@
         />
         <IconPlus
           ref="iconPlus"
-          v-else-if="!isProductInOrder"
+          v-else-if="!isProductInOrder && productsStore.orderFunc == true"
           :isBlack="true"
           @click="onAddToOrder($event)"
         />
@@ -214,7 +214,6 @@ const onProductCounterUpdate = (iterator) => {
   if (orderStore.preOrder[indexInOrder].amount == 0) {
     isProductInOrder.value = false
     orderStore.preOrder.splice(indexInOrder, 1)
-    console.log(orderStore.preOrder, orderStore.preOrder.length)
   }
 }
 </script>
