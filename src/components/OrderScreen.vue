@@ -34,48 +34,6 @@
           >{{ totalPrice }} Руб.</span
         >
       </div>
-      <!-- Кнопки -->
-      <!-- <div
-        v-if="isAdditionalItems"
-        :class="['relative flex flex-col h-full !pointer-events-auto', {
-          'opacity-[0.3]': isOrderUpdating
-        }]"
-      >
-        <img v-if="isOrderUpdating" src="/icons/loading.gif" class="absolute top-0 left-[-40px] w-[40px]"/>
-
-        <span
-          @click="onUpdateOrder"
-          class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
-        >
-          Добавить в заказ
-        </span>
-
-        <div class="absolute bottom-[-10px] right-[-200px] w-[600px] flex shrink-1 items-center">
-          <img class="block h-[15px] w-auto" src="/icons/IconRhombusGold.svg" alt="" />
-          <div class="h-[1px] w-full bg-gold"></div>
-        </div>
-      </div>
-
-      <div
-        v-else
-        :class="['relative flex flex-col h-full !pointer-events-auto', {
-          'opacity-[0.3]': !orderStore.preOrder.length || isOrderInProgress || isOrderCreating
-        }]"
-      >
-        <img v-if="isOrderCreating" src="/icons/loading.gif" class="absolute top-0 left-[-40px] w-[40px]"/>
-
-        <span
-          @click="onMakeOrder"
-          class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"
-        >
-          {{ !isOrderInProgress ? 'Пригласить официанта' : 'Скоро начнём готовить' }}
-        </span>
-
-        <div class="absolute bottom-[-10px] right-[-200px] w-[600px] flex shrink-1 items-center">
-          <img class="block h-[15px] w-auto" src="/icons/IconRhombusGold.svg" alt="" />
-          <div class="h-[1px] w-full bg-gold"></div>
-        </div>
-      </div> -->
       <div
         class="flex w-fit shrink-0 border-solid border-b-[1px] border-b-darkGold px-[60px] pb-[15px] translate-x-[60px] default-transition"
       >

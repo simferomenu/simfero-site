@@ -55,18 +55,22 @@
     <div
       class="w-full relative flex justify-between box-border px-[40px] mt-[40px] mb-[30px] shrink-0 h-fit"
     >
-      <div class="flex flex-col w-[320px]">
-        <!--        <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"-->
-        <!--          >10 стол, основной зал</span-->
-        <!--        >-->
-        <!--        <div class="flex justify-between items-center mt-[12px]">-->
-        <!--          <span class="font-Segoe font-[350] text-[14px] tracking-[0.05em] text-[#fff]"-->
-        <!--            >3000 рублей депозит</span-->
-        <!--          >-->
-        <!--          <span class="font-Segoe font-[350] text-[14px] tracking-[0.05em] text-[#fff]"-->
-        <!--            >Бронь стола на 11:00</span-->
-        <!--          >-->
-        <!--        </div>-->
+      <div class="flex items-center w-[320px] pointer-events-auto" @click="changeOrderFunc">
+        <label
+          class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold cursor-pointer mr-[10px]"
+        >
+          Отображение заказов</label
+        >
+        <input type="checkbox" :checked="productsStore.orderFunc" />
+
+        <!-- <div class="flex justify-between items-center mt-[12px]">
+          <span class="font-Segoe font-[350] text-[14px] tracking-[0.05em] text-[#fff]"
+            >3000 рублей депозит</span
+          >
+          <span class="font-Segoe font-[350] text-[14px] tracking-[0.05em] text-[#fff]"
+            >Бронь стола на 11:00</span
+          >
+        </div> -->
       </div>
       <div>
         <span
@@ -81,7 +85,11 @@
         class="flex flex-col w-fit shrink-0 border-solid border-b-[1px] border-b-darkGold px-[10%] mb-[-10px] translate-x-[60px] default-transition"
       >
         <span
-          class="absolute font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase left-[10px] text-gold cursor-pointer !pointer-events-auto bottom-[7.5px]"
+          class="absolute font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase left-[10px] text-gold cursor-pointer bottom-[7.5px]"
+          :class="{
+            'opacity-50 pointer-events-none': selectedTables.length == 0,
+            'pointer-events-auto': selectedTables.length != 0
+          }"
           @click="onTablesSelected"
         >
           Выбрать
@@ -166,6 +174,10 @@ const onOrderDelete = async () => {
   }
 }
 
+const changeOrderFunc = () => {
+  productsStore.orderFunc = !productsStore.orderFunc
+}
+
 const storageMenu = window.localStorage.getItem('menu')
 menuProducts.value = storageMenu ? JSON.parse(storageMenu) : null
 menuProducts.value.groups.forEach((group) => {
@@ -201,22 +213,6 @@ menuProducts.value.products.forEach((product) => {
     product.weightMeasure = 'г.'
     product.weight = product.weight * 1000
   }
-  // if (drinksSubGroupsId.value.includes(product.parentGroup)) {
-  //   if (product.weight != null && product.weight <= 2 && product.weight > 0.1) {
-  //     product.weightMeasure = 'л.'
-  //   } else {
-  //     product.weightMeasure = 'г.'
-  //   }
-  // } else {
-  //   if (product.weight != null && product.weight < 1) {
-  //     if (product.weight - product.weight == 0) {
-  //       product.weight = product.weight.toFixed(0)
-  //     } else {
-  //       product.weight = product.weight.toFixed(2)
-  //     }
-  //     product.weightMeasure = 'г.'
-  //   }
-  // }
 })
 
 menuProducts.value.products = menuProducts.value.products.filter(
