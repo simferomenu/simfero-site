@@ -52,7 +52,7 @@
           <div class="relative h-full flex flex-col justify-between">
             <span
               class="font-Segoe font-semibold text-[24px] leading-[110%] tracking-[0.03em] upppercase text-[#fff]"
-              >{{ product.sizePrices[0].price.currentPrice }} Руб.</span
+              >{{ product.sizePrices[0].price.currentPrice }} руб</span
             >
             <span
               class="font-Segoe font-semibold text-[21px] leading-[110%] tracking-[0.03em] upppercase text-darkGold mt-[18px]"
@@ -91,10 +91,11 @@ const props = defineProps({
   }
 })
 
+console.log(props.product)
+
 const proteinsAmount = props.product.proteinsAmount.toFixed(1)
 const fatAmount = props.product.fatAmount.toFixed(1)
 const carbohydratesAmount = props.product.carbohydratesAmount.toFixed(1)
-
 const productsStore = useProductsStore()
 const businessStore = useBusinessStore()
 const isButtonVisible = ref(null)
@@ -138,7 +139,7 @@ const addToOrder = () => {
         .products[cardInfo.value.cardIndex]
     )
   }
-  isProductInOrder.value = true
+  // isProductInOrder.value = true
   orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
   orderStore.orderInfo.orderAmount++
 }
@@ -158,7 +159,7 @@ const onProductCounterUpdate = (iterator) => {
     orderStore.orderInfo.prevOrderAmount = orderStore.orderInfo.orderAmount
     orderStore.orderInfo.orderAmount += iterator
     orderStore.preOrder.splice(indexInOrder, 1)
-    isProductInOrder.value = false
+    // isProductInOrder.value = false
   } else {
     if (isBusinessProduct.value) {
       businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[
