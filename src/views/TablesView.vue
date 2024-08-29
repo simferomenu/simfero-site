@@ -57,20 +57,15 @@
       class="w-full relative flex justify-between box-border px-[40px] mt-[40px] mb-[30px] shrink-0 h-fit"
       v-if="!isFetchingTables && !isMenuLoading"
     >
-      <div class="flex flex-col w-[320px]">
-        <!--        <span class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold"-->
-        <!--          >10 стол, основной зал</span-->
-        <!--        >-->
-        <!--        <div class="flex justify-between items-center mt-[12px]">-->
-        <!--          <span class="font-Segoe font-[350] text-[14px] tracking-[0.05em] text-[#fff]"-->
-        <!--            >3000 рублей депозит</span-->
-        <!--          >-->
-        <!--          <span class="font-Segoe font-[350] text-[14px] tracking-[0.05em] text-[#fff]"-->
-        <!--            >Бронь стола на 11:00</span-->
-        <!--          >-->
-        <!--        </div>-->
+      <div class="flex items-center w-[320px] pointer-events-auto" @click="changeOrderFunc">
+        <label
+          class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold cursor-pointer mr-[10px]"
+        >
+          Отображение заказов</label
+        >
+        <input type="checkbox" :checked="productsStore.orderFunc" />
       </div>
-      <div class="absolute right-[50%] translate-x-[50%] bottom-[50%]">
+      <div class="absolute right-[50%] translate-x-[50%]">
         <span
           v-if="selectedTables.length != 0"
           class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold cursor-pointer !pointer-events-auto"
@@ -83,7 +78,11 @@
         class="flex flex-col w-fit shrink-0 border-solid border-b-[1px] border-b-darkGold px-[10%] mb-[-10px] translate-x-[60px] default-transition"
       >
         <span
-          class="absolute font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase left-[10px] text-gold cursor-pointer !pointer-events-auto bottom-[7.5px]"
+          class="absolute font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase left-[10px] text-gold cursor-pointer bottom-[7.5px]"
+          :class="{
+            'opacity-50 pointer-events-none': selectedTables.length == 0,
+            'pointer-events-auto': selectedTables.length != 0
+          }"
           @click="onTablesSelected"
         >
           Выбрать
@@ -128,6 +127,10 @@ const drinksGroupsId = [
   '1e815609-ed6a-466d-9914-bc9ca89a3761',
   '606700d7-17e3-46b5-b753-900f279f9522'
 ]
+
+const changeOrderFunc = () => {
+  productsStore.orderFunc = !productsStore.orderFunc
+}
 
 const fillProducts = () => {
   const propertiesToRemove = [

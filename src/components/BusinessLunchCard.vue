@@ -48,7 +48,8 @@
           v-if="
             isProductInOrder &&
             businessStore.isBusinessAvailable &&
-            businessStore.isCurrentDaySelected
+            businessStore.isCurrentDaySelected &&
+            productsStore.orderFunc == true
           "
           isBlack
           class="pointer-events-auto"
@@ -60,7 +61,8 @@
           v-else-if="
             !isProductInOrder &&
             businessStore.isBusinessAvailable &&
-            businessStore.isCurrentDaySelected
+            businessStore.isCurrentDaySelected &&
+            productsStore.orderFunc == true
           "
           :isBlack="true"
           @click="onAddToOrder($event)"
@@ -75,6 +77,7 @@ import { useElementSize } from '@vueuse/core'
 import { IconPlus, Counter } from '@/components'
 import { useBusinessStore } from '@/stores/business.store'
 import { useOrderStore } from '@/stores/order.store'
+import { useProductsStore } from '@/stores/products.store'
 const props = defineProps({
   product: {
     type: Object
@@ -92,6 +95,8 @@ const props = defineProps({
     type: Boolean
   }
 })
+
+const productsStore = useProductsStore()
 
 const emit = defineEmits(['select'])
 

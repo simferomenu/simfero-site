@@ -44,7 +44,7 @@
       </span>
       <Transition name="expand">
         <Counter
-          v-if="isProductInOrder"
+          v-if="isProductInOrder && productsStore.orderFunc == true"
           isBlack
           class="pointer-events-auto"
           :quantity="productAmount"
@@ -52,7 +52,7 @@
         />
         <IconPlus
           ref="iconPlus"
-          v-else-if="!isProductInOrder"
+          v-else-if="!isProductInOrder && productsStore.orderFunc == true"
           :isBlack="true"
           @click="onAddToOrder($event)"
         />

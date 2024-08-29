@@ -48,21 +48,6 @@
             class="absolute bottom-0 right-0 h-[1px] bg-[#fff] w-[100%] mr-[2.5%] opacity-50"
           ></div>
         </div>
-        <!-- <div
-          v-for="fpc of filteredFpc"
-          :key="fpc.name"
-          class="relative w-full flex justify-between pb-[20px] mt-[45px] border-solid border-b-[1px] border-b-gold"
-        >
-          <span
-            class="font-Segoe text-[#fff] font-semibold uppercase text-[16px] leading-[200%] tracking-[0.07em]"
-            >{{ fpc.name }}:</span
-          >
-          <span
-            class="font-Segoe text-[#fff] font-semibold uppercase text-[16px] leading-[200%] tracking-[0.07em]"
-          >
-            {{ fpc.amount }}</span
-          >
-        </div> -->
         <div class="relative w-full flex items-center justify-between mt-[30px]">
           <div class="relative h-full flex flex-col justify-between">
             <span
@@ -74,9 +59,14 @@
               >{{ product.weight }} {{ product.weightMeasure }}</span
             >
           </div>
-          <AddButton v-if="!isProductInOrder && isButtonVisible" @select="addToOrder" />
+          <AddButton
+            v-if="!isProductInOrder && isButtonVisible && productsStore.orderFunc == true"
+            @select="addToOrder"
+          />
           <AddButtonActive
-            v-if="isProductInOrder && cardInfo && isButtonVisible"
+            v-if="
+              isProductInOrder && cardInfo && isButtonVisible && productsStore.orderFunc == true
+            "
             @update="onProductCounterUpdate"
             :cardInfo="cardInfo"
             :quantity="props.product.amount"
@@ -130,17 +120,6 @@ if (props.product.subGroupIndex == null) {
 const description =
   props.product.description ||
   'Каждый раз, когда вы пробуете это блюдо, вы погружаетесь в мир вкуса и наслаждения. Вы чувствуете, как все ваши чувства оживают, а душа наполняется радостью и счастьем.'
-
-// const navigation = ref({
-//   enabled: true,
-//   nextEl: '.dish-button-next',
-//   prevEl: '.dish-button-prev'
-// })
-
-// const scrollbar = ref({
-//   enabled: true,
-//   el: '.dish-scrollbar'
-// })
 
 const addToOrder = () => {
   if (isBusinessProduct.value) {

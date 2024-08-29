@@ -68,11 +68,7 @@
           >Деловые обеды (11:00-16:00)</span
         >
       </div>
-      <!-- <div class="relative flex items-center !pointer-events-auto">
-        <img class="w-[32px] h-[32px]" src="/icons/IconExclamation.svg" alt="" />
-        <span class="menu-link ml-[15px]">Интерактивы</span>
-      </div> -->
-      <div class="relative flex items-center ml-[50px]">
+      <div class="relative flex items-center ml-[50px]" v-if="productsStore.orderFunc == true">
         <span
           @click="$emit('openOrder')"
           class="menu-link !pointer-events-auto shrink-0 text-nowrap"
@@ -109,8 +105,10 @@ import { useRouter } from 'vue-router'
 import { SmallCounter } from '@/components'
 import { useOrderStore } from '@/stores/order.store'
 import { useBusinessStore } from '@/stores/business.store'
+import { useProductsStore } from '@/stores/products.store'
 
 const businessStore = useBusinessStore()
+const productsStore = useProductsStore()
 
 const props = defineProps({
   categories: {
