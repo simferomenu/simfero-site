@@ -57,7 +57,7 @@
       class="w-full relative flex justify-between box-border px-[40px] mt-[40px] mb-[30px] shrink-0 h-fit"
       v-if="!isFetchingTables && !isMenuLoading"
     >
-      <div class="flex w-[320px] pointer-events-auto" @click="changeOrderFunc">
+      <div class="flex items-center w-[320px] pointer-events-auto" @click="changeOrderFunc">
         <label
           class="font-Segoe font-semibold text-[20px] tracking-[0.13em] uppercase text-gold cursor-pointer mr-[10px]"
         >
