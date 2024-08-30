@@ -125,7 +125,7 @@ import { useProductsStore } from '@/stores/products.store'
 
 const emit = defineEmits(['updateOrder'])
 
-const onChooseFromOrder = () => {}
+const onChooseFromOrder = (product) => emit('chooseFromOrder', product)
 
 const orderItems = ref([])
 const orderItemsPosition = ref([])

@@ -3,9 +3,10 @@
     class="relative flex flex-col h-[350px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated"
     :class="{ 'active-menu-card border-animation': isProductInOrder }"
     ref="cardElement"
+    @click="onChoose"
     v-if="product.isRendered"
   >
-    <div class="relative h-[145px] w-full shrink-0" @click="onChoose">
+    <div class="relative h-[145px] w-full shrink-0">
       <div
         class="absolute w-[183px] h-[183px] top-[-30px] left-[-25px] overflow-hidden rounded-[100px] animated bg-[#fff] flex justify-center items-center"
       >
@@ -24,7 +25,7 @@
       </div> -->
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
-      <div class="relative flex flex-col" @click="onChoose">
+      <div class="relative flex flex-col">
         <span
           ref="productName"
           class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000] clip-5 mb-[5px]"
@@ -38,14 +39,12 @@
           {{ description }}
         </span>
       </div>
-      <span
-        class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue"
-        @click="onChoose"
-      >
+      <span class="font-Segoe font-bold text-[20px] leading-[115%] tracking-[0.03em] text-darkBlue">
         {{ product.sizePrices[0].price.currentPrice }} Руб.
       </span>
       <Transition name="expand">
         <Counter
+          @click="preventChoose($event)"
           v-if="isProductInOrder && productsStore.orderFunc == true"
           isBlack
           class="pointer-events-auto"
@@ -56,7 +55,7 @@
           ref="iconPlus"
           v-else-if="!isProductInOrder && productsStore.orderFunc == true"
           :isBlack="true"
-          @click="onAddToOrder"
+          @click="onAddToOrder($event)"
         />
       </Transition>
     </div>
@@ -66,8 +65,9 @@
 <style scoped></style>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
 import { IconPlus, Counter } from '@/components'
+import { useElementSize } from '@vueuse/core'
 import { useOrderStore } from '@/stores/order.store'
 import { useProductsStore } from '@/stores/products.store'
 
@@ -97,6 +97,10 @@ const props = defineProps({
     type: Number
   }
 })
+
+const preventChoose = (event) => {
+  event.stopPropagation()
+}
 
 const emit = defineEmits(['choose', 'order-update', 'expand'])
 
@@ -155,13 +159,6 @@ onMounted(() => {
   if (cardElement.value) {
     observer.observe(cardElement.value)
   }
-  setTimeout(() => {
-    if (cardElement.value) {
-      if (productName.value && productName.value.clientHeight > 48) {
-        isDescrHidden.value = true
-      }
-    }
-  })
 })
 
 const orderStore = useOrderStore()
@@ -172,6 +169,21 @@ onBeforeUnmount(() => {
     observer.unobserve(cardElement.value)
   }
 })
+
+watch(
+  () => useElementSize(productName).height.value,
+  () => {
+    if (useElementSize(productName).height.value != 0) {
+      if (useElementSize(productName).height.value < 56) {
+        isDescrHidden.value = false
+      } else {
+        isDescrHidden.value = true
+      }
+    } else {
+      isDescrHidden.value = false
+    }
+  }
+)
 
 const onAddToOrder = (event) => {
   event && event.stopPropagation()

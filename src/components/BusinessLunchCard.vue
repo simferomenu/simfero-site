@@ -3,8 +3,9 @@
     class="relative flex flex-col h-[320px] w-[calc(50%-40px)] md:w-[calc(33%-40px)] xl:w-[calc(25%-40px)] box-border rounded-[19px] menu-card-bg mr-[40px] mb-[40px] shrink-0 pointer-events-auto default-transition animated"
     :class="{ 'active-menu-card border-animation': isProductInOrder }"
     ref="cardElement"
+    @click="onSelect"
   >
-    <div class="relative h-[145px] w-full shrink-0" @click="onSelect">
+    <div class="relative h-[145px] w-full shrink-0">
       <div
         class="absolute overflow-hidden rounded-[100px] animated flex justify-center items-center"
         :class="
@@ -25,7 +26,7 @@
       </div>
     </div>
     <div class="h-full w-full box-border p-[17px] flex flex-col justify-between">
-      <div class="relative flex flex-col" @click="onSelect">
+      <div class="relative flex flex-col">
         <span
           ref="productName"
           class="font-Segoe font-semibold text-[16px] leading-[150%] tracking-[0.12em] uppercase text-[#000] clip-5 mb-[5px]"
@@ -53,6 +54,7 @@
             businessStore.isCurrentDaySelected &&
             productsStore.orderFunc == true
           "
+          @click="preventChoose($event)"
           isBlack
           class="pointer-events-auto"
           :quantity="productAmount"
@@ -67,7 +69,7 @@
             productsStore.orderFunc == true
           "
           :isBlack="true"
-          @click="onAddToOrder"
+          @click="onAddToOrder($event)"
         />
       </Transition>
     </div>
@@ -110,6 +112,10 @@ const cardElement = ref(null)
 const productName = ref(null)
 const isDescrHidden = ref(false)
 
+const preventChoose = (event) => {
+  event.stopPropagation()
+}
+
 const onSelect = () => emit('select', productInfo.value)
 
 productInfo.value.dayIndex = props.day
@@ -138,7 +144,8 @@ const isProductInOrder = computed(() => {
     return null
   }
 })
-const onAddToOrder = () => {
+const onAddToOrder = (event) => {
+  event.stopPropagation()
   orderStore.preOrder.push(props.product)
   businessStore.businessProducts.subGroups[props.product.subGroupIndex].daysOfWeek[props.day][
     props.product.productIndex
