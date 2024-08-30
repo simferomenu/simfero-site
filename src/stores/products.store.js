@@ -3,7 +3,8 @@ import { defineStore } from 'pinia'
 export const useProductsStore = defineStore('products', {
   state: () => ({
     productsList: [],
-    drinksSubGroupsId: []
+    drinksSubGroupsId: [],
+    orderFunc: false
   }),
   actions: {
     setProductsList(products) {
