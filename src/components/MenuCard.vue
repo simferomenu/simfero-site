@@ -174,7 +174,7 @@ watch(
   () => useElementSize(productName).height.value,
   () => {
     if (useElementSize(productName).height.value != 0) {
-      if (useElementSize(productName).height.value < 56) {
+      if (useElementSize(productName).height.value < 72) {
         isDescrHidden.value = false
       } else {
         isDescrHidden.value = true

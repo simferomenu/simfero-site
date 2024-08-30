@@ -76,8 +76,9 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { IconPlus, Counter } from '@/components'
+import { useElementSize } from '@vueuse/core'
 import { useBusinessStore } from '@/stores/business.store'
 import { useOrderStore } from '@/stores/order.store'
 import { useProductsStore } from '@/stores/products.store'
@@ -169,11 +170,18 @@ const onProductCounterUpdate = (iterator) => {
     orderStore.preOrder.splice(indexInOrder, 1)
   }
 }
-onMounted(() => {
-  if (cardElement.value) {
-    if (productName.value && productName.value.clientHeight > 48) {
-      isDescrHidden.value = true
+watch(
+  () => useElementSize(productName).height.value,
+  () => {
+    if (useElementSize(productName).height.value != 0) {
+      if (useElementSize(productName).height.value < 72) {
+        isDescrHidden.value = false
+      } else {
+        isDescrHidden.value = true
+      }
+    } else {
+      isDescrHidden.value = false
     }
   }
-})
+)
 </script>
