@@ -218,7 +218,7 @@ const onMakeOrder = async () => {
 
     orderStore.preOrder.forEach((item) => {
       item.modifiers.forEach((mod) => {
-        const product = menu.products.find(({ id }) => id == mod.id)
+        const product = menu.find(({ id }) => id == mod.id)
 
         orderItems.push({
           productId: product.id,
