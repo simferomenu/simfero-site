@@ -209,25 +209,41 @@ const onMakeOrder = async () => {
     const tables = JSON.parse(window.localStorage.getItem('selectedTables'))
     const menu = JSON.parse(window.localStorage.getItem('menu'))
 
-    const orderItems = orderStore.preOrder.map((item) => ({
-      productId: item.id,
-      price: item.sizePrices[0].price.currentPrice,
-      type: 'Product',
-      amount: item.amount
-    }))
-
-    orderStore.preOrder.forEach((item) => {
-      item.modifiers.forEach((mod) => {
-        const product = menu.find(({ id }) => id == mod.id)
-
-        orderItems.push({
-          productId: product.id,
-          price: product.sizePrices[0].price.currentPrice,
-          type: 'Product',
-          amount: 1
+    const orderItems = orderStore.preOrder.map((item) => {
+      const data = {
+        productId: item.id,
+        price: item.sizePrices[0].price.currentPrice,
+        type: 'Product',
+        amount: item.amount,
+        modifiers: item.modifiers.map((mod) => {
+          const product = menu.find(({ id }) => id == mod.id);
+          return {
+            productId: product.id,
+            price: product.sizePrices[0].price.currentPrice,
+            type: 'Product',
+            amount: 1
+          }
         })
-      })
-    })
+      };
+
+      item.groupModifiers
+        .filter((mod) => mod.required)
+        .forEach((mod) => {
+          const product = menu.find(({ id }) => id == mod.childModifiers[0].id);
+
+          if (product) {
+            data.modifiers.push({
+              productId: product.id,
+              productGroupId: mod.id,
+              price: product.sizePrices[0].price.currentPrice,
+              type: 'Product',
+              amount: 1,
+            })
+          }
+        });
+
+      return data;
+    });
 
     await axios.post('/order', {
       table: tables[0],
@@ -240,17 +256,50 @@ const onMakeOrder = async () => {
 
 const onUpdateOrder = async () => {
   try {
-    isOrderUpdating.value = true
+    const menu = JSON.parse(window.localStorage.getItem('menu'))
 
-    await axios.put('/order', {
-      order: orderStore.orderInfo.orderId,
-      items: orderStore.preOrder.map((item) => ({
+    isOrderUpdating.value = true;
+
+    const data = orderStore.preOrder.map((item) => {
+      const orderData = {
         productId: item.id,
         price: item.sizePrices[0].price.currentPrice,
         type: 'Product',
-        amount: item.amount
-      }))
-    })
+        amount: item.amount,
+        modifiers: item.modifiers.map((mod) => {
+          const product = menu.find(({ id }) => id == mod.id);
+          return {
+            productId: product.id,
+            price: product.sizePrices[0].price.currentPrice,
+            type: 'Product',
+            amount: 1,
+          }
+        }),
+      };
+
+      item.groupModifiers
+        .filter((mod) => mod.required)
+        .forEach((mod) => {
+          const product = menu.find(({ id }) => id == mod.childModifiers[0].id);
+
+          if (product) {
+            orderData.modifiers.push({
+              productId: product.id,
+              productGroupId: mod.id,
+              price: product.sizePrices[0].price.currentPrice,
+              type: 'Product',
+              amount: 1,
+            })
+          }
+        });
+
+      return orderData
+    });
+
+    await axios.put('/order', {
+      order: orderStore.orderInfo.orderId,
+      items: data
+    });
   } catch (error) {
     console.log('Ошибка получения заказа', error)
   }
