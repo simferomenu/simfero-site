@@ -195,18 +195,18 @@ const fillProducts = () => {
       group.subGroups = [
         {
           name: group.name,
-          products: menuProducts.value.products.filter(
-            (subGroup) => subGroup.parentGroup === group.id
-          )
+          products: menuProducts.value.products
+            .filter((subGroup) => subGroup.parentGroup === group.id)
+            .sort((a, b) => a.order - b.order)
         }
       ]
     }
     // Fill sub with products
     for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
       subGroup.name = subGroup.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace(' ДО', '')
-      const products = menuProducts.value.products.filter(
-        (product) => product.parentGroup === subGroup.id
-      )
+      const products = menuProducts.value.products
+        .filter((product) => product.parentGroup === subGroup.id)
+        .sort((a, b) => a.order - b.order)
       const subSubGroups = menuProducts.value.groups.filter(
         (subSubGroups) => subSubGroups.parentGroup === subGroup.id
       )
@@ -214,7 +214,7 @@ const fillProducts = () => {
         group.subGroups.push(...subSubGroups)
       }
       if (products.length !== 0) {
-        subGroup.products = products
+        subGroup.products = products.sort((a, b) => a.order - b.order)
       }
       if (subGroup.products == null) {
         subGroupIndexRemove.value.push(subGroupIndex)
@@ -319,6 +319,7 @@ const fillProducts = () => {
   }
 
   productsStore.productsList = productsList.value
+  console.log(productsList.value)
 }
 
 const orderStore = useOrderStore()
