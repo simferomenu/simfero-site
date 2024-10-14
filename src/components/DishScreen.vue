@@ -11,7 +11,7 @@
         class="relative max-h-full aspect-square w-full shrink z-[2] rounded-[50%] overflow-hidden"
       >
         <img
-          class="inner-img scale-105"
+          class="inner-img"
           :src="product.imageLinks[0] || '/images/ImageBasicDish2.png'"
           alt=""
         />
@@ -90,6 +90,8 @@ const props = defineProps({
     type: Object
   }
 })
+
+console.log(props.product.imageLinks[0])
 
 const proteinsAmount = props.product.proteinsAmount.toFixed(1)
 const fatAmount = props.product.fatAmount.toFixed(1)
