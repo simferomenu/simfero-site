@@ -101,6 +101,7 @@ import { IconCross, IconBack, NumberCell } from '@/components'
 import { useProductsStore } from '@/stores/products.store'
 import { useOrderStore } from '@/stores/order.store'
 import { useBusinessStore } from '@/stores/business.store'
+import { stopListWorkaround } from '@/composables/stopListWorkaround.js'
 
 const router = useRouter()
 const toWaiter = () => {
@@ -195,12 +196,14 @@ const fillProducts = () => {
       group.subGroups = [
         {
           name: group.name,
+          id: group.id,
           products: menuProducts.value.products
             .filter((subGroup) => subGroup.parentGroup === group.id)
             .sort((a, b) => a.order - b.order)
         }
       ]
     }
+
     // Fill sub with products
     for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
       subGroup.name = subGroup.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace(' ДО', '')
@@ -210,7 +213,11 @@ const fillProducts = () => {
       const subSubGroups = menuProducts.value.groups.filter(
         (subSubGroups) => subSubGroups.parentGroup === subGroup.id
       )
+      // Move subSubGroups to subGroups
       if (subSubGroups.length !== 0) {
+        for (let subSubGroup of subSubGroups) {
+          subSubGroup.parentGroup = group.id
+        }
         group.subGroups.push(...subSubGroups)
       }
       if (products.length !== 0) {
@@ -319,7 +326,6 @@ const fillProducts = () => {
   }
 
   productsStore.productsList = productsList.value
-  console.log(productsList.value)
 }
 
 const orderStore = useOrderStore()
@@ -369,6 +375,7 @@ onMounted(() => {
   axios.get('/menu').then((menuResponse) => {
     storageMenu.value = JSON.stringify(menuResponse.data)
     fillProducts()
+    stopListWorkaround(menuResponse.data)
   })
   axios.get('/tables').then((response) => {
     zones.value = response.data

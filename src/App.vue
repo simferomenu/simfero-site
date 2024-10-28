@@ -9,6 +9,7 @@ import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useOrderStore } from '@/stores/order.store'
+// import { menuInit } from '@/composables/menuInit.js'
 
 // import { useScreenOrientation } from '@vueuse/core'
 
@@ -136,6 +137,7 @@ async function syncOrderData() {
           orderStore.$reset()
         }
       })
+      // await menuInit()
     } catch (error) {
       console.log('Ошибка обновления данных заказа...', error)
     }
