@@ -1,5 +1,5 @@
 export function missingProductsAddition(reparsedProducts) {
-  for (const [groupIndex, group] of reparsedProducts.products.entries()) {
+  for (const [groupIndex, group] of products.entries()) {
     for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
       for (const [productIndex, product] of subGroup.products.entries()) {
         if (!productStore.productsList[groupIndex].subGroups[subGroupIndex].products.filter((piniaProduct) => piniaProduct.id == product.id)) {
