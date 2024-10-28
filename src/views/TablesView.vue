@@ -101,7 +101,6 @@ import { IconCross, IconBack, NumberCell } from '@/components'
 import { useProductsStore } from '@/stores/products.store'
 import { useOrderStore } from '@/stores/order.store'
 import { useBusinessStore } from '@/stores/business.store'
-import { stopListWorkaround } from '@/composables/stopListWorkaround.js'
 
 const router = useRouter()
 const toWaiter = () => {
@@ -375,7 +374,6 @@ onMounted(() => {
   axios.get('/menu').then((menuResponse) => {
     storageMenu.value = JSON.stringify(menuResponse.data)
     fillProducts()
-    stopListWorkaround(menuResponse.data)
   })
   axios.get('/tables').then((response) => {
     zones.value = response.data

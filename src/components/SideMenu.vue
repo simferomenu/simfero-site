@@ -44,6 +44,7 @@
             <div
               class="panel-link"
               v-for="(sub, selectedSubGroupIndex) in item.subGroups"
+              v-if="sub.isHidded !== true"
               :key="sub.id"
             >
               <img class="h-[24px] w-[24px] mr-[10px]" src="/icons/IconCircleArrow.svg" alt="" />

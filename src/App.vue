@@ -9,14 +9,6 @@ import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useOrderStore } from '@/stores/order.store'
-// import { menuInit } from '@/composables/menuInit.js'
-
-// import { useScreenOrientation } from '@vueuse/core'
-
-// const { isSupported, orientation, angle, lockOrientation, unlockOrientation } =
-//   useScreenOrientation()
-
-// document.documentElement.requestFullscreen().then(() => screen.orientation.lock('portrait'))
 
 const isUpdateLocked = ref(false)
 const orderStore = useOrderStore()
@@ -61,7 +53,6 @@ async function syncOrderData() {
       if (['/tables'].includes(route.path)) {
         return
       }
-
       await axios.get(`/table/check/${table}`).then((response) => {
         if (isUpdateLocked.value) return
 
@@ -137,7 +128,6 @@ async function syncOrderData() {
           orderStore.$reset()
         }
       })
-      // await menuInit()
     } catch (error) {
       console.log('Ошибка обновления данных заказа...', error)
     }

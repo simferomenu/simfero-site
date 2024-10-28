@@ -1,8 +1,5 @@
-import { useProductsStore } from '@/stores/products.store.js'
 import { productParser } from '@/composables/productParser.js'
 import { missingProductsAddition } from '@/composables/missingProductsAddition.js'
-
-const productStore = useProductsStore()
 
 export function stopListWorkaround(menuProducts) {
   let stopListItems = {}
@@ -26,11 +23,12 @@ export function stopListWorkaround(menuProducts) {
           }
         }
         subGroup.products = subGroup.products.filter((_, index) => !productIndexToRemove.includes(index));
+        if (subGroup.products.length == 0) {
+          subGroup.isHidded = true
+        }
       }
     }
   }
 
-  var productsReParsed = productParser(menuProducts)
-
-  missingProductsAddition(productsReParsed)
+  missingProductsAddition(productParser(menuProducts))
 }

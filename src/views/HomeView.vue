@@ -54,6 +54,7 @@
       <div ref="scrollElement" class="[&>*]:pt-[40px]">
         <MenuSection
           v-for="(item, subGroupIndex) in productsStore.productsList[displayedGroupIndex].subGroups"
+          v-if="item.isHidded !== true"
           ref="scrollSection"
           :name="item.name"
           :key="item.name"
@@ -101,8 +102,7 @@
 <style scoped></style>
 
 <script setup>
-// import axios from 'axios'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useProductsStore } from '@/stores/products.store'
 import { useBusinessStore } from '@/stores/business.store'
 
@@ -115,6 +115,7 @@ import {
   BusinessLunchScreen,
   SearchScreen
 } from '@/components'
+import { menuInit } from '@/composables/menuInit.js'
 
 const productsStore = useProductsStore()
 const businessStore = useBusinessStore()
@@ -131,7 +132,7 @@ const scrollBody = ref(null)
 const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
   for (let i = 2; i < selectedSubGroupIndex + 1; i++) {
     if (
-      productsStore.productsList[displayedGroupIndex.value].subGroups[i].products[0].isRendered !=
+      productsStore.productsList[displayedGroupIndex.value].subGroups[i].products[0].isRendered !==
       true
     ) {
       for (const product of productsStore.productsList[displayedGroupIndex.value].subGroups[i]
@@ -144,43 +145,10 @@ const onSubGroupSelect = ({ selectedSubGroupIndex }) => {
   setTimeout(() => {
     scrollToSubGroup(selectedSubGroupIndex)
   }, 50)
-  // const element = document.getElementById(selectedSubGroupIndex)
-  // const yOffset = -40
-  // const y = element.getBoundingClientRect().top + window.scrollY + yOffset
-  // scrollBody.value.scrollTo({ top: y })
-  // if (
-  //   productsStore.productsList[displayedGroupIndex.value].subGroups.length > 1 &&
-  //   productsStore.productsList[displayedGroupIndex.value].subGroups[selectedSubGroupIndex].products
-  //     .length >
-  //     cardsPerLine.value * 4
-  // ) {
-  //   for (let i = 0; i < cardsPerLine.value * 4; i++) {
-  //     productsStore.productsList[displayedGroupIndex.value].subGroups[
-  //       selectedSubGroupIndex
-  //     ].products[i].isRendered = true
-  //   }
-  // } else {
-  //   for (
-  //     let i = 0;
-  //     i <
-  //     productsStore.productsList[displayedGroupIndex.value].subGroups[selectedSubGroupIndex]
-  //       .products.length;
-  //     i++
-  //   ) {
-  //     productsStore.productsList[displayedGroupIndex.value].subGroups[
-  //       selectedSubGroupIndex
-  //     ].products[i].isRendered = true
-  //   }
-  // }
-  // if (productsStore.productsList[displayedGroupIndex].subGroups.length > 1) {
-  // for ( let i=0; i<cardsPerLine.value*4; i++) {
-  //   productsStore.productsList[displayedGroupIndex].subGroups[1].products[i].isRendered=true
-  // }
-  // }
 
   if (
     productsStore.productsList[displayedGroupIndex.value].subGroups[selectedSubGroupIndex]
-      .products[0].isRendered == false
+      .products[0].isRendered === false
   ) {
     for (const product of productsStore.productsList[displayedGroupIndex.value].subGroups[
       selectedSubGroupIndex
@@ -370,6 +338,16 @@ const onOrderUpdate = () => {
     console.log('Ошибка добавления в заказа', error)
   }
 }
+
+function syncStopList () {
+  menuInit()
+}
+
+onMounted(() => {
+  syncStopList()
+
+  setInterval(syncStopList, 3000)
+})
 
 // onMounted(async () => {
 //   const storageMenu = window.localStorage.getItem('menu')
