@@ -52,29 +52,30 @@
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
       <div ref="scrollElement" class="[&>*]:pt-[40px]">
-        <MenuSection
-          v-for="(item, subGroupIndex) in productsStore.productsList[displayedGroupIndex].subGroups"
-          v-if="item.isHidded !== true"
-          ref="scrollSection"
-          :name="item.name"
-          :key="item.name"
-          :id="subGroupIndex"
-          :groupIndex="displayedGroupIndex"
-          :data-id="subGroupIndex"
-          :data-sub-group-index="subGroupIndex"
-        >
-          <MenuCard
-            v-for="(product, cardIndex) in item.products"
-            :product="product"
-            :key="product.id"
+        <div v-for="(item, subGroupIndex) in productsStore.productsList[displayedGroupIndex].subGroups" :key="item.name">
+          <MenuSection
+            v-if="item.isHidded === false"
+            ref="scrollSection"
+            :name="item.name"
+            :id="subGroupIndex"
             :groupIndex="displayedGroupIndex"
-            :subGroupIndex="subGroupIndex"
-            :data-id="cardIndex"
-            :cardIndex="cardIndex"
-            @choose="toggleDish"
-            @order-update="onOrderUpdate"
-          />
-        </MenuSection>
+            :data-id="subGroupIndex"
+            :data-sub-group-index="subGroupIndex"
+          >
+            <MenuCard
+              v-for="(product, cardIndex) in item.products"
+              :product="product"
+              :key="product.id"
+              :groupIndex="displayedGroupIndex"
+              :subGroupIndex="subGroupIndex"
+              :data-id="cardIndex"
+              :cardIndex="cardIndex"
+              @choose="toggleDish"
+              @order-update="onOrderUpdate"
+            />
+          </MenuSection>
+        </div>
+
         <!-- <MenuSection
           v-for="(item, sectionIndex) in productsStore.productsList[0]"
           :name="item.name"

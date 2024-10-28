@@ -206,6 +206,7 @@ const fillProducts = () => {
     // Fill sub with products
     for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
       subGroup.name = subGroup.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace(' ДО', '')
+      subGroup.isHidded = false
       const products = menuProducts.value.products
         .filter((product) => product.parentGroup === subGroup.id)
         .sort((a, b) => a.order - b.order)
