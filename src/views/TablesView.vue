@@ -45,7 +45,7 @@
             :key="item.id"
             :value="item.number"
             :id="item.id"
-            :is-selected="isSelected(item)"
+            :is-selected="item.id === selectedTables[0]"
             v-for="item in zone.tables"
             @selected="onCellSelected"
           />
@@ -101,6 +101,8 @@ import { IconCross, IconBack, NumberCell } from '@/components'
 import { useProductsStore } from '@/stores/products.store'
 import { useOrderStore } from '@/stores/order.store'
 import { useBusinessStore } from '@/stores/business.store'
+import { propertiesToRemove, daysOfWeek, drinksGroupsId } from '@/assets/parserConfig.json'
+
 
 const router = useRouter()
 const toWaiter = () => {
@@ -114,7 +116,6 @@ const groupIndexRemove = ref([])
 const subGroupIndexRemove = ref([])
 const businessStore = useBusinessStore()
 const businessLunchGroupIndex = ref(null)
-const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт']
 const storageMenu = ref()
 const isMenuLoading = ref(true)
 
@@ -122,39 +123,9 @@ const changeOrderFunc = () => {
   productsStore.orderFunc = !productsStore.orderFunc
 }
 
-const drinksGroupsId = [
-  'f53b9025-673c-41ef-a1b3-02fddee5fbbc',
-  '1e815609-ed6a-466d-9914-bc9ca89a3761',
-  '606700d7-17e3-46b5-b753-900f279f9522'
-]
-
 const fillProducts = () => {
-  const propertiesToRemove = [
-    'energyAmount',
-    'fatFullAmount',
-    'proteinsFullAmount',
-    'carbohydratesFullAmount',
-    'energyFullAmount',
-    'groupId',
-    'productCategoryId',
-    'type',
-    'orderItemType',
-    'splittable',
-    'measureUnit',
-    'fullNameEnglish',
-    'useBalanceForSell',
-    'canSetOpenPrice',
-    'paymentSubject',
-    'doNotPrintInCheque',
-    'code',
-    'tags',
-    'isDeleted',
-    'seoDescription',
-    'seoText',
-    'seoKeywords',
-    'seoTitle'
-  ]
 
+  // To sort groups that only upperCase
   const isUpperCase = (str) => {
     return str === str.toUpperCase()
   }
@@ -163,6 +134,7 @@ const fillProducts = () => {
 
   let productsInStopListIndexes = []
 
+  // Add some props and clear stopList on initial parse
   menuProducts.value.products.forEach((product,productIndex) => {
     propertiesToRemove.forEach((prop) => {
       delete product[prop]
@@ -175,15 +147,18 @@ const fillProducts = () => {
     }
   })
 
+  // Filter stop list products
   menuProducts.value.products = menuProducts.value.products.filter((_, index) => !productsInStopListIndexes.includes(index));
 
+  // Set localStorage item with menu content
   window.localStorage.setItem('menu', JSON.stringify(menuProducts.value.products))
-  isMenuLoading.value = false
 
+  // Remove products with no price
   menuProducts.value.products = menuProducts.value.products.filter(
     (product) => product.sizePrices[0].price.currentPrice != 0
   )
 
+  // mainGroup creation
   const groups = ref(menuProducts.value.groups)
   for (const group of groups.value) {
     if (group.parentGroup == null && isUpperCase(group.name) == true) {
@@ -191,6 +166,7 @@ const fillProducts = () => {
     }
   }
 
+  // Create subGroups with filters and create minimal subGroup if no subGroup in groups from back got
   for (let group of productsList.value) {
     subGroupIndexRemove.value = []
     const subGroups = menuProducts.value.groups.filter(
@@ -240,14 +216,17 @@ const fillProducts = () => {
     group.subGroups = group.subGroups.filter(
       (_, index) => !subGroupIndexRemove.value.includes(index)
     )
+    // Sort subGroups by order
     group.subGroups.sort((a, b) => a.order - b.order)
   }
   productsList.value = productsList.value.filter(
     (_, index) => !groupIndexRemove.value.includes(index)
   )
 
+  // Sort groups by order property
   productsList.value.sort((a, b) => a.order - b.order)
 
+  // Add correct weight measurements for drinks groups
   productsList.value.forEach((group) => {
     if (drinksGroupsId.includes(group.id)) {
       group.subGroups.forEach((subGroup) => {
@@ -263,6 +242,8 @@ const fillProducts = () => {
         })
       })
     }
+
+    // Add measurement unit non-drinks
     if (!drinksGroupsId.includes(group.id)) {
       group.subGroups.forEach((subGroup) => {
         if (subGroup.id != 'a4411b8a-76ef-4364-afc9-11387256de9f') {
@@ -286,18 +267,21 @@ const fillProducts = () => {
     }
   })
 
+  // Get businessProducts group
+
   businessLunchGroupIndex.value = productsList.value
     .map((e) => e.id)
     .indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f')
   businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
 
+  // Sort products in businessProducts by day
   for (const subGroup of businessStore.businessProducts.subGroups) {
     subGroup.daysOfWeek = []
-    for (let i = 0; i < daysOfWeekArr.length; i++) {
+    for (let i = 0; i < daysOfWeek.length; i++) {
       subGroup.daysOfWeek.push(
         subGroup.products
           .filter((product) => product.additionalInfo != null)
-          .filter((product) => product.additionalInfo.includes(daysOfWeekArr[i]))
+          .filter((product) => product.additionalInfo.includes(daysOfWeek[i]))
       )
       const filterNoDay = subGroup.products
         .filter((product) => product.additionalInfo == null)
@@ -307,9 +291,11 @@ const fillProducts = () => {
       }
     }
   }
+  // reset businessOrder
   businessStore.businessOrder = []
   businessStore.finalCost = 0
 
+  // Add in business subGroups and products for easier functonality implem in future
   businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
     subGroup.products.forEach((product, productIndex) => {
       product.subGroupIndex = subGroupIndex
@@ -317,6 +303,7 @@ const fillProducts = () => {
     })
   })
 
+  // Copy products in businessProducts to days
   businessStore.businessProducts.subGroups.forEach((subGroup) => {
     subGroup.daysOfWeek.forEach((day, dayIndex) => {
       day.forEach((product, productIndex) => {
@@ -326,8 +313,10 @@ const fillProducts = () => {
     })
   })
 
+  // Remove businessProducts from common products base
   productsList.value.splice(businessLunchGroupIndex.value, 1)
 
+  // Remove Additional groups from productsList
   for (const group of productsList.value) {
     group.subGroups = group.subGroups.filter((subGroup) => !subGroup.name.includes('ДОПЫ'))
   }
@@ -347,13 +336,14 @@ const zones = ref([])
 const isFetchingTables = ref(true)
 
 const onCellSelected = ({ id }) => {
-  const isExist = selectedTables.value.find((item) => item === id)
-
-  if (!isExist) {
-    selectedTables.value.push(id)
-  } else {
-    selectedTables.value = selectedTables.value.filter((item) => item != id)
-  }
+  selectedTables.value = [id]
+  // const isExist = selectedTables.value.find((item) => item === id)
+  //
+  // if (!isExist) {
+  //   selectedTables.value.push(id)
+  // } else {
+  //   selectedTables.value = selectedTables.value.filter((item) => item != id)
+  // }
 
   window.localStorage.setItem('selectedTables', JSON.stringify(selectedTables.value))
 }
@@ -382,6 +372,7 @@ onMounted(() => {
   axios.get('/menu').then((menuResponse) => {
     storageMenu.value = JSON.stringify(menuResponse.data)
     fillProducts()
+    isMenuLoading.value = false
   })
   axios.get('/tables').then((response) => {
     zones.value = response.data

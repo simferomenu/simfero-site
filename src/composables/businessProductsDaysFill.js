@@ -1,11 +1,13 @@
+import {daysOfWeek} from '@/assets/parserConfig.json'
+
 export function businessProductsDaysFill() {
   for (const subGroup of businessStore.businessProducts.subGroups) {
     subGroup.daysOfWeek = []
-    for (let i = 0; i < daysOfWeekArr.length; i++) {
+    for (let i = 0; i < daysOfWeek.length; i++) {
       subGroup.daysOfWeek.push(
         subGroup.products
           .filter((product) => product.additionalInfo != null)
-          .filter((product) => product.additionalInfo.includes(daysOfWeekArr[i]))
+          .filter((product) => product.additionalInfo.includes(daysOfWeek[i]))
       )
       const filterNoDay = subGroup.products
         .filter((product) => product.additionalInfo == null)

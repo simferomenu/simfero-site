@@ -1,40 +1,7 @@
-const daysOfWeekArr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт']
-
-const propertiesToRemove = [
-  'energyAmount',
-  'fatFullAmount',
-  'proteinsFullAmount',
-  'carbohydratesFullAmount',
-  'energyFullAmount',
-  'groupId',
-  'productCategoryId',
-  'type',
-  'orderItemType',
-  'splittable',
-  'measureUnit',
-  'fullNameEnglish',
-  'useBalanceForSell',
-  'canSetOpenPrice',
-  'paymentSubject',
-  'doNotPrintInCheque',
-  'code',
-  'tags',
-  'isDeleted',
-  'seoDescription',
-  'seoText',
-  'seoKeywords',
-  'seoTitle'
-]
-
+import { propertiesToRemove, daysOfWeek, drinksGroupsId } from '@/assets/parserConfig.json'
 const isUpperCase = (str) => {
   return str === str.toUpperCase()
 }
-
-const drinksGroupsId = [
-  'f53b9025-673c-41ef-a1b3-02fddee5fbbc',
-  '1e815609-ed6a-466d-9914-bc9ca89a3761',
-  '606700d7-17e3-46b5-b753-900f279f9522'
-]
 
 export function productParser(menuProducts) {
   var productsList = []
@@ -54,6 +21,7 @@ export function productParser(menuProducts) {
     }
   })
 
+  // Delete products that already in stopList
   menuProducts.products = menuProducts.products.filter((_, index) => !productsInStopListIndexes.includes(index));
 
   menuProducts.products = menuProducts.products.filter(
@@ -168,11 +136,11 @@ export function productParser(menuProducts) {
 
   for (const subGroup of businessProducts.subGroups) {
     subGroup.daysOfWeek = []
-    for (let i = 0; i < daysOfWeekArr.length; i++) {
+    for (let i = 0; i < daysOfWeek.length; i++) {
       subGroup.daysOfWeek.push(
         subGroup.products
           .filter((product) => product.additionalInfo != null)
-          .filter((product) => product.additionalInfo.includes(daysOfWeekArr[i]))
+          .filter((product) => product.additionalInfo.includes(daysOfWeek[i]))
       )
       const filterNoDay = subGroup.products
         .filter((product) => product.additionalInfo == null)

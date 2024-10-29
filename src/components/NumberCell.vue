@@ -6,7 +6,7 @@
       {
         'opacity-50': disabled,
         'border-solid border-b-[1px] border-b-[#fff]': !disabled,
-        'active-cell': isActive
+        'active-cell': isSelected
       }
     ]"
     @click="activateCell"
@@ -39,10 +39,10 @@ const props = defineProps({
 
 const emit = defineEmits(['selected'])
 const cell = ref()
-const isActive = ref(props.isSelected)
+// const isActive = ref(props.isSelected)
 
 const activateCell = () => {
-  isActive.value = !isActive.value
+  // isActive.value = !isActive.value
   emit('selected', { id: props.id })
 }
 </script>
