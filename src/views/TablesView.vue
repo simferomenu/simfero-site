@@ -161,14 +161,21 @@ const fillProducts = () => {
 
   menuProducts.value = storageMenu.value ? JSON.parse(storageMenu.value) : null
 
-  menuProducts.value.products.forEach((product) => {
+  let productsInStopListIndexes = []
+
+  menuProducts.value.products.forEach((product,productIndex) => {
     propertiesToRemove.forEach((prop) => {
       delete product[prop]
     })
     product.isRendered = false
     product.amount = 0
     product.name = product.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace('ДО ', '')
+    if (product.isInStopList) {
+      productsInStopListIndexes.push(productIndex)
+    }
   })
+
+  menuProducts.value.products = menuProducts.value.products.filter((_, index) => !productsInStopListIndexes.includes(index));
 
   window.localStorage.setItem('menu', JSON.stringify(menuProducts.value.products))
   isMenuLoading.value = false
