@@ -3,11 +3,12 @@ import { useProductsStore } from '@/stores/products.store'
 export function missingProductsAddition(products) {
   const productStore = useProductsStore()
 
-  let groupsToAdd = []
   let isGroupAdded = false
   for (const [groupIndex, group] of products.entries()) {
     if (!productStore.productsList.find(groupItem => groupItem.id === group.id)) {
-      productStore.productsList.push(group)
+      let groupToAdd = group
+      groupToAdd.subGroups=[]
+      productStore.productsList.push(groupToAdd)
       isGroupAdded = true
     }
   }
