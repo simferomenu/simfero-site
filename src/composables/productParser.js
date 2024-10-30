@@ -30,7 +30,7 @@ export function productParser(menuProducts) {
 
   var groups = (menuProducts.groups)
   for (const group of groups) {
-    if (group.parentGroup == null && isUpperCase(group.name) == true && group.id !== "1e815609-ed6a-466d-9914-bc9ca89a3761") {
+    if (group.parentGroup == null && isUpperCase(group.name) == true) {
       productsList.push(group)
     }
   }
