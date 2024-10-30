@@ -20,10 +20,12 @@ export function missingProductsAddition(products) {
     for (const [subGroupIndex, subGroup] of group.subGroups) {
       if (!productStore.productsList[groupIndex].subGroups.find(subGroupItem => subGroupItem.id === subGroupItem.id)) {
         isSubGroupAdded = true
-        productStore.productsList[groupIndex].subGroups.push(subGroup)
+        let subGroupToAdd = subGroup
+        subGroupToAdd.products = []
+        productStore.productsList[groupIndex].subGroups.push(subGroupToAdd)
       }
     }
-    if (isGroupAdded) {
+    if (isSubGroupAdded) {
       productStore.productsList[groupIndex].subGroups.sort((a,b) => a.order - b.order)
     }
   }
