@@ -2,10 +2,8 @@ import { productParser } from '@/composables/productParser.js'
 import { missingProductsAddition } from '@/composables/missingProductsAddition.js'
 import { useProductsStore } from '@/stores/products.store'
 
-export function stopListWorkaround(menuProducts, menuVersion) {
+export function stopListWorkaround(menuProducts) {
   const productsStore = useProductsStore()
-
-
 
   let stopListItems = {}
   for (let product of menuProducts.products) {
@@ -17,7 +15,7 @@ export function stopListWorkaround(menuProducts, menuVersion) {
     }
   }
 
-let groupsToRemove = []
+  let groupsToRemove = []
   for (const [groupIndex, group] of productsStore.productsList.entries()) {
     let subGroupsToRemove = []
     for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
@@ -48,6 +46,9 @@ let groupsToRemove = []
   for (let i = groupsToRemove.length -1; i >= 0; i--) {
     productsStore.productsList.splice(groupsToRemove[i],1);
   }
+
+  let reparsedMenu = productParser(menuProducts).products
+  missingProductsAddition(reparsedMenu)
 
   // if (stopListItems["d9b01578-bd7f-4934-bf6e-2806900c3e1f"]) {
   //   let arrayStopListSubGroup = Array.from(stopListItems["d9b01578-bd7f-4934-bf6e-2806900c3e1f"])
