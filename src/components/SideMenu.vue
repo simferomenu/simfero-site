@@ -27,7 +27,7 @@
       class="relative w-full flex-1 h-full flex flex-col mt-[30px] !overflow-auto pointer-events-auto custom-scrollbar animated-up"
     >
       <ul class="box-border pb-[20px]">
-        <li v-for="(item, selectedGroupIndex) in categories" :key="item.name">
+        <li v-for="(item, selectedGroupIndex) in categories" :key="item.name" >
           <div
             :class="[
               'menu-link accordion',
@@ -44,7 +44,7 @@
             <div  v-for="(sub, selectedSubGroupIndex) in item.subGroups"
                   :key="sub.id">
               <div
-                class="panel-link" v-if="sub.isHidded === false"
+                class="panel-link"
               >
                 <img class="h-[24px] w-[24px] mr-[10px]" src="/icons/IconCircleArrow.svg" alt="" />
                 <div
@@ -117,6 +117,17 @@ const props = defineProps({
     type: Array
   }
 })
+
+// const isItHidden = (groupIndex) => {
+//   let isSubGroupsVisible = true
+//   for (let subGroup of productsStore.productsList[groupIndex].subGroups) {
+//     if (subGroup.products.length != 0) {
+//       isSubGroupsVisible = false
+//       break
+//     }
+//   }
+//   return isSubGroupsVisible
+// }
 
 const pressTimer = ref(null)
 

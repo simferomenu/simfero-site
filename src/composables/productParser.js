@@ -25,7 +25,7 @@ export function productParser(menuProducts) {
   menuProducts.products = menuProducts.products.filter((_, index) => !productsInStopListIndexes.includes(index));
 
   menuProducts.products = menuProducts.products.filter(
-    (product) => product.sizePrices[0].price.currentPrice != 0
+    (product) => product.sizePrices[0].price.currentPrice !== 0
   )
 
   var groups = (menuProducts.groups)

@@ -8,9 +8,9 @@ export function menuInit(){
     if (currentMenuVersion==null || currentMenuVersion != infoResponse.data.menuVersion.value) {
       axios.get('/menu').then((menuResponse) => {
         stopListWorkaround(menuResponse.data)
-        window.localStorage.setItem('menu', menuResponse.data.products)
+        window.localStorage.setItem('menu', JSON.stringify(menuResponse.data.products))
+        window.localStorage.setItem('menuVersion', infoResponse.data.menuVersion.value)
       })
-      window.localStorage.setItem('menuVersion', infoResponse.data.menuVersion.value)
     }
   })
 }

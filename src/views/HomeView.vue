@@ -52,29 +52,28 @@
         <img src="/icons/loadingBlack.gif" alt="" />
       </div>
       <div ref="scrollElement" class="[&>*]:pt-[40px]">
-        <div v-for="(item, subGroupIndex) in productsStore.productsList[displayedGroupIndex].subGroups" :key="item.name">
-          <MenuSection
-            v-if="item.isHidded === false"
-            ref="scrollSection"
-            :name="item.name"
-            :id="subGroupIndex"
+        <MenuSection
+          v-for="(item, subGroupIndex) in productsStore.productsList[displayedGroupIndex].subGroups"
+          :key="item.name"
+          ref="scrollSection"
+          :name="item.name"
+          :id="subGroupIndex"
+          :groupIndex="displayedGroupIndex"
+          :data-id="subGroupIndex"
+          :data-sub-group-index="subGroupIndex"
+        >
+          <MenuCard
+            v-for="(product, cardIndex) in item.products"
+            :product="product"
+            :key="product.id"
             :groupIndex="displayedGroupIndex"
-            :data-id="subGroupIndex"
-            :data-sub-group-index="subGroupIndex"
-          >
-            <MenuCard
-              v-for="(product, cardIndex) in item.products"
-              :product="product"
-              :key="product.id"
-              :groupIndex="displayedGroupIndex"
-              :subGroupIndex="subGroupIndex"
-              :data-id="cardIndex"
-              :cardIndex="cardIndex"
-              @choose="toggleDish"
-              @order-update="onOrderUpdate"
-            />
-          </MenuSection>
-        </div>
+            :subGroupIndex="subGroupIndex"
+            :data-id="cardIndex"
+            :cardIndex="cardIndex"
+            @choose="toggleDish"
+            @order-update="onOrderUpdate"
+          />
+        </MenuSection>
 
         <!-- <MenuSection
           v-for="(item, sectionIndex) in productsStore.productsList[0]"
@@ -340,7 +339,7 @@ const onOrderUpdate = () => {
   }
 }
 
-function syncStopList () {
+function syncStopList() {
   menuInit()
 }
 

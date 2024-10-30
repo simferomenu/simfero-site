@@ -102,6 +102,8 @@ import { useProductsStore } from '@/stores/products.store'
 import { useOrderStore } from '@/stores/order.store'
 import { useBusinessStore } from '@/stores/business.store'
 import { propertiesToRemove, daysOfWeek, drinksGroupsId } from '@/assets/parserConfig.json'
+import { productParser } from '@/composables/productParser.js'
+import { stopListWorkaround } from '@/composables/stopListWorkaround.js'
 
 
 const router = useRouter()
@@ -126,202 +128,211 @@ const changeOrderFunc = () => {
 const fillProducts = () => {
 
   // To sort groups that only upperCase
-  const isUpperCase = (str) => {
-    return str === str.toUpperCase()
-  }
-
+  // const isUpperCase = (str) => {
+  //   return str === str.toUpperCase()
+  // }
+  //
+  // menuProducts.value = storageMenu.value ? JSON.parse(storageMenu.value) : null
+  // console.log(menuProducts.value)
+  //
+  // let productsInStopListIndexes = []
+  //
+  // // Add some props and clear stopList on initial parse
+  // menuProducts.value.products.forEach((product,productIndex) => {
+  //   propertiesToRemove.forEach((prop) => {
+  //     delete product[prop]
+  //   })
+  //   product.isRendered = false
+  //   product.amount = 0
+  //   product.name = product.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace('ДО ', '')
+  //   if (product.isInStopList) {
+  //     productsInStopListIndexes.push(productIndex)
+  //   }
+  // })
+  //
+  // // Filter stop list products
+  // // menuProducts.value.products = menuProducts.value.products.filter((_, index) => !productsInStopListIndexes.includes(index));
+  //
+  // // Set localStorage item with menu content
+  // window.localStorage.setItem('menu', JSON.stringify(menuProducts.value.products))
+  //
+  // // Remove products with no price
+  // menuProducts.value.products = menuProducts.value.products.filter(
+  //   (product) => product.sizePrices[0].price.currentPrice != 0
+  // )
+  //
+  // // mainGroup creation
+  // const groups = ref(menuProducts.value.groups)
+  // for (const group of groups.value) {
+  //   if (group.parentGroup == null && isUpperCase(group.name) == true) {
+  //     productsList.value.push(group)
+  //   }
+  // }
+  //
+  // // Create subGroups with filters and create minimal subGroup if no subGroup in groups from back got
+  // for (let group of productsList.value) {
+  //   subGroupIndexRemove.value = []
+  //   const subGroups = menuProducts.value.groups.filter(
+  //     (subGroup) => subGroup.parentGroup === group.id
+  //   )
+  //   if (subGroups.length !== 0) {
+  //     group.subGroups = subGroups
+  //   } else {
+  //     group.subGroups = [
+  //       {
+  //         name: group.name,
+  //         id: group.id,
+  //         products: menuProducts.value.products
+  //           .filter((subGroup) => subGroup.parentGroup === group.id)
+  //           .sort((a, b) => a.order - b.order)
+  //       }
+  //     ]
+  //   }
+  //
+  //   // Fill sub with products
+  //   for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
+  //     subGroup.name = subGroup.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace(' ДО', '')
+  //     subGroup.isHidded = false
+  //     const products = menuProducts.value.products
+  //       .filter((product) => product.parentGroup === subGroup.id)
+  //       .sort((a, b) => a.order - b.order)
+  //     const subSubGroups = menuProducts.value.groups.filter(
+  //       (subSubGroups) => subSubGroups.parentGroup === subGroup.id
+  //     )
+  //     // Move subSubGroups to subGroups
+  //     if (subSubGroups.length !== 0) {
+  //       for (let subSubGroup of subSubGroups) {
+  //         subSubGroup.parentGroup = group.id
+  //       }
+  //       group.subGroups.push(...subSubGroups)
+  //     }
+  //     if (products.length !== 0) {
+  //       subGroup.products = products.sort((a, b) => a.order - b.order)
+  //     }
+  //     if (subGroup.products == null) {
+  //       subGroupIndexRemove.value.push(subGroupIndex)
+  //     }
+  //   }
+  //   if (group.subGroups.length == 1 && group.subGroups[0].products.length == 0) {
+  //     groupIndexRemove.value.push(productsList.value.indexOf(group))
+  //   }
+  //   group.subGroups = group.subGroups.filter(
+  //     (_, index) => !subGroupIndexRemove.value.includes(index)
+  //   )
+  //   // Sort subGroups by order
+  //   group.subGroups.sort((a, b) => a.order - b.order)
+  // }
+  // productsList.value = productsList.value.filter(
+  //   (_, index) => !groupIndexRemove.value.includes(index)
+  // )
+  //
+  // // Sort groups by order property
+  // productsList.value.sort((a, b) => a.order - b.order)
+  //
+  // // Add correct weight measurements for drinks groups
+  // productsList.value.forEach((group) => {
+  //   if (drinksGroupsId.includes(group.id)) {
+  //     group.subGroups.forEach((subGroup) => {
+  //       subGroup.products.forEach((product) => {
+  //         if (product.weight != 0 && product.weight != null) {
+  //           if (product.weight * 1000 >= 1000) {
+  //             product.weightMeasure = 'л.'
+  //           } else {
+  //             product.weight = product.weight * 1000
+  //             product.weightMeasure = 'мл.'
+  //           }
+  //         }
+  //       })
+  //     })
+  //   }
+  //
+  //   // Add measurement unit non-drinks
+  //   if (!drinksGroupsId.includes(group.id)) {
+  //     group.subGroups.forEach((subGroup) => {
+  //       if (subGroup.id != 'a4411b8a-76ef-4364-afc9-11387256de9f') {
+  //         subGroup.products.forEach((product) => {
+  //           product.weightMeasure = 'г.'
+  //           product.weight = (product.weight * 1000).toFixed(0)
+  //         })
+  //       } else if (subGroup.id == 'a4411b8a-76ef-4364-afc9-11387256de9f') {
+  //         subGroup.products.forEach((product) => {
+  //           if (product.weight != 0 && product.weight != null) {
+  //             if (product.weight * 1000 >= 1000) {
+  //               product.weightMeasure = 'л.'
+  //             } else {
+  //               product.weight = product.weight * 1000
+  //               product.weightMeasure = 'мл.'
+  //             }
+  //           }
+  //         })
+  //       }
+  //     })
+  //   }
+  // })
+  //
+  // // Get businessProducts group
+  //
+  // businessLunchGroupIndex.value = productsList.value
+  //   .map((e) => e.id)
+  //   .indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f')
+  // businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
+  //
+  // // Sort products in businessProducts by day
+  // for (const subGroup of businessStore.businessProducts.subGroups) {
+  //   subGroup.daysOfWeek = []
+  //   for (let i = 0; i < daysOfWeek.length; i++) {
+  //     subGroup.daysOfWeek.push(
+  //       subGroup.products
+  //         .filter((product) => product.additionalInfo != null)
+  //         .filter((product) => product.additionalInfo.includes(daysOfWeek[i]))
+  //     )
+  //     const filterNoDay = subGroup.products
+  //       .filter((product) => product.additionalInfo == null)
+  //       .filter((product) => product.name != null)
+  //     if (filterNoDay.length != 0) {
+  //       subGroup.daysOfWeek[i].push(...filterNoDay)
+  //     }
+  //   }
+  // }
+  // // reset businessOrder
+  // businessStore.businessOrder = []
+  // businessStore.finalCost = 0
+  //
+  // // Add in business subGroups and products for easier functonality implem in future
+  // businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
+  //   subGroup.products.forEach((product, productIndex) => {
+  //     product.subGroupIndex = subGroupIndex
+  //     product.productIndex = productIndex
+  //   })
+  // })
+  //
+  // // Copy products in businessProducts to days
+  // businessStore.businessProducts.subGroups.forEach((subGroup) => {
+  //   subGroup.daysOfWeek.forEach((day, dayIndex) => {
+  //     day.forEach((product, productIndex) => {
+  //       product.dayIndex = dayIndex
+  //       product.productIndex = productIndex
+  //     })
+  //   })
+  // })
+  //
+  // // Remove businessProducts from common products base
+  // productsList.value.splice(businessLunchGroupIndex.value, 1)
+  //
+  // // Remove Additional groups from productsList
+  // for (const group of productsList.value) {
+  //   group.subGroups = group.subGroups.filter((subGroup) => !subGroup.name.includes('ДОПЫ'))
+  // }
+  //
+  // productsStore.productsList = productsList.value
   menuProducts.value = storageMenu.value ? JSON.parse(storageMenu.value) : null
-
-  let productsInStopListIndexes = []
-
-  // Add some props and clear stopList on initial parse
-  menuProducts.value.products.forEach((product,productIndex) => {
-    propertiesToRemove.forEach((prop) => {
-      delete product[prop]
-    })
-    product.isRendered = false
-    product.amount = 0
-    product.name = product.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace('ДО ', '')
-    if (product.isInStopList) {
-      productsInStopListIndexes.push(productIndex)
-    }
-  })
-
-  // Filter stop list products
-  menuProducts.value.products = menuProducts.value.products.filter((_, index) => !productsInStopListIndexes.includes(index));
-
-  // Set localStorage item with menu content
-  window.localStorage.setItem('menu', JSON.stringify(menuProducts.value.products))
-
-  // Remove products with no price
-  menuProducts.value.products = menuProducts.value.products.filter(
-    (product) => product.sizePrices[0].price.currentPrice != 0
-  )
-
-  // mainGroup creation
-  const groups = ref(menuProducts.value.groups)
-  for (const group of groups.value) {
-    if (group.parentGroup == null && isUpperCase(group.name) == true) {
-      productsList.value.push(group)
-    }
-  }
-
-  // Create subGroups with filters and create minimal subGroup if no subGroup in groups from back got
-  for (let group of productsList.value) {
-    subGroupIndexRemove.value = []
-    const subGroups = menuProducts.value.groups.filter(
-      (subGroup) => subGroup.parentGroup === group.id
-    )
-    if (subGroups.length != 0) {
-      group.subGroups = subGroups
-    } else {
-      group.subGroups = [
-        {
-          name: group.name,
-          id: group.id,
-          products: menuProducts.value.products
-            .filter((subGroup) => subGroup.parentGroup === group.id)
-            .sort((a, b) => a.order - b.order)
-        }
-      ]
-    }
-
-    // Fill sub with products
-    for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
-      subGroup.name = subGroup.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace(' ДО', '')
-      subGroup.isHidded = false
-      const products = menuProducts.value.products
-        .filter((product) => product.parentGroup === subGroup.id)
-        .sort((a, b) => a.order - b.order)
-      const subSubGroups = menuProducts.value.groups.filter(
-        (subSubGroups) => subSubGroups.parentGroup === subGroup.id
-      )
-      // Move subSubGroups to subGroups
-      if (subSubGroups.length !== 0) {
-        for (let subSubGroup of subSubGroups) {
-          subSubGroup.parentGroup = group.id
-        }
-        group.subGroups.push(...subSubGroups)
-      }
-      if (products.length !== 0) {
-        subGroup.products = products.sort((a, b) => a.order - b.order)
-      }
-      if (subGroup.products == null) {
-        subGroupIndexRemove.value.push(subGroupIndex)
-      }
-    }
-    if (group.subGroups.length == 1 && group.subGroups[0].products.length == 0) {
-      groupIndexRemove.value.push(productsList.value.indexOf(group))
-    }
-    group.subGroups = group.subGroups.filter(
-      (_, index) => !subGroupIndexRemove.value.includes(index)
-    )
-    // Sort subGroups by order
-    group.subGroups.sort((a, b) => a.order - b.order)
-  }
-  productsList.value = productsList.value.filter(
-    (_, index) => !groupIndexRemove.value.includes(index)
-  )
-
-  // Sort groups by order property
-  productsList.value.sort((a, b) => a.order - b.order)
-
-  // Add correct weight measurements for drinks groups
-  productsList.value.forEach((group) => {
-    if (drinksGroupsId.includes(group.id)) {
-      group.subGroups.forEach((subGroup) => {
-        subGroup.products.forEach((product) => {
-          if (product.weight != 0 && product.weight != null) {
-            if (product.weight * 1000 >= 1000) {
-              product.weightMeasure = 'л.'
-            } else {
-              product.weight = product.weight * 1000
-              product.weightMeasure = 'мл.'
-            }
-          }
-        })
-      })
-    }
-
-    // Add measurement unit non-drinks
-    if (!drinksGroupsId.includes(group.id)) {
-      group.subGroups.forEach((subGroup) => {
-        if (subGroup.id != 'a4411b8a-76ef-4364-afc9-11387256de9f') {
-          subGroup.products.forEach((product) => {
-            product.weightMeasure = 'г.'
-            product.weight = (product.weight * 1000).toFixed(0)
-          })
-        } else if (subGroup.id == 'a4411b8a-76ef-4364-afc9-11387256de9f') {
-          subGroup.products.forEach((product) => {
-            if (product.weight != 0 && product.weight != null) {
-              if (product.weight * 1000 >= 1000) {
-                product.weightMeasure = 'л.'
-              } else {
-                product.weight = product.weight * 1000
-                product.weightMeasure = 'мл.'
-              }
-            }
-          })
-        }
-      })
-    }
-  })
-
-  // Get businessProducts group
-
-  businessLunchGroupIndex.value = productsList.value
-    .map((e) => e.id)
-    .indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f')
-  businessStore.businessProducts = productsList.value[businessLunchGroupIndex.value]
-
-  // Sort products in businessProducts by day
-  for (const subGroup of businessStore.businessProducts.subGroups) {
-    subGroup.daysOfWeek = []
-    for (let i = 0; i < daysOfWeek.length; i++) {
-      subGroup.daysOfWeek.push(
-        subGroup.products
-          .filter((product) => product.additionalInfo != null)
-          .filter((product) => product.additionalInfo.includes(daysOfWeek[i]))
-      )
-      const filterNoDay = subGroup.products
-        .filter((product) => product.additionalInfo == null)
-        .filter((product) => product.name != null)
-      if (filterNoDay.length != 0) {
-        subGroup.daysOfWeek[i].push(...filterNoDay)
-      }
-    }
-  }
-  // reset businessOrder
+  let parsedProduct = productParser(menuProducts.value)
   businessStore.businessOrder = []
   businessStore.finalCost = 0
-
-  // Add in business subGroups and products for easier functonality implem in future
-  businessStore.businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
-    subGroup.products.forEach((product, productIndex) => {
-      product.subGroupIndex = subGroupIndex
-      product.productIndex = productIndex
-    })
-  })
-
-  // Copy products in businessProducts to days
-  businessStore.businessProducts.subGroups.forEach((subGroup) => {
-    subGroup.daysOfWeek.forEach((day, dayIndex) => {
-      day.forEach((product, productIndex) => {
-        product.dayIndex = dayIndex
-        product.productIndex = productIndex
-      })
-    })
-  })
-
-  // Remove businessProducts from common products base
-  productsList.value.splice(businessLunchGroupIndex.value, 1)
-
-  // Remove Additional groups from productsList
-  for (const group of productsList.value) {
-    group.subGroups = group.subGroups.filter((subGroup) => !subGroup.name.includes('ДОПЫ'))
-  }
-
-  productsStore.productsList = productsList.value
+  businessStore.businessProducts = parsedProduct.businessProducts
+  productsStore.productsList = parsedProduct.products
+  stopListWorkaround(menuProducts.value)
+  isMenuLoading.value = false
 }
 
 const orderStore = useOrderStore()
@@ -372,7 +383,6 @@ onMounted(() => {
   axios.get('/menu').then((menuResponse) => {
     storageMenu.value = JSON.stringify(menuResponse.data)
     fillProducts()
-    isMenuLoading.value = false
   })
   axios.get('/tables').then((response) => {
     zones.value = response.data

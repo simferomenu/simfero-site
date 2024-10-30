@@ -1,4 +1,34 @@
-export function missingProductsAddition(reparsedProducts) {
+import { useProductsStore } from '@/stores/products.store'
+
+export function missingProductsAddition(products) {
+  const productStore = useProductsStore()
+
+  let groupsToAdd = []
+  let isGroupAdded = false
+  for (const [groupIndex, group] of products.entries()) {
+    if (!productStore.productsList.find(groupItem => groupItem.id === group.id)) {
+      productStore.productsList.push(group)
+      isGroupAdded = true
+    }
+  }
+  if (isGroupAdded) {
+    productStore.productsList.sort((a,b) => a.order-b.order)
+  }
+
+  for (const [groupIndex, group] of products.entries()) {
+    let isSubGroupAdded
+    for (const [subGroupIndex, subGroup] of group.subGroups) {
+      if (!productStore.productsList[groupIndex].subGroups.find(subGroupItem => subGroupItem.id === subGroupItem.id)) {
+        isSubGroupAdded = true
+        productStore.productsList[groupIndex].subGroups.push(subGroup)
+      }
+    }
+    if (isGroupAdded) {
+      productStore.productsList[groupIndex].subGroups.sort((a,b) => a.order - b.order)
+    }
+  }
+
+
   for (const [groupIndex, group] of products.entries()) {
     for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
       for (const [productIndex, product] of subGroup.products.entries()) {
