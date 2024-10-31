@@ -2,7 +2,7 @@ import axios from 'axios'
 import { stopListWorkaround } from '@/composables/stopListWorkaround.js'
 
 export function menuInit(){
-  const table = window.localStorage.getItem('selectedTables')[0]
+  const table = JSON.parse(window.localStorage.getItem('selectedTables'))[0]
   axios.get(`/info/:${table}`).then((infoResponse) => {
     const currentMenuVersion = window.localStorage.getItem('menuVersion')
     if (currentMenuVersion==null || currentMenuVersion !== infoResponse.data.menuVersion.value) {
