@@ -1,0 +1,35 @@
+{
+  "propertiesToRemove": [
+    "energyAmount",
+    "fatFullAmount",
+    "proteinsFullAmount",
+    "carbohydratesFullAmount",
+    "energyFullAmount",
+    "groupId",
+    "productCategoryId",
+    "type",
+    "orderItemType",
+    "splittable",
+    "measureUnit",
+    "fullNameEnglish",
+    "useBalanceForSell",
+    "canSetOpenPrice",
+    "paymentSubject",
+    "doNotPrintInCheque",
+    "code",
+    "tags",
+    "isDeleted",
+    "seoDescription",
+    "seoText",
+    "seoKeywords",
+    "seoTitle"
+  ],
+  "daysOfWeek": [
+    "Пн", "Вт", "Ср", "Чт", "Пт"
+  ],
+  "drinksGroupsId": [
+    "f53b9025-673c-41ef-a1b3-02fddee5fbbc",
+    "1e815609-ed6a-466d-9914-bc9ca89a3761",
+    "606700d7-17e3-46b5-b753-900f279f9522"
+  ]
+}

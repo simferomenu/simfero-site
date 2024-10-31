@@ -10,13 +10,6 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useOrderStore } from '@/stores/order.store'
 
-// import { useScreenOrientation } from '@vueuse/core'
-
-// const { isSupported, orientation, angle, lockOrientation, unlockOrientation } =
-//   useScreenOrientation()
-
-// document.documentElement.requestFullscreen().then(() => screen.orientation.lock('portrait'))
-
 const isUpdateLocked = ref(false)
 const orderStore = useOrderStore()
 const route = useRoute()
@@ -60,7 +53,6 @@ async function syncOrderData() {
       if (['/tables'].includes(route.path)) {
         return
       }
-
       await axios.get(`/table/check/${table}`).then((response) => {
         if (isUpdateLocked.value) return
 

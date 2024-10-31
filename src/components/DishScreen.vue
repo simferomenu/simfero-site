@@ -91,8 +91,6 @@ const props = defineProps({
   }
 })
 
-console.log(props.product.imageLinks[0])
-
 const proteinsAmount = props.product.proteinsAmount.toFixed(1)
 const fatAmount = props.product.fatAmount.toFixed(1)
 const carbohydratesAmount = props.product.carbohydratesAmount.toFixed(1)
@@ -105,7 +103,7 @@ const cardInfo = ref()
 const isBusinessProduct = ref(null)
 const isProductInOrder = computed(() => {
   const index = orderStore.preOrder.map((e) => e.id).indexOf(props.product.id)
-  if (index == -1) {
+  if (index === -1) {
     return false
   } else {
     return true

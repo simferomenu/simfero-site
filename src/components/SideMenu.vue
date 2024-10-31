@@ -27,7 +27,7 @@
       class="relative w-full flex-1 h-full flex flex-col mt-[30px] !overflow-auto pointer-events-auto custom-scrollbar animated-up"
     >
       <ul class="box-border pb-[20px]">
-        <li v-for="(item, selectedGroupIndex) in categories" :key="item.name">
+        <li v-for="(item, selectedGroupIndex) in categories" :key="item.name" >
           <div
             :class="[
               'menu-link accordion',
@@ -41,19 +41,21 @@
           </div>
 
           <div class="panel [&>*:not(:last-child)]:mb-[10px]">
-            <div
-              class="panel-link"
-              v-for="(sub, selectedSubGroupIndex) in item.subGroups"
-              :key="sub.id"
-            >
-              <img class="h-[24px] w-[24px] mr-[10px]" src="/icons/IconCircleArrow.svg" alt="" />
+            <div  v-for="(sub, selectedSubGroupIndex) in item.subGroups"
+                  :key="sub.id">
               <div
-                class="font-Sitka text-[#fff] text-[15px] tracking-[0.17em] uppercase leading-[160%] font-normal"
-                @click="onSubGroupSelect(selectedSubGroupIndex)"
+                class="panel-link"
               >
-                {{ sub.name }}
+                <img class="h-[24px] w-[24px] mr-[10px]" src="/icons/IconCircleArrow.svg" alt="" />
+                <div
+                  class="font-Sitka text-[#fff] text-[15px] tracking-[0.17em] uppercase leading-[160%] font-normal"
+                  @click="onSubGroupSelect(selectedSubGroupIndex)"
+                >
+                  {{ sub.name }}
+                </div>
               </div>
             </div>
+
           </div>
         </li>
       </ul>
@@ -115,6 +117,17 @@ const props = defineProps({
     type: Array
   }
 })
+
+// const isItHidden = (groupIndex) => {
+//   let isSubGroupsVisible = true
+//   for (let subGroup of productsStore.productsList[groupIndex].subGroups) {
+//     if (subGroup.products.length != 0) {
+//       isSubGroupsVisible = false
+//       break
+//     }
+//   }
+//   return isSubGroupsVisible
+// }
 
 const pressTimer = ref(null)
 

@@ -44,7 +44,7 @@ const handleVisibilityChange = (entries) => {
       const sectionId = parseInt(entry.target.getAttribute('data-id'))
       if (sectionId == 0 || sectionId % 2 == 0) {
         for (let i = sectionId + 2; i < sectionId + 4; i++) {
-          if (productsStore.productsList[props.groupIndex].subGroups[i] != null) {
+          if (productsStore.productsList[props.groupIndex].subGroups[i] != null && productsStore.productsList[props.groupIndex].subGroups[i].products.length !== 0) {
             if (
               productsStore.productsList[props.groupIndex].subGroups[i].products[0].isRendered ==
               false
