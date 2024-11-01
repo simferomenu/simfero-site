@@ -9,7 +9,6 @@ export function menuInit(){
   const table = JSON.parse(window.localStorage.getItem('selectedTables'))[0]
   axios.get(`/info/:${table}`).then((infoResponse) => {
     const currentMenuVersion = window.localStorage.getItem('menuVersion') || ''
-    console.log(`currentMenuVersion - ${currentMenuVersion}`)
     if (currentMenuVersion !== infoResponse.data.menuVersion.value) {
       productStore.isStopListIsParsing = true
       axios.get('/menu').then((menuResponse) => {

@@ -31,5 +31,4 @@ export function missingProductsAddition(products) {
     }
   }
   productStore.isStopListIsParsing = false
-  console.log('Stop List workaround is done')
 }
