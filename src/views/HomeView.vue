@@ -340,7 +340,12 @@ const onOrderUpdate = () => {
 }
 
 function syncStopList() {
-  menuInit()
+  if (productsStore.isStopListIsParsing === false) {
+    menuInit()
+  } else {
+    console.log('Stop list is parsing')
+  }
+
 }
 
 onMounted(() => {

@@ -4,7 +4,8 @@ export const useProductsStore = defineStore('products', {
   state: () => ({
     productsList: [],
     drinksSubGroupsId: [],
-    orderFunc: false
+    orderFunc: false,
+    isStopListIsParsing: false,
   }),
   actions: {
     setProductsList(products) {

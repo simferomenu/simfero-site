@@ -20,15 +20,9 @@ export function stopListWorkaround(menuProducts) {
     let subGroupsToRemove = []
     for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
       if (stopListItems[subGroup.id]) {
-        let arrayStopListSubGroup = (stopListItems[subGroup.id])
-        let productIndexToRemove = []
-        for (const [productIndex, product] of subGroup.products.entries()) {
-          if (arrayStopListSubGroup.find(stopListItem => stopListItem.id === product.id)) {
-            productIndexToRemove.push(productIndex)
-          }
-        }
-        for (let i = productIndexToRemove.length -1; i>=0; i--) {
-          subGroup.products.splice(productIndexToRemove[i],1)
+        let arrayStopListSubGroup = Array.from(stopListItems[subGroup.id])
+        for (let i=0; i<arrayStopListSubGroup.length; i++) {
+          subGroup.products = subGroup.products.filter((product) => product.id !== arrayStopListSubGroup[i].id)
         }
         if (subGroup.products.length === 0) {
           subGroupsToRemove.push(subGroupIndex)
@@ -47,8 +41,7 @@ export function stopListWorkaround(menuProducts) {
     productsStore.productsList.splice(groupsToRemove[i],1);
   }
 
-  let reparsedMenu = productParser(menuProducts).products
-  missingProductsAddition(reparsedMenu)
+  missingProductsAddition(productParser(menuProducts).products)
 
   // if (stopListItems["d9b01578-bd7f-4934-bf6e-2806900c3e1f"]) {
   //   let arrayStopListSubGroup = Array.from(stopListItems["d9b01578-bd7f-4934-bf6e-2806900c3e1f"])
