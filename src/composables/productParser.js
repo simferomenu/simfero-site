@@ -7,7 +7,6 @@ export function productParser(menuProducts) {
   var productsList = []
   var subGroupIndexRemove = []
   var groupIndexRemove = []
-  var productsInStopListIndexes = []
 
   menuProducts.products.forEach((product, productIndex) => {
     propertiesToRemove.forEach((prop) => {
@@ -16,13 +15,11 @@ export function productParser(menuProducts) {
     product.isRendered = false
     product.amount = 0
     product.name = product.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace('ДО ', '')
-    if (product.isInStopList) {
-      productsInStopListIndexes.push(productIndex)
-    }
   })
 
-  // Delete products that already in stopList
-  menuProducts.products = menuProducts.products.filter((_, index) => !productsInStopListIndexes.includes(index));
+  menuProducts.products = menuProducts.products.filter(product => {
+    return product.isInStopList !== true
+  })
 
   menuProducts.products = menuProducts.products.filter(
     (product) => product.sizePrices[0].price.currentPrice !== 0

@@ -24,10 +24,12 @@ export function missingProductsAddition(products) {
     for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
         for (const [productIndex, product] of subGroup.products.entries()) {
           if (productStore.productsList[groupIndex].subGroups[subGroupIndex].products.filter(piniaProduct => piniaProduct.id === product.id).length === 0) {
+            product.isRendered = true
             productStore.productsList[groupIndex].subGroups[subGroupIndex].products.splice(productIndex, 0, product)
           }
         }
-      productStore.productsList[groupIndex].subGroups[subGroupIndex].products.sort((a, b) => a.order - b.order)
     }
   }
+  productStore.isStopListIsParsing = false
+  console.log('Stop List workaround is done')
 }

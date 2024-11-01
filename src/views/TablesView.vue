@@ -331,7 +331,6 @@ const fillProducts = () => {
   businessStore.finalCost = 0
   businessStore.businessProducts = parsedProduct.businessProducts
   productsStore.productsList = parsedProduct.products
-  stopListWorkaround(menuProducts.value)
   isMenuLoading.value = false
 }
 
