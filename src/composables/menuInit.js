@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { stopListWorkaround } from '@/composables/stopListWorkaround.js'
-// import {menu} from '@/assets/testingMenu.json'
+
 import { useProductsStore } from '@/stores/products.store.js'
 
 
