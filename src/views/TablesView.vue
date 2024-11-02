@@ -90,6 +90,7 @@
         />
       </div>
     </div>
+    <span class="fixed bottom-[10px] left-[10px] text-[16px] text-white/30">Версия: 10.0</span>
   </div>
 </template>
 
@@ -104,7 +105,6 @@ import { useBusinessStore } from '@/stores/business.store'
 import { propertiesToRemove, daysOfWeek, drinksGroupsId } from '@/assets/parserConfig.json'
 import { productParser } from '@/composables/productParser.js'
 import { stopListWorkaround } from '@/composables/stopListWorkaround.js'
-
 
 const router = useRouter()
 const toWaiter = () => {
@@ -126,7 +126,6 @@ const changeOrderFunc = () => {
 }
 
 const fillProducts = () => {
-
   // To sort groups that only upperCase
   // const isUpperCase = (str) => {
   //   return str === str.toUpperCase()
