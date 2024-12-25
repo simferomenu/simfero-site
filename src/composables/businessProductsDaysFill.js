@@ -1,4 +1,4 @@
-import {daysOfWeek} from '@/assets/parserConfig.json'
+import {daysOfWeek} from '@/constants/parserConfig.json'
 
 export function businessProductsDaysFill() {
   for (const subGroup of businessStore.businessProducts.subGroups) {

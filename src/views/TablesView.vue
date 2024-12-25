@@ -102,7 +102,7 @@ import { IconCross, IconBack, NumberCell } from '@/components'
 import { useProductsStore } from '@/stores/products.store'
 import { useOrderStore } from '@/stores/order.store'
 import { useBusinessStore } from '@/stores/business.store'
-import { propertiesToRemove, daysOfWeek, drinksGroupsId } from '@/assets/parserConfig.json'
+import { propertiesToRemove, daysOfWeek, drinksGroupsId } from '@/constants/parserConfig.json'
 import { productParser } from '@/composables/productParser.js'
 import { stopListWorkaround } from '@/composables/stopListWorkaround.js'
 
