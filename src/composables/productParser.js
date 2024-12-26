@@ -1,14 +1,12 @@
-import { propertiesToRemove, daysOfWeek, drinksGroupsId } from '@/assets/parserConfig.json'
+import { propertiesToRemove, daysOfWeek, drinksGroupsId } from '@/constants/parserConfig.json'
+import { ref } from 'vue'
 const isUpperCase = (str) => {
   return str === str.toUpperCase()
 }
 
 export function productParser(menuProducts) {
-  var productsList = []
-  var subGroupIndexRemove = []
-  var groupIndexRemove = []
-
-  menuProducts.products.forEach((product, productIndex) => {
+  let productsList = []
+  menuProducts.products.forEach((product) => {
     propertiesToRemove.forEach((prop) => {
       delete product[prop]
     })
@@ -17,7 +15,7 @@ export function productParser(menuProducts) {
     product.name = product.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace('ДО ', '')
   })
 
-  menuProducts.products = menuProducts.products.filter(product => {
+  menuProducts.products = menuProducts.products.filter((product) => {
     return product.isInStopList !== true
   })
 
@@ -25,68 +23,63 @@ export function productParser(menuProducts) {
     (product) => product.sizePrices[0].price.currentPrice !== 0
   )
 
-  var groups = (menuProducts.groups)
+  var groups = menuProducts.groups
   for (const group of groups) {
-    if (group.parentGroup == null && isUpperCase(group.name) == true) {
+    if (group.parentGroup === null && isUpperCase(group.name) == true) {
       productsList.push(group)
     }
   }
 
+  let groupsToRemove = []
+
   for (let group of productsList) {
-    subGroupIndexRemove = []
-    const subGroups = menuProducts.groups.filter(
-      (subGroup) => subGroup.parentGroup === group.id
-    )
-    if (subGroups.length != 0) {
+    let subGroups = menuProducts.groups.filter((subGroup) => subGroup.parentGroup === group.id)
+    if (subGroups.length !== 0) {
       group.subGroups = subGroups
     } else {
-      group.subGroups = [
-        {
-          name: group.name,
-          id: group.id,
-          products: menuProducts.products
-            .filter((subGroup) => subGroup.parentGroup === group.id)
-            .sort((a, b) => a.order - b.order)
-        }
-      ]
+      let products = menuProducts.products.filter((product) => product.parentGroup === group.id)
+      if (products.length !== 0) {
+        group.subGroups = [
+          {
+            name: group.name,
+            id: group.id
+          }
+        ]
+      } else {
+        groupsToRemove.push(group.id)
+      }
     }
+  }
 
-    // Fill sub with products
-    for (const [subGroupIndex, subGroup] of group.subGroups.entries()) {
-      subGroup.name = subGroup.name.replace('ДЕЛОВЫЕ ОБЕДЫ', '').replace(' ДО', '')
-      const products = menuProducts.products
-        .filter((product) => product.parentGroup === subGroup.id)
-        .sort((a, b) => a.order - b.order)
-      const subSubGroups = menuProducts.groups.filter(
-        (subSubGroups) => subSubGroups.parentGroup === subGroup.id
+  productsList = productsList.filter((group) => !groupsToRemove.includes(group.id))
+
+  // SubSubGroups
+  for (let group of productsList) {
+    for (let subGroup of group.subGroups) {
+      let subSubGroups = menuProducts.groups.filter(
+        (subSubGroup) => subSubGroup.parentGroup === subGroup.id
       )
-      // Move subSubGroups to subGroups
       if (subSubGroups.length !== 0) {
         for (let subSubGroup of subSubGroups) {
           subSubGroup.parentGroup = group.id
         }
         group.subGroups.push(...subSubGroups)
       }
-      if (products.length !== 0) {
-        subGroup.products = products.sort((a, b) => a.order - b.order)
-      }
-      if (subGroup.products == null) {
-        subGroupIndexRemove.push(subGroupIndex)
-      }
     }
-    if (group.subGroups.length == 1 && group.subGroups[0].products.length == 0) {
-      groupIndexRemove.push(productsList.indexOf(group))
-    }
-    group.subGroups = group.subGroups.filter(
-      (_, index) => !subGroupIndexRemove.includes(index)
-    )
-    group.subGroups.sort((a, b) => a.order - b.order)
+    group.subGroups = group.subGroups.sort((a, b) => a.order - b.order)
   }
-  productsList = productsList.filter(
-    (_, index) => !groupIndexRemove.includes(index)
-  )
 
-  productsList.sort((a, b) => a.order - b.order)
+  productsList = productsList.sort((a, b) => a.order - b.order)
+
+  // Fill sub with products
+
+  for (let group of productsList) {
+    for (let subGroup of group.subGroups) {
+      subGroup.products = menuProducts.products.filter(
+        (product) => product.parentGroup === subGroup.id
+      )
+    }
+  }
 
   productsList.forEach((group) => {
     if (drinksGroupsId.includes(group.id)) {
@@ -170,5 +163,5 @@ export function productParser(menuProducts) {
     group.subGroups = group.subGroups.filter((subGroup) => !subGroup.name.includes('ДОПЫ'))
   }
 
-  return { products:productsList, businessProducts:businessProducts }
+  return { products: productsList, businessProducts: businessProducts }
 }
