@@ -1,5 +1,4 @@
 import { propertiesToRemove, daysOfWeek, drinksGroupsId } from '@/constants/parserConfig.json'
-import { ref } from 'vue'
 const isUpperCase = (str) => {
   return str === str.toUpperCase()
 }
@@ -78,6 +77,7 @@ export function productParser(menuProducts) {
       subGroup.products = menuProducts.products.filter(
         (product) => product.parentGroup === subGroup.id
       )
+      subGroup.products = subGroup.products.sort((a, b) => a.order - b.order)
     }
   }
 
