@@ -35,9 +35,18 @@ export function productParser(menuProducts) {
     let subGroups = menuProducts.groups.filter((subGroup) => subGroup.parentGroup === group.id)
     if (subGroups.length !== 0) {
       group.subGroups = subGroups
+      if (
+        menuProducts.products.filter((product) => product.parentGroup === group.id).length !== 0
+      ) {
+        group.subGroups.push({
+          name: group.name,
+          id: group.id
+        })
+      }
     } else {
-      let products = menuProducts.products.filter((product) => product.parentGroup === group.id)
-      if (products.length !== 0) {
+      if (
+        menuProducts.products.filter((product) => product.parentGroup === group.id).length !== 0
+      ) {
         group.subGroups = [
           {
             name: group.name,
@@ -51,6 +60,7 @@ export function productParser(menuProducts) {
   }
 
   productsList = productsList.filter((group) => !groupsToRemove.includes(group.id))
+  groupsToRemove = []
 
   // SubSubGroups
   for (let group of productsList) {
@@ -59,9 +69,6 @@ export function productParser(menuProducts) {
         (subSubGroup) => subSubGroup.parentGroup === subGroup.id
       )
       if (subSubGroups.length !== 0) {
-        for (let subSubGroup of subSubGroups) {
-          subSubGroup.parentGroup = group.id
-        }
         group.subGroups.push(...subSubGroups)
       }
     }
@@ -73,13 +80,22 @@ export function productParser(menuProducts) {
   // Fill sub with products
 
   for (let group of productsList) {
+    let subGroupsToRemove = []
     for (let subGroup of group.subGroups) {
-      subGroup.products = menuProducts.products.filter(
-        (product) => product.parentGroup === subGroup.id
-      )
-      subGroup.products = subGroup.products.sort((a, b) => a.order - b.order)
+      let products = menuProducts.products.filter((product) => product.parentGroup === subGroup.id)
+      if (products.length === 0) {
+        subGroupsToRemove.push(subGroup.id)
+      } else {
+        subGroup.products = products
+      }
+    }
+    group.subGroups = group.subGroups.filter((subGroup) => !subGroupsToRemove.includes(subGroup.id))
+    if (group.subGroups.length === 0) {
+      groupsToRemove.push(group.id)
     }
   }
+
+  productsList.filter((group) => !groupsToRemove.includes(group.id))
 
   productsList.forEach((group) => {
     if (drinksGroupsId.includes(group.id)) {
