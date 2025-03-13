@@ -27,7 +27,7 @@
       class="relative w-full flex-1 h-full flex flex-col mt-[30px] !overflow-auto pointer-events-auto custom-scrollbar animated-up"
     >
       <ul class="box-border pb-[20px]">
-        <li v-for="(item, selectedGroupIndex) in categories" :key="item.name" >
+        <li v-for="(item, selectedGroupIndex) in categories" :key="item.name">
           <div
             :class="[
               'menu-link accordion',
@@ -41,11 +41,8 @@
           </div>
 
           <div class="panel [&>*:not(:last-child)]:mb-[10px]">
-            <div  v-for="(sub, selectedSubGroupIndex) in item.subGroups"
-                  :key="sub.id">
-              <div
-                class="panel-link"
-              >
+            <div v-for="(sub, selectedSubGroupIndex) in item.subGroups" :key="sub.id">
+              <div class="panel-link">
                 <img class="h-[24px] w-[24px] mr-[10px]" src="/icons/IconCircleArrow.svg" alt="" />
                 <div
                   class="font-Sitka text-[#fff] text-[15px] tracking-[0.17em] uppercase leading-[160%] font-normal"
@@ -55,7 +52,6 @@
                 </div>
               </div>
             </div>
-
           </div>
         </li>
       </ul>
@@ -63,8 +59,15 @@
     <div
       class="relative w-full flex flex-col pt-[30px] [&>*:not(:last-child)]:mb-[30px] animated-up"
     >
-      <div class="absolute left-0 top-0 w-[312px] translate-x-[-20px] h-[150%] bg-[#27282b]"></div>
-      <div class="relative flex items-center !pointer-events-auto" @click="onBusinessClick">
+      <div
+        class="absolute left-0 top-0 w-[312px] translate-x-[-20px] h-[150%] bg-[#27282b]"
+        v-if="businessStore.businessProducts.length > 0 || orderStore.orderFunc === true"
+      ></div>
+      <div
+        class="relative flex items-center !pointer-events-auto"
+        @click="onBusinessClick"
+        v-if="businessStore.businessProducts.length > 0"
+      >
         <img class="w-[32px] h-[32px]" src="/icons/IconBriefcaseGold.svg" alt="" />
         <span class="menu-link ml-[15px]" :class="{ active: businessStore.isBusinessVisible }"
           >Деловые обеды (11:00-16:00)</span

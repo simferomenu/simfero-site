@@ -138,46 +138,49 @@ export function productParser(menuProducts) {
   var businessLunchGroupIndex = productsList
     .map((e) => e.id)
     .indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f')
-  var businessProducts = productsList[businessLunchGroupIndex]
 
-  for (const subGroup of businessProducts.subGroups) {
-    subGroup.daysOfWeek = []
-    for (let i = 0; i < daysOfWeek.length; i++) {
-      subGroup.daysOfWeek.push(
-        subGroup.products
-          .filter((product) => product.additionalInfo != null)
-          .filter((product) => product.additionalInfo.includes(daysOfWeek[i]))
-      )
-      const filterNoDay = subGroup.products
-        .filter((product) => product.additionalInfo == null)
-        .filter((product) => product.name != null)
-      if (filterNoDay.length != 0) {
-        subGroup.daysOfWeek[i].push(...filterNoDay)
+  if (businessLunchGroupIndex !== -1) {
+    var businessProducts = productsList[businessLunchGroupIndex]
+
+    for (const subGroup of businessProducts.subGroups) {
+      subGroup.daysOfWeek = []
+      for (let i = 0; i < daysOfWeek.length; i++) {
+        subGroup.daysOfWeek.push(
+          subGroup.products
+            .filter((product) => product.additionalInfo != null)
+            .filter((product) => product.additionalInfo.toLowerCase().includes(daysOfWeek[i]))
+        )
+        const filterNoDay = subGroup.products
+          .filter((product) => product.additionalInfo == null)
+          .filter((product) => product.name != null)
+        if (filterNoDay.length != 0) {
+          subGroup.daysOfWeek[i].push(...filterNoDay)
+        }
       }
     }
-  }
 
-  businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
-    subGroup.products.forEach((product, productIndex) => {
-      product.subGroupIndex = subGroupIndex
-      product.productIndex = productIndex
-    })
-  })
-
-  businessProducts.subGroups.forEach((subGroup) => {
-    subGroup.daysOfWeek.forEach((day, dayIndex) => {
-      day.forEach((product, productIndex) => {
-        product.dayIndex = dayIndex
+    businessProducts.subGroups.forEach((subGroup, subGroupIndex) => {
+      subGroup.products.forEach((product, productIndex) => {
+        product.subGroupIndex = subGroupIndex
         product.productIndex = productIndex
       })
     })
-  })
 
-  productsList.splice(businessLunchGroupIndex, 1)
+    businessProducts.subGroups.forEach((subGroup) => {
+      subGroup.daysOfWeek.forEach((day, dayIndex) => {
+        day.forEach((product, productIndex) => {
+          product.dayIndex = dayIndex
+          product.productIndex = productIndex
+        })
+      })
+    })
+
+    productsList.splice(businessLunchGroupIndex, 1)
+  }
 
   for (const group of productsList) {
     group.subGroups = group.subGroups.filter((subGroup) => !subGroup.name.includes('ДОПЫ'))
   }
 
-  return { products: productsList, businessProducts: businessProducts }
+  return { products: productsList, businessProducts: businessProducts || [] }
 }
