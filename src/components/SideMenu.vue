@@ -61,12 +61,12 @@
     >
       <div
         class="absolute left-0 top-0 w-[312px] translate-x-[-20px] h-[150%] bg-[#27282b]"
-        v-if="businessStore.businessProducts.length > 0 || orderStore.orderFunc === true"
+        v-if="businessStore.businessProducts || orderStore.orderFunc === true"
       ></div>
       <div
         class="relative flex items-center !pointer-events-auto"
         @click="onBusinessClick"
-        v-if="businessStore.businessProducts.length > 0"
+        v-if="businessStore.businessProducts"
       >
         <img class="w-[32px] h-[32px]" src="/icons/IconBriefcaseGold.svg" alt="" />
         <span class="menu-link ml-[15px]" :class="{ active: businessStore.isBusinessVisible }"

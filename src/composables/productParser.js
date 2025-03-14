@@ -135,9 +135,7 @@ export function productParser(menuProducts) {
     }
   })
 
-  var businessLunchGroupIndex = productsList
-    .map((e) => e.id)
-    .indexOf('d9b01578-bd7f-4934-bf6e-2806900c3e1f')
+  var businessLunchGroupIndex = productsList.map((e) => e.name).indexOf('ДЕЛОВЫЕ ОБЕДЫ')
 
   if (businessLunchGroupIndex !== -1) {
     var businessProducts = productsList[businessLunchGroupIndex]
@@ -182,5 +180,5 @@ export function productParser(menuProducts) {
     group.subGroups = group.subGroups.filter((subGroup) => !subGroup.name.includes('ДОПЫ'))
   }
 
-  return { products: productsList, businessProducts: businessProducts || [] }
+  return { products: productsList, businessProducts: businessProducts || null }
 }
