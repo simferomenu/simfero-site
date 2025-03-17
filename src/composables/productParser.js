@@ -60,6 +60,7 @@ export function productParser(menuProducts) {
   }
 
   productsList = productsList.filter((group) => !groupsToRemove.includes(group.id))
+  productsList = productsList.sort((a, b) => a.order - b.order)
   groupsToRemove = []
 
   // SubSubGroups
@@ -69,6 +70,7 @@ export function productParser(menuProducts) {
         (subSubGroup) => subSubGroup.parentGroup === subGroup.id
       )
       if (subSubGroups.length !== 0) {
+        subSubGroups = subSubGroups.sort((a, b) => a.order - b.order)
         group.subGroups.push(...subSubGroups)
       }
     }
@@ -87,6 +89,7 @@ export function productParser(menuProducts) {
         subGroupsToRemove.push(subGroup.id)
       } else {
         subGroup.products = products
+        subGroup.products = subGroup.products.sort((a, b) => a.order - b.order)
       }
     }
     group.subGroups = group.subGroups.filter((subGroup) => !subGroupsToRemove.includes(subGroup.id))
