@@ -69,7 +69,12 @@ export function productParser(menuProducts) {
       let subSubGroups = menuProducts.groups.filter(
         (subSubGroup) => subSubGroup.parentGroup === subGroup.id
       )
-      if (subSubGroups.length !== 0) {
+      if (
+        subSubGroups.length !== 0 ||
+        subSubGroups.findIndex((subSubGroup) => {
+          subSubGroup.name === group.name
+        }) === -1
+      ) {
         subSubGroups = subSubGroups.sort((a, b) => a.order - b.order)
         group.subGroups.push(...subSubGroups)
       }
