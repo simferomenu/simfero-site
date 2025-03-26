@@ -90,7 +90,9 @@
         />
       </div>
     </div>
-    <span class="fixed bottom-[10px] left-[10px] text-[16px] text-white/30">Версия: 10.0</span>
+    <span class="fixed bottom-[10px] left-[10px] text-[16px] text-white/30"
+      >Версия: {{ version }}</span
+    >
   </div>
 </template>
 
@@ -104,6 +106,8 @@ import { useOrderStore } from '@/stores/order.store'
 import { useBusinessStore } from '@/stores/business.store'
 
 import { productParser } from '@/composables/productParser.js'
+
+const version = import.meta.env.VITE_APP_VERSION
 
 const router = useRouter()
 const toWaiter = () => {
