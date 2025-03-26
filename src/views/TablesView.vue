@@ -123,6 +123,7 @@ const changeOrderFunc = () => {
 const fillProducts = () => {
   menuProducts.value = storageMenu.value ? JSON.parse(storageMenu.value) : null
   let parsedProduct = productParser(menuProducts.value)
+  console.log(parsedProduct)
   businessStore.businessOrder = []
   businessStore.finalCost = 0
   businessStore.businessProducts = parsedProduct.businessProducts
@@ -176,6 +177,7 @@ const onOrderDelete = async () => {
 
 onMounted(() => {
   axios.get('/menu').then((menuResponse) => {
+    console.log(menuResponse.data)
     storageMenu.value = JSON.stringify(menuResponse.data)
     fillProducts()
   })

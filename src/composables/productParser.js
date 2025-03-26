@@ -18,8 +18,11 @@ export function productParser(menuProducts) {
     return product.isInStopList !== true
   })
 
+  var businessLunchGroup = menuProducts.groups.find((group) => group.name === 'ДЕЛОВЫЕ ОБЕДЫ').id
+
   menuProducts.products = menuProducts.products.filter(
-    (product) => product.sizePrices[0].price.currentPrice !== 0
+    (product) =>
+      product.parentGroup === businessLunchGroup || product.sizePrices[0].price.currentPrice !== 0
   )
 
   var groups = menuProducts.groups
@@ -43,19 +46,9 @@ export function productParser(menuProducts) {
           id: group.id
         })
       }
-    } else {
-      if (
-        menuProducts.products.filter((product) => product.parentGroup === group.id).length !== 0
-      ) {
-        group.subGroups = [
-          {
-            name: group.name,
-            id: group.id
-          }
-        ]
-      } else {
-        groupsToRemove.push(group.id)
-      }
+    }
+    if (!group.subGroups || group.subGroups.length === 0) {
+      groupsToRemove.push(group.id)
     }
   }
 
@@ -67,7 +60,7 @@ export function productParser(menuProducts) {
   for (let group of productsList) {
     for (let subGroup of group.subGroups) {
       let subSubGroups = menuProducts.groups.filter(
-        (subSubGroup) => subSubGroup.parentGroup === subGroup.id
+        (subSubGroup) => subSubGroup.parentGroup === subGroup.id && subGroup.id !== group.id
       )
       if (
         subSubGroups.length !== 0 ||
