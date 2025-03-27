@@ -36,18 +36,14 @@ export function productParser(menuProducts) {
 
   for (let group of productsList) {
     let subGroups = menuProducts.groups.filter((subGroup) => subGroup.parentGroup === group.id)
+    group.subGroups = []
     if (subGroups.length !== 0) {
-      group.subGroups = subGroups
-      if (
-        menuProducts.products.filter((product) => product.parentGroup === group.id).length !== 0
-      ) {
-        group.subGroups.push({
-          name: group.name,
-          id: group.id
-        })
-      }
+      group.subGroups.push(...subGroups)
     }
-    if (!group.subGroups || group.subGroups.length === 0) {
+    if (menuProducts.products.filter((product) => product.parentGroup === group.id).length !== 0) {
+      group.subGroups.push({ name: group.name, id: group.id })
+    }
+    if (group.subGroups.length === 0) {
       groupsToRemove.push(group.id)
     }
   }

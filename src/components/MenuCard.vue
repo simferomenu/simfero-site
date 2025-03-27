@@ -218,7 +218,6 @@ const onProductCounterUpdate = (iterator) => {
   if (orderStore.preOrder[indexInOrder].amount == 0) {
     isProductInOrder.value = false
     orderStore.preOrder.splice(indexInOrder, 1)
-    console.log(orderStore.preOrder, orderStore.preOrder.length)
   }
 }
 </script>
