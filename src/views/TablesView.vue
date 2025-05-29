@@ -144,7 +144,6 @@ orderStore.products = []
 const selectedTables = ref([])
 const zones = ref([])
 const isFetchingTables = ref(true)
-
 const onCellSelected = ({ id }) => {
   selectedTables.value = [id]
   // const isExist = selectedTables.value.find((item) => item === id)
@@ -163,7 +162,7 @@ const isSelected = ({ id }) => {
 }
 
 const onTablesSelected = () => {
-  window.location = '/'
+  router.push('/promotion')
 }
 
 const onOrderDelete = async () => {
