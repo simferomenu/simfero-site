@@ -57,7 +57,7 @@ if (currentDay > 4) {
   selectedDay.value = new Date().getDay() - 1
 }
 
-if (currentTime >= 11 && currentTime < 16 && currentDay <= 4) {
+if (currentTime >= 12 && currentTime < 16 && currentDay <= 4) {
   businessStore.isBusinessAvailable = true
 } else {
   businessStore.isBusinessAvailable = false
