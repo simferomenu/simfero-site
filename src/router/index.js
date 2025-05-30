@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
-import PromotionView from '@/views/PromotionView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,11 +21,6 @@ const router = createRouter({
       path: '/tables',
       name: 'tables',
       component: () => import('../views/TablesView.vue')
-    },
-    {
-      path: '/promotion',
-      name: 'promotion',
-      component: () => import('../views/PromotionView.vue')
     }
   ]
 })

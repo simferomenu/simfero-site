@@ -19,6 +19,7 @@ import FilteredProduct from '@/components/FilteredProduct.vue'
 import IconPlus from '@/components/icons/IconPlus.vue'
 import IconCross from '@/components/icons/IconCross.vue'
 import IconBack from '@/components/icons/IconBack.vue'
+import PromotionScreen from '@/components/PromotionScreen.vue'
 
 export {
   SideMenu,
@@ -41,5 +42,6 @@ export {
   DishScreen,
   OrderScreen,
   SearchScreen,
-  FilteredProduct
+  FilteredProduct,
+  PromotionScreen
 }

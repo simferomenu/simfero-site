@@ -1,8 +1,10 @@
 <template>
-  <div class="h-screen w-screen overflow-hidden waiter-bg flex flex-col">
+  <div
+    class="h-screen w-screen overflow-hidden fixed top-0 left-0 z-[1000] waiter-bg flex flex-col"
+  >
     <div
       class="flex items-center fixed top-[35px] cursor-pointer right-[35px] gap-[16px]"
-      @click="toTheMenu"
+      @click="emit('close')"
     >
       <span class="text-[#D2AF96] text-[20px] font-Segoe font-normal">ЗАКРЫТЬ</span>
       <img src="/icons/IconCrossAlt.svg" alt="close" class="w-[27px] h-[27px]" />
@@ -20,13 +22,7 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-
-const toTheMenu = () => {
-  router.push('/')
-}
+const emit = defineEmits(['close'])
 </script>
 
 <style scoped>

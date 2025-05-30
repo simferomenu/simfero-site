@@ -94,13 +94,25 @@
       >Версия: {{ version }}</span
     >
   </div>
+
+  <Teleport to="body">
+    <PromotionScreen
+      v-if="isPromotionVisible"
+      @close="
+        () => {
+          isPromotionVisible = false
+          router.push('/')
+        }
+      "
+    />
+  </Teleport>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import { IconCross, IconBack, NumberCell } from '@/components'
+import { IconCross, IconBack, NumberCell, PromotionScreen } from '@/components'
 import { useProductsStore } from '@/stores/products.store'
 import { useOrderStore } from '@/stores/order.store'
 import { useBusinessStore } from '@/stores/business.store'
@@ -115,6 +127,7 @@ const toWaiter = () => {
 }
 
 const productsStore = useProductsStore()
+const isPromotionVisible = ref(false)
 const menuProducts = ref(null)
 const businessStore = useBusinessStore()
 const storageMenu = ref()
@@ -162,7 +175,7 @@ const isSelected = ({ id }) => {
 }
 
 const onTablesSelected = () => {
-  router.push('/promotion')
+  isPromotionVisible.value = true
 }
 
 const onOrderDelete = async () => {
