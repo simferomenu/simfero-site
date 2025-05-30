@@ -96,15 +96,7 @@
   </div>
 
   <Teleport to="body">
-    <PromotionScreen
-      v-if="isPromotionVisible"
-      @close="
-        () => {
-          isPromotionVisible = false
-          router.push('/')
-        }
-      "
-    />
+    <PromotionScreen v-if="isPromotionVisible" @close="closePromotion" />
   </Teleport>
 </template>
 
@@ -135,6 +127,11 @@ const isMenuLoading = ref(true)
 
 const changeOrderFunc = () => {
   productsStore.orderFunc = !productsStore.orderFunc
+}
+
+const closePromotion = () => {
+  isPromotionVisible.value = false
+  window.location = '/'
 }
 
 const fillProducts = () => {
