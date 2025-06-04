@@ -9,8 +9,8 @@
       <span class="text-[#D2AF96] text-[20px] font-Segoe font-normal">ЗАКРЫТЬ</span>
       <img src="/icons/IconCrossAlt.svg" alt="close" class="w-[27px] h-[27px]" />
     </div>
-    <div class="flex flex-col items-center justify-center w-full h-full">
-      <div class="imageBorder h-[600px] w-auto">
+    <div class="flex flex-col items-center justify-center py-[9vw] w-full h-full">
+      <div class="imageBorder w-auto h-full">
         <img
           src="/images/PromotionImage.png"
           alt="promotion"
