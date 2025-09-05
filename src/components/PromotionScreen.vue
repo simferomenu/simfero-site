@@ -11,7 +11,7 @@
     </div>
     <div class="flex flex-col items-center justify-center w-full h-full">
         <img
-          src="/images/PromotionImage.jpg?date=050925"
+          src="/images/PromotionImage.jpg?date=0509251525"
           alt="promotion-image"
           class="w-full h-full object-fill"
     </div>
