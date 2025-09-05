@@ -22,14 +22,33 @@ app.mount('#app')
 
 import { registerSW } from 'virtual:pwa-register'
 
+const intervalMS = 30 * 60 * 1000 // Check for updates every 30 minutes
+
 const updateSW = registerSW({
   onNeedRefresh() {
     if (confirm('Доступно обновление. Перезагрузить?')) {
       updateSW(true)
     }
   },
-  onOfflineReady() {
-    console.log('App ready to work offline')
+  onRegisteredSW(swUrl, r) {
+    r && setInterval(async () => {
+      if (!(!r.installing && navigator))
+        return
+      
+      if (('connection' in navigator) && !navigator.onLine)
+        return
+      
+      const resp = await fetch(swUrl, {
+        cache: 'no-store',
+        headers: {
+          'cache': 'no-store',
+          'cache-control': 'no-cache',
+        },
+      })
+      
+      if (resp?.status === 200)
+        await r.update()
+    }, intervalMS)
   }
 })
 
