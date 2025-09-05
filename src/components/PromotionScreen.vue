@@ -12,8 +12,8 @@
     <div class="flex flex-col items-center justify-center py-[9vw] w-full h-full">
       <div class="imageBorder w-auto max-h-full">
         <img
-          src="/images/PromotionImage.jpg"
-          alt="promotion"
+          src="/images/PromotionImage.jpg?date=050925"
+          alt="promotion-image"
           class="w-full h-full rounded-[20px]"
         />
       </div>
