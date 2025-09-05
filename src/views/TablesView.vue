@@ -95,9 +95,7 @@
     >
   </div>
 
-  <Teleport to="body">
-    <PromotionScreen v-if="isPromotionVisible" @close="closePromotion" />
-  </Teleport>
+  <PromotionScreen v-if="isPromotionVisible" @close="closePromotion" />
 </template>
 
 <script setup>
