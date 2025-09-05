@@ -5,9 +5,9 @@ import App from './App.vue'
 import router from './router'
 
 // axios.defaults.baseURL = 'http://localhost:3000'
-axios.maxContentLength = 3000;
+axios.maxContentLength = 3000
 axios.defaults.baseURL = 'http://178.34.180.164:3000'
-axios.defaults.headers.publicKey = 'eYd75HxAXtTbj6q4aZRPnrKgLvyGWMc9FfU8kNmE';
+axios.defaults.headers.publicKey = 'eYd75HxAXtTbj6q4aZRPnrKgLvyGWMc9FfU8kNmE'
 
 import './assets/index.css'
 import axios from 'axios'
@@ -19,6 +19,19 @@ const app = createApp(App)
 app.use(router)
 app.use(pinia)
 app.mount('#app')
+
+import { registerSW } from 'virtual:pwa-register'
+
+const updateSW = registerSW({
+  onNeedRefresh() {
+    if (confirm('New content available. Reload?')) {
+      updateSW(true)
+    }
+  },
+  onOfflineReady() {
+    console.log('App ready to work offline')
+  }
+})
 
 // const requestFullScreen = async () => {
 //   let element = await document.documentElement
