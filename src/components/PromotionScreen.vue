@@ -10,7 +10,7 @@
       <img src="/icons/IconCrossAlt.svg" alt="close" class="w-[27px] h-[27px]" />
     </div>
     <div class="flex flex-col items-center justify-center py-[9vw] w-full h-full">
-      <div class="imageBorder w-auto max-h-full">
+      <div class="imageBorder w-auto max-h-full max-w-[80vw]">
         <img
           src="/images/PromotionImage.jpg?date=050925"
           alt="promotion-image"
