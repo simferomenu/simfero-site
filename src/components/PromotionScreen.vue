@@ -9,11 +9,11 @@
       <span class="text-[#D2AF96] text-[20px] font-Segoe font-normal">ЗАКРЫТЬ</span>
       <img src="/icons/IconCrossAlt.svg" alt="close" class="w-[27px] h-[27px]" />
     </div>
-    <div class="flex flex-col items-center justify-center w-full h-full">
+    <div class="flex flex-col justify-center items-center w-full h-full">
         <img
-          src="/images/PromotionImage.jpg?date=0509251525"
+          src="/images/PromotionImage.jpg?date=1008251525"
           alt="promotion-image"
-          class="w-full h-full object-fill"
+          class="object-fill w-full h-full"
     </div>
   </div>
 </template>
