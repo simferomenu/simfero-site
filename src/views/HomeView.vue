@@ -351,7 +351,7 @@ function syncStopList() {
 onMounted(() => {
   syncStopList()
 
-  setInterval(syncStopList, 30000)
+  setInterval(syncStopList, 60000)
 })
 
 // onMounted(async () => {
