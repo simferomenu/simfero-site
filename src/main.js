@@ -22,13 +22,11 @@ app.mount('#app')
 
 import { registerSW } from 'virtual:pwa-register'
 
-const intervalMS = 30 * 60 * 1000 // Check for updates every 30 minutes
+const intervalMS = 60 * 1000 // Check for updates every minute
 
 const updateSW = registerSW({
   onNeedRefresh() {
-    if (confirm('Доступно обновление. Перезагрузить?')) {
-      updateSW(true)
-    }
+    updateSW(true)
   },
   onRegisteredSW(swUrl, r) {
     r && setInterval(async () => {
